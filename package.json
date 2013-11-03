@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "wow such compiled very limited so future",
   "main": "dogescript.js",
+  "repository": {
+     "type": "git",
+     "url": "https://github.com/remixz/dogescript.git"
+   },
   "keywords": [
     "wow"
   ],

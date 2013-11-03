@@ -5,6 +5,15 @@ This is an implementation of the best new compile-to-JS language, dogescript. Wo
 
 And yes, I am very aware I went about a very, er, *non-conventional*, way of parsing a language, and is probably riddled with bugs and edge-cases. However, this is dogescript, so anything goes!
 
+```
+    wow
+         such dogescript
+     very compiled
+                  next-generation
+       npm wow
+```
+
+
 ### Installation
 
 `npm install -g dogescript`
