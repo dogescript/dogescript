@@ -1,10 +1,8 @@
 ;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var dogescript = require('../../');
+var dogescript = require('dogescript');
 
 var input  = document.getElementsByClassName('dogescript')[0];
 var output = document.getElementsByClassName('javascript')[0];
-
-var compile = document.getElementsByClassName('compile')[0];
 
 input.addEventListener('keyup', function () {
     output.value = dogescript(input.value);
@@ -12,7 +10,7 @@ input.addEventListener('keyup', function () {
 
 output.value = dogescript(input.value);
 
-},{"../../":2}],2:[function(require,module,exports){
+},{"dogescript":2}],2:[function(require,module,exports){
 /**
  * dogescript - wow so syntax such language
  *
@@ -41,9 +39,9 @@ module.exports = function (file) {
 var remove = require('lodash.remove');
 
 var indentLevel = 0;
-module.exports = function (line) {
+module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', 'very', 'shh', 'rly'];
+    var valid = ['such', 'wow', 'plz', 'very', 'shh', 'rly', 'so'];
     var statement = '';
 
     if (keys === null) return line + '\n'
@@ -117,12 +115,30 @@ module.exports = function (line) {
 
     // very new variable
     if (keys[0] === 'very') {
-        statement += 'var ' + keys[1] + ' = ' + keys[3] + ';\n';
+        statement += 'var ' + keys[1] + ' = ';
+        if (keys.length > 3) {
+            var recurse = ''
+            for (var i = 3; i < keys.length; i++) {
+                recurse += keys[i] + ' ';
+            }
+            statement += parse(recurse);
+        } else {
+            statement += keys[3] + ';\n';
+        }
     }
 
     // is existing variable
     if (keys[1] === 'is') {
-        statement += keys[0] + ' = ' + keys[2] + ';\n';
+        statement += keys[0] + ' = ';
+        if (keys.length > 2) {
+            var recurse = ''
+            for (var i = 2; i < keys.length; i++) {
+                recurse += keys[i] + ' ';
+            }
+            statement += parse(recurse);
+        } else {
+            statement += keys[2] + ';\n';
+        }
     } 
 
     // shh comment
@@ -155,6 +171,15 @@ module.exports = function (line) {
             statement += keys[i];
         }
         statement += ') {\n'
+    }
+
+    // so require (thanks @maxogden!)
+    if (keys[0] === 'so') {
+        if (keys[2] === 'as') {
+            statement += 'var ' + keys[3] + ' = require(\'' + keys[1] + '\');\n';
+        } else {
+            statement += 'var ' + keys[1] + ' = require(\'' + keys[1] + '\');\n';
+        }
     }
 
     return statement;
