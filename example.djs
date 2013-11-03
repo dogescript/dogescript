@@ -3,9 +3,9 @@ shh THIS IS DOGESCRIPT
 very dogescript is 'such messy; very doge-friendly'
 
 such woof much foo bar bat
-    console.log(foo)
+    plz console.loge with foo
     such nested
-        console.log('such nesting')
+        plz console.loge with 'such nesting'
     wow
     plz nested
 wow
