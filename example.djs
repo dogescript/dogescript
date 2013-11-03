@@ -2,7 +2,7 @@ shh THIS IS DOGESCRIPT
 
 very dogescript is 'such messy; very doge-friendly'
 
-such function woof much variables foo bar bat
+such woof much foo bar bat
     console.log(foo)
     such function nested
         console.log('such nesting')

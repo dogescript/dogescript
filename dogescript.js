@@ -32,13 +32,13 @@ var parser = function (line) {
     }
 
     // such function
-    if (keys[0] === 'such' && keys[1] === 'function') {
+    if (keys[0] === 'such') {
         indentLevel += 4;
-        statement += 'function ' + keys[2];
+        statement += 'function ' + keys[1];
 
-        if (keys[3] === 'much' && keys[4] === 'variables') {
+        if (keys[2] === 'much') {
             statement += ' ('
-            for (var i = 5; i < keys.length; i++) {
+            for (var i = 3; i < keys.length; i++) {
                 statement += keys[i];
                 if (i !== keys.length - 1) statement += ', '
             }
