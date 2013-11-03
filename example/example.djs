@@ -21,4 +21,8 @@ rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
     plz console.loge with {such: 'doge'}
 wow
 
+very arr is new Array with 0
+
+obj is new Object
+
 module.exports is woof
