@@ -41,7 +41,7 @@ var remove = require('lodash.remove');
 var indentLevel = 0;
 module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', 'very', 'shh', 'rly', 'so'];
+    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'so'];
     var statement = '';
 
     if (keys === null) return line + '\n'
@@ -89,24 +89,40 @@ module.exports = function parse (line) {
         }
     }
 
-    // wow end function
+    // wow end function and return 
     if (keys[0] === 'wow') {
-        indentLevel -= 4;
-        statement = statement.replace('    ', '');
-        statement += '} \n';
+        if (keys[1]) {
+            statement += 'return'
+            for (var i = 1; i < keys.length; i++) {
+                statement += ' ' + keys[i];
+            }
+            statement += ';\n'
+            indentLevel -= 4;
+            statement += '} \n';
+        } else {
+            indentLevel -= 4;
+            statement = statement.substr(0, 4);
+            statement = statement.replace('	', '');
+            statement += '} \n';
+        }
     }
 
     // plz execute function
-    if (keys[0] === 'plz') {
+    if (keys[0] === 'plz' || keys[0] === '.plz') {
+        if (keys[0].charAt(0) === '.') statement += '.';
         if (keys[1] === 'console.loge') keys[1] = 'console.log';
         if (keys[2] === 'with') {
             statement += keys[1] + '(';
+            dupe = keys.slice(0);
             for (var i = 3; i < keys.length; i++) {
-                if (keys[i] === ',') continue;
+                if (keys[i] === ',' || keys[i] === '&') continue;
+                if (keys[i].substr(-1) === '&' || keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
                 statement += keys[i];
                 if (i !== keys.length - 1) statement += ', '
             }
-            statement += ');\n';
+            if (statement.substr(-2) === ', ') statement = statement.slice(0, -2);
+            if (dupe[keys.length - 1].slice(-1) === '&') statement += ')\n'
+            else statement += ');\n';
         } else {
             statement += keys[1] + '();\n';
         }
@@ -120,6 +136,7 @@ module.exports = function parse (line) {
             if (keys[5] === 'with') {
                 for (var i = 6; i < keys.length; i++) {
                     if (keys[i] === ',') continue;
+                    if (keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
                     statement += keys[i];
                     if (i !== keys.length - 1) statement += ', '
                 }
@@ -130,6 +147,7 @@ module.exports = function parse (line) {
         if (keys.length > 3) {
             var recurse = ''
             for (var i = 3; i < keys.length; i++) {
+                if (keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
                 recurse += keys[i] + ' ';
             }
             statement += parse(recurse);
