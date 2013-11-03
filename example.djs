@@ -4,7 +4,7 @@ very dogescript is 'such messy; very doge-friendly'
 
 such woof much foo bar bat
     console.log(foo)
-    such function nested
+    such nested
         console.log('such nesting')
     wow
     plz nested
