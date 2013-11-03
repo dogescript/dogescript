@@ -57,6 +57,7 @@ var parser = function (line) {
 
     // plz execute function
     if (keys[0] === 'plz') {
+        if (keys[1] === 'console.loge') keys[1] = 'console.log';
         if (keys[2] === 'with') {
             statement += keys[1] + '(';
             for (var i = 3; i < keys.length; i++) {
