@@ -1,23 +1,10 @@
-/**
- * dogescript - wow so syntax such language
- *
- * Copyright (c) 2013 Zach Bruggeman
- *
- * dogescript is licensed under the MIT License.
- *
- * @package dogescript
- * @author  Zach Bruggeman <talkto@zachbruggeman.me>
- */
+var dogescript = require('dogescript');
 
-var parser = require('./lib/parser');
+var input  = document.getElementsByClassName('dogescript')[0];
+var output = document.getElementsByClassName('javascript')[0];
 
-module.exports = function (file) {
-    var lines = file.split('\n');
-    var script = '';
+input.addEventListener('keyup', function () {
+    output.value = dogescript(input.value);
+});
 
-    for (var i = 0; i < lines.length; i++) {
-        script += parser(lines[i]);
-    }
-
-    return script;
-}
+output.value = dogescript(input.value);
