@@ -11,7 +11,7 @@ such woof much foo bar bat
         plz console.loge with ['so', 'wow']
     wow
     plz nested
-wow
+wow bar
 
 plz woof with 'multiple', 'doge', 'properties wow'
 
@@ -20,6 +20,15 @@ very cat is 'not a doge'
 rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
     plz console.loge with {such: 'doge'}
 wow
+
+shh chaining
+very canvas is plz d3.select with 'body'&
+.plz append with 'canvas'&
+.plz attr with 'width', width&
+.plz attr with 'height', height
+
+very regex is new RegExp with keyword, 'g'
+very regex2 is new RegExp with 'doge', 'g'
 
 very arr is new Array with 0
 
