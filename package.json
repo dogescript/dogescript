@@ -2,7 +2,7 @@
   "name": "dogescript",
   "version": "0.0.1",
   "description": "wow such compiled very limited so future",
-  "main": "dogescript.js",
+  "main": "index.js",
   "repository": {
      "type": "git",
      "url": "https://github.com/remixz/dogescript.git"
@@ -15,7 +15,7 @@
   "dependencies": {
     "optimist": "~0.6.0",
     "event-stream": "~3.0.16",
-    "lodash": "~2.2.1"
+    "lodash.remove": "~2.2.1"
   },
-  "bin": "./dogescript.js"
+  "bin": "./bin/dogescript.js"
 }
