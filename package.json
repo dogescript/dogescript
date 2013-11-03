@@ -1,0 +1,17 @@
+{
+  "name": "dogescript",
+  "version": "0.0.0",
+  "description": "wow such compiled very limited so future",
+  "main": "dogescript.js",
+  "keywords": [
+    "wow"
+  ],
+  "author": "Zach Bruggeman <zachb@diy.org>",
+  "license": "MIT",
+  "dependencies": {
+    "optimist": "~0.6.0",
+    "event-stream": "~3.0.16",
+    "lodash": "~2.2.1"
+  },
+  "bin": "./dogescript.js"
+}
