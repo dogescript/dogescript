@@ -15,6 +15,15 @@ var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8
         output += parser(lines[i]);
     }
 
-    if (argv.beautify) process.stdout.write(beautify(output))
-    else process.stdout.write(output);
+    if (argv.beautify){
+     process.stdout.write(beautify(output))
+ 	}else{
+ 	 fs.writeFile(path.resolve(process.cwd(),argv._[1]), output, function(err) {
+		    if(err) {
+		        console.log(err);
+		    } else {
+		        console.log("The file was compile!");
+		    }
+		});
+ 	}
 });
