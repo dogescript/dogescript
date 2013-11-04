@@ -213,7 +213,7 @@ module.exports = function parse (line) {
                 statement += ' || ';
                 continue;
             }
-            statement += keys[i];
+            statement += keys[i] + ' ';
         }
         indentLevel += 4;
         statement += ') {\n'
@@ -237,7 +237,7 @@ module.exports = function parse (line) {
                 statement += ' || ';
                 continue;
             }
-            statement += keys[i];
+            statement += keys[i] + ' ';
         }
         statement += ') {\n'
     }
@@ -281,7 +281,7 @@ module.exports = function parse (line) {
                 statement += ' var '
                 continue;
             }
-            statement += keys[i];
+            statement += keys[i] + ' ';
         }
         statement += ') {\n'
     }
