@@ -4,9 +4,9 @@
   "description": "wow so syntax very doge much future",
   "main": "index.js",
   "repository": {
-     "type": "git",
-     "url": "https://github.com/remixz/dogescript.git"
-   },
+    "type": "git",
+    "url": "https://github.com/remixz/dogescript.git"
+  },
   "keywords": [
     "wow"
   ],
@@ -14,8 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "optimist": "~0.6.0",
-    "event-stream": "~3.0.16",
-    "lodash.remove": "~2.2.1"
+    "lodash.remove": "~2.2.1",
+    "js-beautify": "~1.4.1"
   },
   "bin": "./bin/dogescript.js"
 }

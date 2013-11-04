@@ -20,9 +20,11 @@ And yes, I am very aware I went about a very, er, *non-conventional*, way of par
 
 ### Usage
 
-Dogescript pipes out to sdout. To compile a dogescript file:
+Dogescript pipes to sdout. To compile a dogescript file:
 
-`dogescript location/to/dogescript.djs`
+`dogescript location/to/dogescript.djs --beautify`
+
+Add the `--beautify` option if you want properly formatted JS.
 
 ### Language
 

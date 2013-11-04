@@ -9,9 +9,11 @@
  * @author  Zach Bruggeman <talkto@zachbruggeman.me>
  */
 
-var parser = require('./lib/parser');
+var beautify = require('js-beautify').js_beautify;
 
-module.exports = function (file) {
+var parser   = require('./lib/parser');
+
+module.exports = function (file, beauty) {
     var lines = file.split('\n');
     var script = '';
 
@@ -19,5 +21,6 @@ module.exports = function (file) {
         script += parser(lines[i]);
     }
 
-    return script;
+    if (beauty) return beautify(script)
+    else return script;
 }
