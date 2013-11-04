@@ -1,0 +1,15 @@
+shh : //
+very : var 
+such : function
+much : ()
+wow : }
+is : =
+plz : run a function with parameters E.G plz myFunct turns into myFunct()
+
+with : passes parameters into a function E.G console.loge with [‘so’, ‘’wow] turns into console.log([‘so’, ‘’wow])
+
+rly : if
+and : &&
+or : ||
+not : !==
+loge : log (console.loge)
