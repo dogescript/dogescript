@@ -1,4 +1,4 @@
-## dogescript spec (1.0.0)
+## dogescript spec (1.2.0)
 
 ### notes
 
@@ -26,9 +26,11 @@ Used in `many`, `much` and `rly`.
 * `is` - `===`
 * `and` - `&&`
 * `or` - `||`
-* `next` - `; ` (only in `much`)
-* `as` - `=` (only in `much`)
-* `more` - `+=` (only in `much`)
-* `less` - `-=` (only in `much`)
-* `lots` - `*=` (only in `much`)
-* `few` - `/=` (only in `much`)
+* `next` - `; `
+* `as` - `=`
+* `more` - `+=`
+* `less` - `-=`
+* `lots` - `*=`
+* `few` - `/=`
+* `lesser` - `>`
+* `greater` - `<`
