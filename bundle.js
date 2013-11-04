@@ -40,8 +40,8 @@ var remove = require('lodash.remove');
 
 var indentLevel = 0;
 module.exports = function parse (line) {
-    var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'so'];
+    var keys = line.match(/'[^'[{]+']}|\S+/g);
+    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
     var statement = '';
 
     if (keys === null) return line + '\n'
@@ -51,21 +51,6 @@ module.exports = function parse (line) {
         keys = remove(keys, function (key) { return key !== ''; });
         for (var i = 0; i < indentLevel; i++) {
             statement += ' ';
-        }
-    }
-
-    // combine arrays and objects with spaces in them
-    for (var i = 0; i < keys.length; i++) {
-        keys[i] = keys[i].replace('	', '    ');
-        if (( keys[i].charAt(0) === '[' || keys[i].charAt(0) === '{') && keys[i + 1] ) {
-            var dupe = keys.slice(0); // .slice(0) duplicates an array
-            for (var j = i + 1; j < dupe.length; j++) {
-                keys[i] += ' ' + dupe[j];
-                keys.splice(j, 1);
-                if (keys[keys.length - 1] === ']' || keys[keys.length - 1] === '}') keys.splice(keys.length - 1, 1);
-            }
-        } else {
-            continue;
         }
     }
 
@@ -91,7 +76,7 @@ module.exports = function parse (line) {
 
     // wow end function and return 
     if (keys[0] === 'wow') {
-        if (keys[1]) {
+        if (typeof keys[1] !== 'undefined') {
             statement += 'return'
             for (var i = 1; i < keys.length; i++) {
                 statement += ' ' + keys[i];
@@ -101,8 +86,10 @@ module.exports = function parse (line) {
             statement += '} \n';
         } else {
             indentLevel -= 4;
-            statement = statement.substr(0, 4);
-            statement = statement.replace('	', '');
+            statement = statement.trimLeft();
+            for (var i = 0; i < indentLevel; i++) {
+                statement = ' ' + statement;
+            }
             statement += '} \n';
         }
     }
@@ -118,7 +105,8 @@ module.exports = function parse (line) {
                 if (keys[i] === ',' || keys[i] === '&') continue;
                 if (keys[i].substr(-1) === '&' || keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
                 statement += keys[i];
-                if (i !== keys.length - 1) statement += ', '
+                if (keys[i].substr(-1) === ':') statement += ' ';
+                if (i !== keys.length - 1 && keys[i].substr(-1) !== ':') statement += ', ';
             }
             if (statement.substr(-2) === ', ') statement = statement.slice(0, -2);
             if (dupe[keys.length - 1].slice(-1) === '&') statement += ')\n'
@@ -136,9 +124,9 @@ module.exports = function parse (line) {
             if (keys[5] === 'with') {
                 for (var i = 6; i < keys.length; i++) {
                     if (keys[i] === ',') continue;
-                    if (keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
+                    if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
                     statement += keys[i];
-                    if (i !== keys.length - 1) statement += ', '
+                    if (i !== keys.length - 1) statement += ', ';
                 }
             }
             statement += ');\n'
@@ -147,7 +135,7 @@ module.exports = function parse (line) {
         if (keys.length > 3) {
             var recurse = ''
             for (var i = 3; i < keys.length; i++) {
-                if (keys[i].substr(-1) === ',') keys[i] = keys[i].slice(0, -1);
+                if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
                 recurse += keys[i] + ' ';
             }
             statement += parse(recurse);
@@ -193,7 +181,6 @@ module.exports = function parse (line) {
 
     // rly if
     if (keys[0] === 'rly') {
-        indentLevel += 4;
         statement += 'if (';
         for (var i = 1; i < keys.length; i++) {
             if (keys[i] === 'is') {
@@ -207,6 +194,74 @@ module.exports = function parse (line) {
                 continue;
             } else if (keys[i] === 'or') {
                 statement += ' || ';
+                continue;
+            }
+            statement += keys[i];
+        }
+        indentLevel += 4;
+        statement += ') {\n'
+    }
+
+    // many while
+    if (keys[0] === 'many') {
+        indentLevel += 4;
+        statement += 'while (';
+        for (var i = 1; i < keys.length; i++) {
+            if (keys[i] === 'is') {
+                statement += ' === ';
+                continue;
+            } else if (keys[i] === 'not') {
+                statement += ' !== ';
+                continue;
+            } else if (keys[i] === 'and') {
+                statement += ' && ';
+                continue;
+            } else if (keys[i] === 'or') {
+                statement += ' || ';
+                continue;
+            }
+            statement += keys[i];
+        }
+        statement += ') {\n'
+    }
+
+    // much for
+    if (keys[0] === 'much') {
+        indentLevel += 4;
+        statement += 'for (';
+        for (var i = 1; i < keys.length; i++) {
+            if (keys[i] === 'is') {
+                statement += ' === ';
+                continue;
+            } else if (keys[i] === 'not') {
+                statement += ' !== ';
+                continue;
+            } else if (keys[i] === 'and') {
+                statement += ' && ';
+                continue;
+            } else if (keys[i] === 'or') {
+                statement += ' || ';
+                continue;
+            } else if (keys[i] === "next") {
+                statement += '; '
+                continue;
+            } else if (keys[i] === 'as') {
+                statement += ' = '
+                continue;
+            } else if (keys[i] === 'more') {
+                statement += ' += '
+                continue;
+            } else if (keys[i] === 'less') {
+                statement += ' -= '
+                continue;
+            } else if (keys[i] === 'lots') {
+                statement += ' *= '
+                continue;
+            } else if (keys[i] === 'few') {
+                statement += ' /= '
+                continue;
+            } else if (keys[i] === 'very') {
+                statement += ' var '
                 continue;
             }
             statement += keys[i];
