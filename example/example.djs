@@ -17,8 +17,16 @@ plz woof with 'multiple', 'doge', 'properties wow'
 
 very cat is 'not a doge'
 
+many woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
+    plz console.loge with {such: 'doge'}
+wow
+
 rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
     plz console.loge with {such: 'doge', wow: 'dogee'}
+wow
+
+much very woof as 3 next woof not 3 next woof more 1
+	plz console.loge with {such: 'doge'}
 wow
 
 shh chaining
