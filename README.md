@@ -26,6 +26,10 @@ Dogescript pipes to sdout. To compile a dogescript file:
 
 Add the `--beautify` option if you want properly formatted JS.
 
+Compile djs file..
+
+`dogescript location/to/dogescript.djs location/to/dogescript.js`
+
 ### Language
 
 I may document this properly soon, but for now see `example.djs` or look through the code. Dogescript accepts regular JS as well.
