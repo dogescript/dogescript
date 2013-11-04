@@ -1,3 +1,5 @@
+![dogescript](https://raw.github.com/remixz/dogescript/master/doge.gif)
+
 ## dogescript
 (aka when Zach went insane)
 
