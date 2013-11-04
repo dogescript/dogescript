@@ -43,3 +43,10 @@ very arr is new Array with 0
 obj is new Object
 
 module.exports is woof
+
+shh example http server
+so http
+plz http.createServer with much req res
+   plz req.writeHead with 200 {'Content-Type': 'text/plain'}
+   plz req.end with 'so hello\nmuch world'
+wow
