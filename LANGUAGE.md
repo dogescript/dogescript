@@ -9,7 +9,7 @@
 
 * `shh [comment]` - `// [comment]`
 * `very [var] is [value]` - `var [var] = [value]`
-* `[var] is [value]` - `[var] is [value]`
+* `[var] is [value]` - `[var] = [value]`
 * `such [name] much [variables]` - `function [name] ([variables])`
 * `wow` - `}`
 * `plz [function] with [variables]` - `[function]([variables])`
