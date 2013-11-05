@@ -43,13 +43,35 @@ var remove = require('lodash.remove');
 
 module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
+    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so', 'quiet', 'loud'];
     var statement = '';
 
     if (keys === null) return line + '\n'
 
     // not dogescript, such javascript
     if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is') return line + '\n';
+    
+    // multiline Comment start
+    if (keys[0] === 'quiet') {
+        statement += '/* '
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i];
+        }
+        statement += '\n';
+    }
+    
+    
+    // multiline Comment end
+    if (keys[0] === 'loud') {
+        statement += '*/ '
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i];
+        }
+        statement += '\n';
+    }
+
+    
+    
 
     // such function
     if (keys[0] === 'such') {

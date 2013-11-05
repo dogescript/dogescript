@@ -24,6 +24,8 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `much [params]` - `for ([params])`
 * `so [module]` - `var [module] = require([module])`
 * `so [module] as [name]` - `var [name] = require([module])`
+* `quiet` - `/*`
+* `loud` - `*/`
 
 ### operators
 
