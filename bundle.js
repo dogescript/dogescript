@@ -27,7 +27,7 @@ var beautify = require('js-beautify').js_beautify;
 var parser   = require('./lib/parser');
 
 module.exports = function (file, beauty) {
-    var lines = file.split('\n');
+    var lines = file.split(/\r?\n/);
     var script = '';
 
     for (var i = 0; i < lines.length; i++) {
@@ -43,7 +43,8 @@ var remove = require('lodash.remove');
 
 module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
+    var valid = ['such', 'wow', 'wow&', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
+    var validKeys = {'is': ' === ', 'not': ' !== ', 'and':  ' && ', 'or':  ' || ', 'next':  '; ', 'as':  ' = ', 'more':  ' += ', 'less':  ' -= ', 'lots': ' *= ', 'few': ' /= ', 'very': ' var ', 'lesser': ' < ', 'greater': ' > '};
     var statement = '';
 
     if (keys === null) return line + '\n'
@@ -68,8 +69,10 @@ module.exports = function parse (line) {
     }
 
     // wow end function and return 
-    if (keys[0] === 'wow') {
-        if (typeof keys[1] !== 'undefined') {
+    if (keys[0] === 'wow' || keys[0] === 'wow&') {
+        if (keys[0] === 'wow&') {
+            statement += '}) \n';
+        } else if (typeof keys[1] !== 'undefined') {
             statement += 'return'
             for (var i = 1; i < keys.length; i++) {
                 statement += ' ' + keys[i];
@@ -115,8 +118,12 @@ module.exports = function parse (line) {
             if (dupe[keys.length - 1].slice(-1) === '&') statement += ')\n'
             else statement += ');\n';
         } else {
-            if (keys[1].slice(-1) === '&') statement += keys[1] + '()\n';
-            else statement += keys[1] + '();\n';
+            if (keys[1].slice(-1) === '&') {
+                keys[1] = keys[1].slice(0, -1);
+                statement += keys[1] + '()\n';
+            } else {
+                statement += keys[1] + '();\n';
+            } 
         }
     }
 
@@ -142,7 +149,8 @@ module.exports = function parse (line) {
                 if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
                 recurse += keys[i] + ' ';
             }
-            statement += parse(recurse);
+            if (valid.indexOf(keys[3]) !== -1) statement += parse(recurse);
+            else statement += recurse + ';\n';
         } else {
             statement += keys[3] + ';\n';
         }
@@ -184,44 +192,8 @@ module.exports = function parse (line) {
     }
 
     var keyParser = function (key) {
-        if (key === 'is') {
-            statement += ' === ';
-            return true;
-        } else if (key === 'not') {
-            statement += ' !== ';
-            return true;
-        } else if (key === 'and') {
-            statement += ' && ';
-            return true;
-        } else if (key === 'or') {
-            statement += ' || ';
-            return true;
-        } else if (key === "next") {
-            statement += '; ';
-            return true;
-        } else if (key === 'as') {
-            statement += ' = ';
-            return true;
-        } else if (key === 'more') {
-            statement += ' += ';
-            return true;
-        } else if (key === 'less') {
-            statement += ' -= ';
-            return true;
-        } else if (key === 'lots') {
-            statement += ' *= ';
-            return true;
-        } else if (key === 'few') {
-            statement += ' /= ';
-            return true;
-        } else if (key === 'very') {
-            statement += ' var ';
-            return true;
-        } else if (key === 'lesser') {
-            statement += ' < ';
-            return true;
-        } else if (key === 'greater') {
-            statement += ' > ';
+        if (validKeys[key]) {
+            statement += validKeys[key];
             return true;
         } else {
             return false;
