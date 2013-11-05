@@ -26,7 +26,7 @@ rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
 wow
 
 much very woof as 1 next woof lesser 3 next woof more 1
-	plz console.loge with {such: 'doge'}
+    plz console.loge with {such: 'doge'}
 wow
 
 shh chaining
@@ -49,4 +49,5 @@ so http
 plz http.createServer with much req res
    plz req.writeHead with 200 {'Content-Type': 'text/plain'}
    plz req.end with 'so hello\nmuch world'
-wow
+wow&
+.plz listen with 8080
