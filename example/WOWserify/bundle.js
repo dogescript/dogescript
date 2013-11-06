@@ -43,13 +43,35 @@ var remove = require('lodash.remove');
 
 module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
+    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so', 'quiet', 'loud', 'notrly', 'otherrly'];
     var statement = '';
 
     if (keys === null) return line + '\n'
 
     // not dogescript, such javascript
     if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is') return line + '\n';
+    
+    // multiline Comment start
+    if (keys[0] === 'quiet') {
+        statement += '/* '
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i];
+        }
+        statement += '\n';
+    }
+    
+    
+    // multiline Comment end
+    if (keys[0] === 'loud') {
+        statement += '*/ '
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i];
+        }
+        statement += '\n';
+    }
+
+    
+    
 
     // such function
     if (keys[0] === 'such') {
@@ -204,6 +226,42 @@ module.exports = function parse (line) {
         }
         statement += ') {\n'
     }
+    
+    
+    // rly else if
+    if (keys[0] === 'otherrly') {
+        statement += 'else if (';
+        for (var i = 1; i < keys.length; i++) {
+            
+            if (keys[i] === 'is') {
+                statement += ' === ';
+                continue;
+            } else if (keys[i] === 'not') {
+                statement += ' !== ';
+                continue;
+            } else if (keys[i] === 'and') {
+                statement += ' && ';
+                continue;
+            } else if (keys[i] === 'or') {
+                statement += ' || ';
+                continue;
+            }
+            
+            statement += keys[i] + ' ';
+        }
+        statement += ') {\n'
+    }
+    
+    
+    // notrly else
+    if (keys[0] === 'notrly') {
+        statement += 'else {';
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i] + ' ';
+        }
+        statement += '\n'
+    }
+    
 
     // many while
     if (keys[0] === 'many') {

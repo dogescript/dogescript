@@ -20,10 +20,16 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `plz [function] with [variables]` - `[function]([variables])`
 * `plz [function] with [variables..] much [arguments]` - `[function]([variables..], function ([arguments]) {})`
 * `rly [params]` - `if ([params])`
+* `otherrly [params]` - `else if ([params])`
+* `notrly` - `else`
 * `many [params]` - `while ([params])`
 * `much [params]` - `for ([params])`
 * `so [module]` - `var [module] = require([module])`
 * `so [module] as [name]` - `var [name] = require([module])`
+* `quiet` - `/*`
+* `loud` - `*/`
+
+
 
 ### operators
 
