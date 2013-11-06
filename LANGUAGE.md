@@ -1,4 +1,4 @@
-## dogescript spec (1.3.0)
+## dogescript spec (1.4.0)
 
 ### notes
 
@@ -20,6 +20,8 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `plz [function] with [variables]` - `[function]([variables])`
 * `plz [function] with [variables..] much [arguments]` - `[function]([variables..], function ([arguments]) {})`
 * `rly [params]` - `if ([params])`
+* `but rly [params]` - `else if ([params])`
+* `but` - `else`
 * `many [params]` - `while ([params])`
 * `much [params]` - `for ([params])`
 * `so [module]` - `var [module] = require([module])`
