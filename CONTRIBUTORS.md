@@ -12,3 +12,4 @@ These are people who have implemented code in dogescript, or have directly influ
 * @maxogden
 * @EmiiilK
 * @absentTelegraph
+* @muan
