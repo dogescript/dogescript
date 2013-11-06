@@ -41,16 +41,17 @@ module.exports = function (file, beauty) {
 },{"./lib/parser":3,"js-beautify":4}],3:[function(require,module,exports){
 var remove = require('lodash.remove');
 
+var multiComment = false;
 module.exports = function parse (line) {
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'wow&', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
+    var valid = ['such', 'wow', 'wow&', 'plz', '.plz', 'very', 'shh', 'quiet', 'loud', 'rly', 'but', 'many', 'much', 'so'];
     var validKeys = {'is': ' === ', 'not': ' !== ', 'and':  ' && ', 'or':  ' || ', 'next':  '; ', 'as':  ' = ', 'more':  ' += ', 'less':  ' -= ', 'lots': ' *= ', 'few': ' /= ', 'very': ' var ', 'lesser': ' < ', 'greater': ' > '};
     var statement = '';
 
     if (keys === null) return line + '\n'
 
     // not dogescript, such javascript
-    if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is') return line + '\n';
+    if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is' || multiComment && keys[0] !== 'loud') return line + '\n';
 
     // such function
     if (keys[0] === 'such') {
@@ -184,7 +185,27 @@ module.exports = function parse (line) {
 
     // shh comment
     if (keys[0] === 'shh') {
-        statement += '// '
+        statement += '// ';
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i] + ' ';
+        }
+        statement += '\n';
+    }
+
+    // quiet start multi-line comment
+    if (keys[0] === 'quiet') {
+        statement += '/* ';
+        multiComment = true;
+        for (var i = 1; i < keys.length; i++) {
+            statement += keys[i] + ' ';
+        }
+        statement += '\n';
+    }
+
+    // loud end multi-line comment
+    if (keys[0] === 'loud') {
+        statement += '*/ ';
+        multiComment = false;
         for (var i = 1; i < keys.length; i++) {
             statement += keys[i] + ' ';
         }
@@ -209,6 +230,21 @@ module.exports = function parse (line) {
             statement += keys[i] + ' ';
         }
         statement += ') {\n'
+    }
+
+    // but else
+    if (keys[0] === 'but') {
+        if (keys[1] === 'rly') {
+          statement += '} else if (';
+          for (var i = 2; i < keys.length; i++) {
+              var parsed = keyParser(keys[i]);
+              if (parsed) continue;
+              statement += keys[i] + ' ';
+          }
+          statement += ') {\n'
+        } else {
+          statement += '} else {\n'
+        }
     }
 
     // many while
@@ -244,6 +280,7 @@ module.exports = function parse (line) {
 
     return statement;
 }
+
 },{"lodash.remove":8}],4:[function(require,module,exports){
 /**
 The following batches are equivalent:
