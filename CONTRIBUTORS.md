@@ -10,3 +10,5 @@ These are people who have implemented code in dogescript, or have directly influ
 * @00Davo
 * @LondoMundo 
 * @maxogden
+* @EmiiilK
+* @absentTelegraph
