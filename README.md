@@ -1,6 +1,7 @@
 ![dogescript](https://raw.github.com/remixz/dogescript/master/doge.gif)
 
-## dogescript
+## dogescript [![NPM version](https://badge.fury.io/js/dogescript.png)](http://badge.fury.io/js/dogescript)
+
 (aka when Zach went insane)
 
 This is an implementation of the best new compile-to-JS language, dogescript. Wow. 
