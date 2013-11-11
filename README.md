@@ -32,3 +32,7 @@ Add the `--beautify` option if you want properly formatted JS.
 ### Language
 
 I may document this properly soon, but for now see `example.djs` or look through the code. Dogescript accepts regular JS as well.
+
+### Projects using dogescript
+
+- [Doge Adventure!](https://github.com/ngscheurich/doge-adventure): A text adventure game inspired by [leonsumbitches](http://dailydoge.tumblr.com/post/21839788086/leonsumbitches-you-have-encountered-a-doge)
