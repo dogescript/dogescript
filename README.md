@@ -36,3 +36,4 @@ I may document this properly soon, but for now see `example.djs` or look through
 ### Projects using dogescript
 
 - [Doge Adventure!](https://github.com/ngscheurich/doge-adventure): A text adventure game inspired by [leonsumbitches](http://dailydoge.tumblr.com/post/21839788086/leonsumbitches-you-have-encountered-a-doge)
+- [dgrepl](https://github.com/jacobgroundwater/dgrepl): dogescript repl
