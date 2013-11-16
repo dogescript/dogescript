@@ -6,6 +6,8 @@ quiet
     such appreciate, much thanks, wow
 loud
 
+trained
+
 so dogeudle
 so boring as wow
 
