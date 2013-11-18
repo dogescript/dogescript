@@ -41,9 +41,18 @@ rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
     plz console.loge with {such: 'doge', wow: 'dogee'}
 wow
 
-much very woof as 1 next woof lesser 3 next woof more 1
+much very woof as 1 next woof smaller 3 next woof more 1
     plz console.loge with {such: 'doge'}
 wow
+
+shh doge style
+very science is 4
+           much  very so as 1 next so smaller 10 next so more 1
+    rly so bigger 2
+                   plz console.loge with {such: so}
+      wow
+                      wow
+
 
 shh chaining
 very canvas is plz d3.select with 'body'&
@@ -67,3 +76,4 @@ http dose createServer with much req res
    req dose end with 'so hello\nmuch world'
 wow&
 .plz listen with 8080
+
