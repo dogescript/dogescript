@@ -11,7 +11,7 @@ var parser   = require('../lib/parser');
 
 if (argv._[0]) {
   var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
-      var lines = script.split('\n');
+      var lines = script.split(/ {3,}|\n/);
       var output = '';
 
       for (var i = 0; i < lines.length; i++) {
@@ -28,7 +28,7 @@ if (argv._[0]) {
         stream.Transform.call(this);
     }
     util.inherits(Stream, stream.Transform);
-      
+
     // see streams documentation
     Stream.prototype._transform = function (chunk, encoding, callback) {
         var script = parser(chunk.toString());
