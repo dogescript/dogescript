@@ -46,3 +46,8 @@ Used in `many`, `much` and `rly`.
 * `smaller` - `<`
 * `biggerish` - `>=`
 * `smallerish` - `<=`
+
+### standard objects
+
+* `console.loge` - `console.log`
+
