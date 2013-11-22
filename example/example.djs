@@ -41,15 +41,24 @@ rly woof is 'doges only' and cat not 'doge' or cat is 'not a doge'
     plz console.loge with {such: 'doge', wow: 'dogee'}
 wow
 
-much very woof as 1 next woof lesser 3 next woof more 1
+much very woof as 1 next woof smaller 3 next woof more 1
     plz console.loge with {such: 'doge'}
 wow
 
+shh doge style
+very science is 4
+           much  very so as 1 next so smaller 10 next so more 1
+    rly so bigger 2
+                   plz console.loge with {such: so}
+      wow
+                      wow
+
+
 shh chaining
 very canvas is plz d3.select with 'body'&
-.plz append with 'canvas'&
-.plz attr with 'width', width&
-.plz attr with 'height', height
+dose append with 'canvas'&
+dose attr with 'width', width&
+dose attr with 'height', height
 
 very regex is new RegExp with keyword, 'g'
 very regex2 is new RegExp with 'doge', 'g'
@@ -62,8 +71,9 @@ module.exports is woof
 
 shh example http server
 so http
-plz http.createServer with much req res
-   plz req.writeHead with 200 {'Content-Type': 'text/plain'}
-   plz req.end with 'so hello\nmuch world'
+http dose createServer with much req res
+   req dose writeHead with 200 {'Content-Type': 'text/plain'}
+   req dose end with 'so hello\nmuch world'
 wow&
 .plz listen with 8080
+
