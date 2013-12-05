@@ -14,7 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "optimist": "~0.6.0",
-    "lodash.remove": "~2.4.1",
     "js-beautify": "~1.4.2"
   },
   "bin": "./bin/dogescript.js"
