@@ -26,8 +26,9 @@ var beautify = require('js-beautify').js_beautify;
 
 var parser   = require('./lib/parser');
 
-module.exports = function (file, beauty) {
-    var lines = file.split(/ {3,}|\r?\n/);
+module.exports = function (file, beauty, dogeMode) {
+    if (dogeMode) var lines = file.split(/ {3,}|\r?\n/);
+    else var lines = file.split(/\r?\n/);
     var script = '';
 
     for (var i = 0; i < lines.length; i++) {
@@ -51,6 +52,11 @@ module.exports = function parse (line) {
 
     // not dogescript, such javascript
     if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is' && keys[1] !== 'dose' || multiComment && keys[0] !== 'loud') return line + '\n';
+    
+    for (var i = 0; i < keys.length; i++) {
+        keys[i] = keys[i].replace('dogeument', 'document');
+        keys[i] = keys[i].replace('windoge', 'window');
+    }
 
     // trained use strict
     if (keys[0] === 'trained') {
@@ -149,7 +155,7 @@ module.exports = function parse (line) {
             statement += ');\n';
             return statement;
         }
-        if (keys.length > 3) {
+        if (keys.length > 4) {
             var recurse = '';
             for (var i = 3; i < keys.length; i++) {
                 if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
