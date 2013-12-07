@@ -10,17 +10,17 @@ var beautify = require('js-beautify').js_beautify;
 var parser   = require('../lib/parser');
 
 if (argv._[0]) {
-  var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
-      var lines = script.split(/ {3,}|\n/);
-      var output = '';
+    var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
+        var lines = script.split(/ {3,}|\n/);
+        var output = '';
 
-      for (var i = 0; i < lines.length; i++) {
-          output += parser(lines[i]);
-      }
+        for (var i = 0; i < lines.length; i++) {
+            output += parser(lines[i]);
+        }
 
-      if (argv.beautify) process.stdout.write(beautify(output))
-      else process.stdout.write(output);
-  });
+        if (argv.beautify) process.stdout.write(beautify(output, {break_chained_methods: false}))
+        else process.stdout.write(output);
+    });
 } else {
     // streamy inheritance stuff
     // boilerblate from the docs
