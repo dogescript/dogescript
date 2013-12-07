@@ -11,7 +11,8 @@ var parser   = require('../lib/parser');
 
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
-        var lines = script.split(/ {3,}|\n/);
+        if (argv['true-doge']) var lines = script.split(/ {3,}|\r?\n/);
+        else var lines = script.split(/\r?\n/);
         var output = '';
 
         for (var i = 0; i < lines.length; i++) {
