@@ -23,15 +23,27 @@ And yes, I am very aware I went about a very, er, *non-conventional*, way of par
 
 ### Usage
 
-Dogescript pipes to sdout. To compile a dogescript file:
+#### Command Line
 
-`dogescript location/to/dogescript.djs --beautify`
+`dogescript` without a file launches a REPL.
 
-Add the `--beautify` option if you want properly formatted JS.
+`dogescript location/to/dogescript.djs` pipes the result to stdout. Use a command like `dogescript dogescript.djs > compiled.js` to save to a file.
+
+Options:
+
+* `--beautify` - Runs the code through a beautifier.
+* `--true-doge` - Implements "true doge" mode, which splits lines by 3 spaces, instead of by newlines. This stays behind a flag until the spacing it exports is identical to non-true-doge mode.
+
+#### Javascript
+
+`dogescript(file, beauty, trueDoge)`
+* `file` - A string of Dogescript.
+* `beauty` - A boolean, set to true if you want the output to be ran through a beautifier.
+* `trueDoge` - A boolean, set to true if you want to enable true-doge mode.
 
 ### Language
 
-I may document this properly soon, but for now see `example.djs` or look through the code. Dogescript accepts regular JS as well.
+Check out `LANGUAGE.md` for some documentation. Otherwise, look at the example files in this repo.
 
 ### Projects using dogescript
 

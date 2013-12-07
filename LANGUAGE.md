@@ -1,9 +1,10 @@
-## dogescript spec (1.4.0)
+## dogescript spec (2.1.0)
 
 ### notes
 
 * dogescript uses single quotes for strings. Double quotes are not supported.
 * dogescript uses 4 space characters for indentation. Tabs are not supported.
+* dogescript seperates statements by newlines by default. In true-doge mode, they are separated by 3 spaces.
 
 ### files
 
@@ -27,6 +28,8 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `much [params]` - `for ([params])`
 * `so [module]` - `var [module] = require([module])`
 * `so [module] as [name]` - `var [name] = require([module])`
+* `dose` - `.` (example: `console dose loge with 'such dot notation => console.log('such dot notation')`)
+* `trained` - `"use strict"`
 
 ### operators
 
@@ -50,4 +53,5 @@ Used in `many`, `much` and `rly`.
 ### standard objects
 
 * `console.loge` - `console.log`
-
+* `dogeument` - 'document'
+* `windoge` - `window`

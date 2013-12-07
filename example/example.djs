@@ -77,3 +77,5 @@ http dose createServer with much req res
 wow&
 .plz listen with 8080
 
+windoge.doge is 'so global, no scope wow'
+very dogelement is plz dogeument.createElement with 'doge'
