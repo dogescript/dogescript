@@ -50,3 +50,4 @@ Check out `LANGUAGE.md` for some documentation. Otherwise, look at the example f
 - [Doge Adventure!](https://github.com/ngscheurich/doge-adventure): A text adventure game inspired by [leonsumbitches](http://dailydoge.tumblr.com/post/21839788086/leonsumbitches-you-have-encountered-a-doge)
 - [dogeify](https://github.com/remixz/dogeify): A Browserify transform for dogescript.
 - [grunt-dogescript](https://github.com/Bartvds/grunt-dogescript): A grunt plugin to compile dogescript.
+- [Wow Such](https://github.com/swirlycheetah/wowsuch): A Dogecoin price calculator.
