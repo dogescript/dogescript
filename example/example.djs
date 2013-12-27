@@ -12,6 +12,7 @@ so dogeudle
 so boring as wow
 
 very dogescript is 'such messy; very doge-friendly'
+always VERSION is '3.0.0'
 
 such woof much foo bar bat
     plz console.loge with foo
