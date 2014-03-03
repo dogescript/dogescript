@@ -23,6 +23,7 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `rly [params]` - `if ([params])`
 * `but rly [params]` - `else if ([params])`
 * `but` - `else`
+* `maybe` - `!!+Math.round(Math.random())`
 * `notrly [params]` - `if (! [params])`
 * `many [params]` - `while ([params])`
 * `much [params]` - `for ([params])`
