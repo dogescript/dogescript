@@ -1,4 +1,4 @@
-;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var dogescript = require('dogescript');
 
 var input  = document.getElementsByClassName('dogescript')[0];
@@ -43,8 +43,11 @@ module.exports = function (file, beauty, dogeMode) {
 var multiComment = false;
 
 module.exports = function parse (line) {
+    //replace dogeument and windoge always
+    line = line.replace(/dogeument/g, 'document').replace(/windoge/g, 'window');
+
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'wow&', 'plz', '.plz', 'dose', 'very', 'shh', 'quiet', 'loud', 'rly', 'but', 'many', 'much', 'so', 'trained'];
+    var valid = ['such', 'wow', 'wow&', 'plz', '.plz', 'dose', 'very', 'shh', 'quiet', 'loud', 'rly', 'but', 'many', 'much', 'so', 'trained', 'maybe'];
     var validKeys = {'is': ' === ', 'not': ' !== ', 'and':  ' && ', 'or':  ' || ', 'next':  '; ', 'as':  ' = ', 'more':  ' += ', 'less':  ' -= ', 'lots': ' *= ', 'few': ' /= ', 'very': ' var ', 'smaller': ' < ', 'bigger': ' > ', 'smallerish': ' <= ', 'biggerish': ' >= ', 'notrly': ' ! '};
     var statement = '';
 
@@ -52,11 +55,6 @@ module.exports = function parse (line) {
 
     // not dogescript, such javascript
     if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is' && keys[1] !== 'dose' || multiComment && keys[0] !== 'loud') return line + '\n';
-    
-    for (var i = 0; i < keys.length; i++) {
-        keys[i] = keys[i].replace('dogeument', 'document');
-        keys[i] = keys[i].replace('windoge', 'window');
-    }
 
     // trained use strict
     if (keys[0] === 'trained') {
@@ -155,13 +153,27 @@ module.exports = function parse (line) {
             statement += ');\n';
             return statement;
         }
+        if (keys[3] === 'much') {
+            statement += 'function ';
+            if (keys[4]) {
+                statement += '(';
+                for (var i = 4; i < keys.length; i++) {
+                    statement += keys[i];
+                    if (i !== keys.length - 1) statement += ', ';
+                }
+                statement += ') { \n';
+            } else {
+                statement += ' () { \n';
+            }
+            return statement;
+        }
         if (keys.length > 4) {
             var recurse = '';
             for (var i = 3; i < keys.length; i++) {
                 if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
                 recurse += keys[i] + ' ';
             }
-            if (valid.indexOf(keys[3]) !== -1) statement += parse(recurse);
+            if (valid.indexOf(keys[3]) !== -1 || (keys[4] === 'is' || keys[4] === 'dose')) statement += parse(recurse);
             else statement += recurse + ';\n';
         } else {
             statement += keys[3] + ';\n';
@@ -289,6 +301,10 @@ module.exports = function parse (line) {
         }
     }
 
+    // maybe boolean operator
+    if (keys[0] === 'maybe') {
+        statement += '(!!+Math.round(Math.random()))';
+    }
     return statement;
 }
 
@@ -330,7 +346,8 @@ beautify.html_beautify = html_beautify;
 module.exports = beautify;
 
 },{"./lib/beautify":7,"./lib/beautify-css":5,"./lib/beautify-html":6}],5:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -634,8 +651,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     }
 
 }());
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],6:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -1475,8 +1494,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }());
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./beautify-css.js":5,"./beautify.js":7}],7:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -3116,5 +3137,5 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }());
 
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}]},{},[1])
-;
