@@ -51,3 +51,4 @@ Options:
 - [Doge Adventure!](https://github.com/ngscheurich/doge-adventure): A text adventure game inspired by [leonsumbitches](http://dailydoge.tumblr.com/post/21839788086/leonsumbitches-you-have-encountered-a-doge).
 - [dogeify](https://github.com/remixz/dogeify): A Browserify transform for dogescript.
 - [grunt-dogescript](https://github.com/Bartvds/grunt-dogescript): A grunt plugin to compile dogescript.
+- [Doge Game of Life](https://github.com/eerwitt/doge-game-of-life): Conway's Game of Life in dogescript.
