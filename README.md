@@ -41,9 +41,10 @@ Options:
 * `beauty` - A boolean, set to true if you want the output to be ran through a beautifier.
 * `trueDoge` - A boolean, set to true if you want to enable true-doge mode.
 
-### Language
+### Language documentation
 
-Check out `LANGUAGE.md` for some documentation. Otherwise, look at the example files in this repo.
+* Introduction to Dogescript - http://alexdantas.net/stuff/posts/introduction-to-dogescript/
+* `LANGUAGE.md`
 
 ### Projects using dogescript
 
