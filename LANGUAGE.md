@@ -54,5 +54,5 @@ Used in `many`, `much` and `rly`.
 ### standard objects
 
 * `console.loge` - `console.log`
-* `dogeument` - 'document'
+* `dogeument` - `document`
 * `windoge` - `window`
