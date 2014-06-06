@@ -71,11 +71,11 @@ module.exports is woof
 
 shh example http server
 so http
-http dose createServer with much req res
-   req dose writeHead with 200 {'Content-Type': 'text/plain'}
-   req dose end with 'so hello\nmuch world'
+server is http dose createServer with much request response
+  response dose writeHead with 200 {"Content-Type": "text/plain"}
+  response dose end with "hello world"
 wow&
-.plz listen with 8080
+server dose listen with 80 'localhost'
 
 windoge.doge is 'so global, no scope wow'
 very dogelement is plz dogeument.createElement with 'doge'
