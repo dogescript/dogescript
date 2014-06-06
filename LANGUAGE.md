@@ -29,7 +29,7 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `much [params]` - `for ([params])`
 * `so [module]` - `var [module] = require([module])`
 * `so [module] as [name]` - `var [name] = require([module])`
-* `dose` - `.` (example: `console dose loge with 'such dot notation => console.log('such dot notation')`)
+* `dose` - `.` (example: `console dose loge with 'such dot notation'` - `console.log('such dot notation')`)
 * `trained` - `"use strict"`
 
 ### operators
