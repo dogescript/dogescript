@@ -1,6 +1,6 @@
 ![dogescript](https://raw.github.com/remixz/dogescript/master/doge.gif)
 
-## dogescript [![NPM version](https://badge.fury.io/js/dogescript.png)](http://badge.fury.io/js/dogescript)
+## dogescript [![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript)
 
 (aka when Zach went insane)
 
@@ -52,14 +52,45 @@ Options:
 * [Doge Game of Life](https://github.com/eerwitt/doge-game-of-life): Conway's Game of Life in dogescript.
 * [doge-toe](http://alexdantas.net/games/doge-toe/): Tic-Tac-Toe in dogescript.
 
-### Dogescript syntax highlighting
+### Utilities
+
+#### Syntax highlighting
 
 * [vim-dogescript](https://github.com/valeriangalliat/vim-dogescript): Vim highlighting.
 * [dogescript-mode](https://github.com/alexdantas/dogescript-mode): Emacs highlighting.
 
-### Tools to compile dogescript
+#### Build plugins
 
 * [dogeify](https://github.com/remixz/dogeify): A [Browserify](http://browserify.org/) transform for dogescript, also usable in [Gulp](https://github.com/gulpjs/gulp)
 * [dogescript-loader](https://github.com/Bartvds/dogescript-loader): A [Webpack](https://Webpack.github.io) loader to bundle dogescript modules.
 * [grunt-dogescript](https://github.com/Bartvds/grunt-dogescript): A [Grunt](http://gruntjs.com) plugin to compile dogescript (written in Dogescript!).
 * [require-doge](https://github.com/Bartvds/require-doge): Directly require() dogescript .djs files in [node.js](http://www.nodejs.org).
+
+### Contributors
+
+Dogescript has been made possible thanks to the contributions of many people. Thank you to everyone who has contributed in some way!
+
+```bash
+$ git log --format='%aN' | sort -u
+
+Bart van der Schoor
+Ben Atkin
+Chad Engler
+Chris Wheatley
+Daniel Lockhart
+Elan Shanker
+Erik Erwitt
+Jacob Groundwater
+Joe Dailey
+Johann Philipp Strathausen
+Joseph Dailey
+Nicholas Scheurich
+Patrick Piemonte
+Ray Toal
+Zach Bruggeman
+achesak
+alehander42
+dogejs
+jasdev
+noformnocontent
+```
