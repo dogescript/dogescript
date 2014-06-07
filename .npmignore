@@ -1,8 +1,4 @@
 /.idea
-node_modules/
-.DS_Store
-/.npmignore
-/*.log
 /*.tgz
 /*.gif
 /*.jpg
