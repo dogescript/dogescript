@@ -79,3 +79,7 @@ wow&
 
 windoge.doge is 'so global, no scope wow'
 very dogelement is plz dogeument.createElement with 'doge'
+
+very multiObj is obj
+  test: ['wow']
+wow
