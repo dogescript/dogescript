@@ -52,3 +52,4 @@ Options:
 - [dogeify](https://github.com/remixz/dogeify): A Browserify transform for dogescript.
 - [grunt-dogescript](https://github.com/Bartvds/grunt-dogescript): A grunt plugin to compile dogescript.
 - [Doge Game of Life](https://github.com/eerwitt/doge-game-of-life): Conway's Game of Life in dogescript.
+- [require-doge](https://github.com/Bartvds/require-doge): Directly require() dogescript .djs files in node.
