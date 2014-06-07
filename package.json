@@ -16,5 +16,12 @@
     "optimist": "~0.6.0",
     "js-beautify": "~1.4.2"
   },
-  "bin": "./bin/dogescript.js"
+  "bin": "./bin/dogescript.js",
+  "scripts": {
+    "test": "node ./test/spec.test.js | tap-dot"
+  },
+  "devDependencies": {
+    "tap-dot": "^0.2.2",
+    "tape": "^2.13.2"
+  }
 }
