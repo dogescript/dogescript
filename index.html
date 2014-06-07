@@ -7,19 +7,22 @@
             body {
               font-family: sans-serif;
             }
-            textarea {
-                width: 49%;
+            .codebox {
+                width: 49.9%;
+                max-width: 49.9%;
+                min-width: 49.9%;
                 height: 600px;
                 font-family: monospace;
                 font-size: 16px;
+                resize: none;
                 -webkit-box-sizing: border-box;
                     -moz-box-sizing: border-box;
                          box-sizing: border-box;
             }
-            .dogescript {
+            #dogescript {
                 float: left;
             }
-            .javascript {
+            #javascript {
                 float: right;
             }
         </style>
@@ -38,6 +41,7 @@
           })();
 
         </script>
+        <link type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/4.2.0/codemirror.css" />
     </head>
     <body>
 
@@ -49,7 +53,7 @@
 
         <p> created by <a href="https://twitter.com/zachbruggeman">Zach Bruggeman</a>, follow <a href="https://twitter.com/dogescript">@dogescript</a> </p>
 
-        <textarea class="dogescript">
+        <textarea id="dogescript" class="codebox">
 shh THIS IS DOGESCRIPT
 
 quiet
@@ -135,8 +139,8 @@ very dogelement is plz dogeument.createElement with 'doge'
 maybe
         </textarea>
 
-        <textarea class="javascript"></textarea>
-
+        <textarea id="javascript" class="codebox"></textarea>
+        <script src="behave.js"></script>
         <script src="bundle.js"></script>
     </body>
 </html>
