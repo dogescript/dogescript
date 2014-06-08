@@ -1,0 +1,4 @@
+quiet
+    silent
+    ninja
+loud
