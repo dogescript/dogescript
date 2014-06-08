@@ -35,14 +35,14 @@ And yes, I am very aware I went about a very, er, *non-conventional*, way of par
 Options:
 
 * `--beautify` - Runs the code through a beautifier.
-* `--true-doge` - Implements "true doge" mode, which splits lines by 3 spaces, instead of by newlines. This stays behind a flag until the spacing it exports is identical to non-true-doge mode.
+* `--true-doge` - Implements "true doge" mode, which splits lines by 3 spaces, instead of by newlines. This stays behind a flag until the spacing it exports is identical to non-true-doge mode. *Deprecated in 2.4.0, to be removed in 3.0.0*
 
 #### Javascript
 
 `dogescript(file, beauty, trueDoge)`
 * `file` - A string of Dogescript.
 * `beauty` - A boolean, set to true if you want the output to be ran through a beautifier.
-* `trueDoge` - A boolean, set to true if you want to enable true-doge mode.
+* `trueDoge` - A boolean, set to true if you want to enable true-doge mode. *Deprecated in 2.4.0, to be removed in 3.0.0*
 
 ### Language documentation
 
