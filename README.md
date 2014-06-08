@@ -68,6 +68,7 @@ Options:
 * [dogescript-loader](https://github.com/Bartvds/dogescript-loader): A [Webpack](https://Webpack.github.io) loader to bundle dogescript modules.
 * [grunt-dogescript](https://github.com/Bartvds/grunt-dogescript): A [Grunt](http://gruntjs.com) plugin to compile dogescript (written in Dogescript!).
 * [require-doge](https://github.com/Bartvds/require-doge): Directly require() dogescript .djs files in [node.js](http://www.nodejs.org).
+* [lineman-dogescript](https://github.com/linemanjs/lineman-dogescript): A [Lineman](http://linemanjs.com/) plugin to compile dogescript.
 
 ### Contributors
 
