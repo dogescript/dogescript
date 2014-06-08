@@ -1,6 +1,9 @@
 ![dogescript](https://raw.github.com/remixz/dogescript/master/doge.gif)
 
-## dogescript [![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript)
+## dogescript 
+
+[![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript) [![Build Status](https://secure.travis-ci.org/remixz/dogescript.svg?branch=master)](http://travis-ci.org/remixz/dogescript) [![Dependency Status](https://david-dm.org/remixz/dogescript.svg)](https://david-dm.org/remixz/dogescript) [![devDependency Status](https://david-dm.org/remixz/dogescript/dev-status.svg)](https://david-dm.org/remixz/dogescript#info=devDependencies)
+
 
 (aka when Zach went insane)
 
