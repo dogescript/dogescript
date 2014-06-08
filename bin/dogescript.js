@@ -19,7 +19,7 @@ if (argv._[0]) {
             output += parser(lines[i]);
         }
 
-        if (argv.beautify) process.stdout.write(beautify(output, {break_chained_methods: false}))
+        if (argv.beautify) process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
         else process.stdout.write(output);
     });
 } else {
