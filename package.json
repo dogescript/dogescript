@@ -18,9 +18,11 @@
   },
   "bin": "./bin/dogescript.js",
   "scripts": {
+    "clean": "node ./test/clean.js",
     "test": "node ./test/spec.test.js | tap-dot"
   },
   "devDependencies": {
+    "glob": "^4.0.2",
     "tap-dot": "~0.2.2",
     "tape": "~2.13.2"
   }
