@@ -1,5 +1,9 @@
 ## dogescript spec (2.1.0)
 
+## heads up!
+
+This spec is a little bit out of date, and is missing some of the newer features. I'll be updating it soon, with the release of 2.4.0, but in the meantime, this documentation has some of the newer stuff (such as loops), and has examples: http://alexdantas.net/stuff/posts/introduction-to-dogescript/
+
 ### notes
 
 * dogescript uses single quotes for strings. Double quotes are not supported.
