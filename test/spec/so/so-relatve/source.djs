@@ -1,0 +1,1 @@
+so ./bar/foo
