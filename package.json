@@ -14,7 +14,8 @@
   "license": "MIT",
   "dependencies": {
     "js-beautify": "~1.5.1",
-    "optimist": "~0.6.0"
+    "optimist": "~0.6.0",
+    "xhr": "^1.8.0"
   },
   "bin": "./bin/dogescript.js",
   "scripts": {

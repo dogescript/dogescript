@@ -1,7 +1,7 @@
 /**
  * dogescript - wow so syntax such language
  *
- * Copyright (c) 2013 Zach Bruggeman
+ * Copyright (c) 2013-2014 Zach Bruggeman
  *
  * dogescript is licensed under the MIT License.
  *
@@ -10,10 +10,11 @@
  */
 
 var beautify = require('js-beautify').js_beautify;
+var xhr      = require('xhr');
 
 var parser = require('./lib/parser');
 
-function parse(file, beauty, dogeMode) {
+function parse (file, beauty, dogeMode) {
     if (dogeMode) var lines = file.split(/ {3,}|\r?\n/);
     else var lines = file.split(/\r?\n/);
     var script = '';
@@ -28,26 +29,19 @@ function parse(file, beauty, dogeMode) {
 
 module.exports = parse;
 
-if (window && document) {
-
-    function getXHR() {
-        if (XMLHttpRequest) {
-            return new XMLHttpRequest();
-        }
-        return new ActiveXObject('Microsoft.XMLHTTP');
-    }
+if (typeof window !== 'undefined' && window !== null) {
 
     var queue = [];
     var seen = [];
 
-    function stepQueue() {
+    var stepQueue = function () {
         while (queue.length > 0 && queue[0].ready) {
             var script = queue.shift();
             exec(script.text);
         }
     }
 
-    function exec(source) {
+    var exec = function (source) {
         var js = ';\n' + parse(source);
         if (js) {
             with (window) {
@@ -56,31 +50,25 @@ if (window && document) {
         }
     }
 
-    function getLoadEval(script) {
+    var getLoadEval = function (script, callback) {
         var res = {
             type: 'load',
-            async: (script.getAttribute('async') || script.getAttribute('defer')),
             ready: false,
             text: null
         };
 
-        var xhr = getXHR();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
+        xhr(script.getAttribute('src'), function (err, resp, body) {
+            if (err) return callback(err);
+
+            if (!err && body) {
                 res.ready = true;
-                res.text = xhr.responseText;
-                stepQueue();
-            }
-        };
-
-        xhr.open('GET', script.getAttribute('src'), true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.send(null);
-
-        return res;
+                res.text = body;
+                return callback(null, res);
+            } 
+        });
     }
 
-    function getInlineEval(script) {
+    var getInlineEval = function (script) {
         return {
             type: 'inline',
             ready: true,
@@ -88,7 +76,7 @@ if (window && document) {
         };
     }
 
-    function processTags() {
+    var processTags = function () {
         var scripts = document.getElementsByTagName('script');
 
         for (var i = 0; i < scripts.length; i++) {
@@ -100,22 +88,22 @@ if (window && document) {
 
             if (script.getAttribute('type') === 'text/dogescript') {
                 if (script.getAttribute('src')) {
-                    var res = getLoadEval(script);
-                    if (!res.async) {
+                    getLoadEval(script, function (err, res) {
+                        if (err) throw err;
                         queue.push(res);
-                    }
-                }
-                else {
+                        stepQueue();
+                    });
+                } else {
                     queue.push(getInlineEval(script));
+                    stepQueue();
                 }
             }
         }
-        stepQueue();
     }
 
-    processTags();
-
-    window.addEventListener('load', function () {
-        processTags();
-    })
+    if (window.addEventListener) {
+      window.addEventListener('DOMContentLoaded', processTags);
+    } else {
+      window.attachEvent('onload', processTags);
+    }
 }
