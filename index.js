@@ -50,22 +50,24 @@ if (typeof window !== 'undefined' && window !== null) {
         }
     }
 
-    var getLoadEval = function (script, callback) {
+    var getLoadEval = function (script) {
         var res = {
             type: 'load',
             ready: false,
-            text: null
+            text: ''
         };
 
         xhr(script.getAttribute('src'), function (err, resp, body) {
-            if (err) return callback(err);
-
-            if (!err && body) {
-                res.ready = true;
+            if (err) {
+                throw err;
+            }
+            res.ready = true;
+            if (body) {
                 res.text = body;
-                return callback(null, res);
-            } 
+            }
+            stepQueue();
         });
+        return res;
     }
 
     var getInlineEval = function (script) {
@@ -88,17 +90,13 @@ if (typeof window !== 'undefined' && window !== null) {
 
             if (script.getAttribute('type') === 'text/dogescript') {
                 if (script.getAttribute('src')) {
-                    getLoadEval(script, function (err, res) {
-                        if (err) throw err;
-                        queue.push(res);
-                        stepQueue();
-                    });
+                    queue.push(getLoadEval(script));
                 } else {
                     queue.push(getInlineEval(script));
-                    stepQueue();
                 }
             }
         }
+        stepQueue();
     }
 
     if (window.addEventListener) {
