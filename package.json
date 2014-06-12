@@ -1,6 +1,6 @@
 {
   "name": "dogescript",
-  "version": "2.3.0",
+  "version": "2.4.0-pre",
   "description": "wow so syntax very doge much future",
   "main": "index.js",
   "repository": {
@@ -20,11 +20,16 @@
   "bin": "./bin/dogescript.js",
   "scripts": {
     "clean": "node ./test/clean.js",
-    "test": "node ./test/spec.test.js | tap-dot"
+    "test": "node ./test/spec.test.js | tap-dot",
+    "build": "browserify index.js -s dogescript > dist/dogescript.js",
+    "min": "uglifyjs dist/dogescript.js > dist/dogescript.min.js",
+    "dist": "npm run build && npm run min"
   },
   "devDependencies": {
+    "browserify": "^4.1.9",
     "glob": "^4.0.2",
     "tap-dot": "~0.2.2",
-    "tape": "~2.13.2"
+    "tape": "~2.13.2",
+    "uglify-js": "^2.4.13"
   }
 }
