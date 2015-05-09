@@ -57,10 +57,6 @@ class For extends Identifier {
   name = "For"
 }
 
-class Require extends Identifier {
-  name = "Require"
-}
-
 class Alias extends Identifier {
   name = "Alias"
 }
@@ -121,13 +117,16 @@ class LTEq extends Identifier {
   name = "LTEq"
 }
 
+class Quantifier extends Identifier {
+  name = "Quantifier"
+}
+
 export default {
   // Language
   "but": Else,
   "dose": Quantifier,
   "is": Eq,
   "many": While,
-  "much": For,
   "much": FunParam,
   "notrly": NotIf,
   "plz": FunInv,
@@ -135,7 +134,7 @@ export default {
   "shh": Comment,
   "so": Require,
   "such": FunDec,
-  "trained": UseStrict
+  "trained": UseStrict,
   "very": Declaration,
   "wow": Closing,
 
