@@ -1,8 +1,7 @@
 export class Identifier {
   name = "Identifier"
-  constructor(line, position, text="") {
+  constructor(position, text="") {
     this.position = position
-    this.line = line
     this.text = text
   }
 }
