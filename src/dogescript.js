@@ -8,8 +8,14 @@ export function main(dir, args) {
     return
   }
 
+  // Create a filepath relative to the directory
+  // dogescript was executed in
   let path = dir + "/" + args
-  tokenizeFile(path).then(tokens => {
-    console.log(tokens.map(x => {return x.name}))
+
+  // Tokenize the file
+  Promise.resolve(tokenizeFile(path))
+  .then(lines => {
+      // Lines is a list of tokenized lines
+      console.log(lines)
   })
 }

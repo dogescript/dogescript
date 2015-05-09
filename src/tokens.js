@@ -1,8 +1,10 @@
 export class Identifier {
   name = "Identifier"
-  constructor(position, text="") {
+
+  create(position, text="") {
     this.position = position
     this.text = text
+    return this
   }
 }
 
