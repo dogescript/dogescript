@@ -1,1 +1,0 @@
-plz dogeument.write

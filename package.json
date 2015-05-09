@@ -1,35 +1,28 @@
 {
   "name": "dogescript",
-  "version": "2.4.0-pre",
-  "description": "wow so syntax very doge much future",
+  "version": "0.0.1",
+  "description": "'wow so syntax very doge much future'",
   "main": "index.js",
+  "scripts": {
+    "test": "./script/test"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/remixz/dogescript.git"
+    "url": "https://github.com/dogescript/dogescript.git"
   },
   "keywords": [
-    "wow"
+    "wow",
+    "dogescript"
   ],
   "author": "Zach Bruggeman <zachb@diy.org>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dogescript/dogescript/issues"
+  },
+  "homepage": "https://github.com/dogescript/dogescript",
   "dependencies": {
-    "js-beautify": "~1.5.1",
-    "optimist": "~0.6.0",
-    "xhr": "^1.8.0"
-  },
-  "bin": "./bin/dogescript.js",
-  "scripts": {
-    "clean": "node ./test/clean.js",
-    "test": "node ./test/spec.test.js | tap-dot",
-    "build": "browserify index.js -s dogescript > dist/dogescript.js",
-    "min": "uglifyjs dist/dogescript.js > dist/dogescript.min.js",
-    "dist": "npm run build && npm run min"
-  },
-  "devDependencies": {
-    "browserify": "^4.1.9",
-    "glob": "^4.0.2",
-    "tap-dot": "~0.2.2",
-    "tape": "~2.13.2",
-    "uglify-js": "^2.4.13"
+    "babel": "^5.2.9",
+    "bluebird": "^2.9.25",
+    "ramda": "^0.13.0"
   }
 }
