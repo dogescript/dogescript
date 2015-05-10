@@ -1,4 +1,4 @@
-
+import R from "ramda"
 import Promise from "bluebird"
 import {tokenizeFile} from "./tokenizer"
 
@@ -16,6 +16,21 @@ export function main(dir, args) {
   Promise.resolve(tokenizeFile(path))
   .then(lines => {
       // Lines is a list of tokenized lines
-      console.log(lines)
+      printTokens(lines)
+
   })
+}
+
+function printTokens(lines) {
+  R.map(line => {
+    let lineNo = lines.indexOf(line) + 1
+
+    console.log("<line=" + lineNo)
+    process.stdout.write(`  `)
+    R.map(token => {
+      process.stdout.write(`<${token.name}>`)
+    }, line)
+    console.log("\n/>\n")
+
+  }, lines)
 }

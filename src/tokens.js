@@ -118,6 +118,14 @@ class LTEq extends Identifier {
   name = "LTEq"
 }
 
+class LParen extends Identifier {
+  name = "LTEq"
+}
+
+class RParen extends Identifier {
+  name = "LTEq"
+}
+
 class Quantifier extends Identifier {
   name = "Quantifier"
 }
@@ -153,6 +161,9 @@ export default {
   "smaller": LT,
   "biggerish": GTEq,
   "smallerish": LTEq,
+  "(": LParen,
+  ")": RParen,
+
 
 
   Identifier,
