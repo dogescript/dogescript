@@ -3,4 +3,4 @@ set -e
 
 (cd $(dirname $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd));
     node_modules/.bin/babel-node --stage 0 -e \
-    "require('./src/dogescript').main(__dirname, \"$1\");")
+    "require('./src/dogescript').run(__dirname, \"$1\");")

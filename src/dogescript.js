@@ -2,7 +2,7 @@ import R from "ramda"
 import Promise from "bluebird"
 import {tokenizeFile} from "./tokenizer"
 
-export function main(dir, args) {
+export async function main(dir, args) {
   if (!args) {
     console.log("Please select a file to parse")
     return
@@ -11,14 +11,10 @@ export function main(dir, args) {
   // Create a filepath relative to the directory
   // dogescript was executed in
   let path = dir + "/" + args
+  let tokenizedLines = await tokenizeFile(path)
 
-  // Tokenize the file
-  Promise.resolve(tokenizeFile(path))
-  .then(lines => {
-      // Lines is a list of tokenized lines
-      printTokens(lines)
+  printTokens(tokenizedLines)
 
-  })
 }
 
 function printTokens(lines) {
@@ -33,4 +29,10 @@ function printTokens(lines) {
     console.log("\n/>\n")
 
   }, lines)
+}
+
+
+
+export function run(dir, args) {
+  Promise.resolve(main(dir, args))
 }
