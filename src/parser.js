@@ -1,38 +1,74 @@
+import Tok from "./tokens"
 import R from "ramda";
 
-// Defines a collection of tokens, and saves any processed tokens to the buffer
-// Storing only the maximum amount of tokens needed for parsing (MAX_LOOKBEHIND)
-class Tokens {
+class Parser {
 
-  MAX_LOOKBEHIND = 3
-
-  constructor(lineNo, line) {
-    this.line = line
-    this.lineNo = lineNo
-    this.lookBehindBuf = []
-    this.lineBuff = []
+  constructor() {
+    this.line = []
+    this.lineNo = 0
+    this.future = {}
+    this.ignore = false
   }
 
   peek() {
-   return this.line[0]
+    return this.line.shift()
   }
 
-  pop() {
-   this.buffer.push(this.peek())
-   return this.line.pop()
+  expect(schema, line) {
+     let o = R.zip(schema, line)
+
+     let errors;
+
+     R.map(pair => {
+       let [type, token] = pair
+
+       // If we get a schema mismatch, record the expected
+       // type, and the position of the token on the line
+       if (typeof type !== typeof token)
+        if (!errors) errors = { type
+                              , tokenIdx: line.indexOf(token)
+                              }
+     })
+
+     return errors
+
   }
 
-  lookAhead(n) {
-   return this.line[n]
+  parseVarDeclaration(line=[]) {
+
+    const schema = [ Tok.VarDeclaration
+                   , Tok.Identifier
+                   ]
+
+    let errors = this.expect(schema, line)
+
+    if (errors) {
+      // TODO(pholey): Process error messages
+      throw errors
+    }
+
+    let [_, identifier, _, value] = line
+
+    // Is it an assignment?
+    if (line.length === 4) {
+      // genAssignCode(identifier, value)
+    }
+
+    // genDecCode(identifier)
+
   }
 
-  lookBehind(n) {
-    return this.buffer[n]
-  }
-
-  setLine(line, lineNo) {
+  parseLine(line) {
     this.line = line
-    this.lineNo = lineNo
-  }
+    // Single line comment, do nothing
 
+    switch(line.0) {
+      case Tok.Comment:
+        return
+        break
+      case Tok.VarDeclaration:
+        return this.parseVarDeclaration(line)
+    }
+
+  }
 }

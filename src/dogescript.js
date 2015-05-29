@@ -19,6 +19,8 @@ export async function main(dir, args) {
 
 function printTokens(lines) {
   R.map(line => {
+
+    // FIXME: This will break when we move to lazy style parsing
     let lineNo = lines.indexOf(line) + 1
 
     console.log("<line=" + lineNo)

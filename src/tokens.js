@@ -8,125 +8,125 @@ export class Identifier {
   }
 }
 
-class Comment extends Identifier {
+export class Comment extends Identifier {
   name = "Comment"
 }
 
-class FunDec extends Identifier {
+export class FunDec extends Identifier {
   name = "FunDec"
 }
 
 
-class FunParam extends Identifier {
+export class FunParam extends Identifier {
   name = "FunParam"
 }
 
 
-class Closing extends Identifier {
+export class Closing extends Identifier {
   name = "Closing"
 }
 
-class Eq extends Identifier {
+export class Eq extends Identifier {
   name = "Eq"
 }
 
-class Declaration extends Identifier {
-  name = "Declaration"
+export class VarDeclaration extends Identifier {
+  name = "VarDeclaration"
 }
 
-class FunInv extends Identifier {
+export class FunInv extends Identifier {
   name = "FunInv"
 }
 
-class If extends Identifier {
+export class If extends Identifier {
   name = "If"
 }
 
-class Else extends Identifier {
+export class Else extends Identifier {
   name = "Else"
 }
 
-class NotIf extends Identifier {
+export class NotIf extends Identifier {
   name = "NotIf"
 }
 
-class While extends Identifier {
+export class While extends Identifier {
   name = "While"
 }
 
-class For extends Identifier {
+export class For extends Identifier {
   name = "For"
 }
 
-class Alias extends Identifier {
+export class Alias extends Identifier {
   name = "Alias"
 }
 
-class Require extends Identifier {
+export class Require extends Identifier {
   name = "Require"
 }
 
-class UseStrict extends Identifier {
+export class UseStrict extends Identifier {
   name = "UseStrict"
 }
 
-class NotDeepEq extends Identifier {
+export class NotDeepEq extends Identifier {
   name = "NotDeepEq"
 }
 
-class And extends Identifier {
+export class And extends Identifier {
   name = "And"
 }
 
-class Or extends Identifier {
+export class Or extends Identifier {
   name = "Or"
 }
 
-class Semi extends Identifier {
+export class Semi extends Identifier {
   name = "Semi"
 }
 
-class PlusEq extends Identifier {
+export class PlusEq extends Identifier {
   name = "PlusEq"
 }
 
-class MinEq extends Identifier {
+export class MinEq extends Identifier {
   name = "MinEq"
 }
 
-class MultEq extends Identifier {
+export class MultEq extends Identifier {
   name = "MultEq"
 }
 
-class DivEq extends Identifier {
+export class DivEq extends Identifier {
   name = "DivEq"
 }
 
-class GT extends Identifier {
+export class GT extends Identifier {
   name = "GT"
 }
 
-class LT extends Identifier {
+export class LT extends Identifier {
   name = "LT"
 }
 
-class GTEq extends Identifier {
+export class GTEq extends Identifier {
   name = "GTEq"
 }
 
-class LTEq extends Identifier {
+export class LTEq extends Identifier {
   name = "LTEq"
 }
 
-class LParen extends Identifier {
+export class LParen extends Identifier {
   name = "LTEq"
 }
 
-class RParen extends Identifier {
+export class RParen extends Identifier {
   name = "LTEq"
 }
 
-class Quantifier extends Identifier {
+export class Quantifier extends Identifier {
   name = "Quantifier"
 }
 
@@ -144,7 +144,7 @@ export default {
   "so": Require,
   "such": FunDec,
   "trained": UseStrict,
-  "very": Declaration,
+  "very": VarDeclaration,
   "wow": Closing,
 
   // Operators
