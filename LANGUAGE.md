@@ -22,6 +22,7 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `such [name] much [variables]` - `function [name] ([variables])`
 * `wow` - `}`
 * `wow&` - `})`
+* `wow [var]` - `return [var]; }`
 * `plz [function] with [variables]` - `[function]([variables])`
 * `plz [function] with [variables..] much [arguments]` - `[function]([variables..], function ([arguments]) {})`
 * `rly [params]` - `if ([params])`
