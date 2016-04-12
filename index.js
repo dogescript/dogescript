@@ -1,9 +1,6 @@
-var System = require('es6-module-loader').System;
+require("babel-core/register")
+require("babel-polyfill")
+var ds = require("./dist/dogescript")
 
-System.import('./src/dogescript').then(function(index) {
-    // Pass along the current directory,
-    // as well as the program arguments
-    index.main(__dirname, process.argv);
-}).catch(function(err){
-    console.log('err', err);
-});
+ds.main(__dirname, process.argv.slice(2, process.argv.length))
+  .catch(function(err) { console.log(err) })

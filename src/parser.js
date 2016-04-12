@@ -47,7 +47,7 @@ class Parser {
       throw errors
     }
 
-    let [_, identifier, _, value] = line
+    let [_, identifier, __, value] = line
 
     // Is it an assignment?
     if (line.length === 4) {
@@ -62,7 +62,7 @@ class Parser {
     this.line = line
     // Single line comment, do nothing
 
-    switch(line.0) {
+    switch(line) {
       case Tok.Comment:
         return
         break

@@ -3,7 +3,7 @@ import Promise from "bluebird"
 import {tokenizeFile} from "./tokenizer"
 
 export async function main(dir, args) {
-  if (!args) {
+  if (args.length === 0) {
     console.log("Please select a file to parse")
     return
   }

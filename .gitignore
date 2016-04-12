@@ -3,3 +3,4 @@ node_modules/
 /*.tgz
 /*.log
 /test/spec/*/*/dump.js
+dist/*
