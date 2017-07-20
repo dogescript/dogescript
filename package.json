@@ -13,9 +13,9 @@
   "author": "Zach Bruggeman <zachb@diy.org>",
   "license": "MIT",
   "dependencies": {
-    "js-beautify": "~1.5.1",
-    "optimist": "~0.6.0",
-    "xhr": "^1.8.0"
+    "js-beautify": "^1.6.14",
+    "optimist": "^0.6.1",
+    "xhr": "^2.4.0"
   },
   "bin": "./bin/dogescript.js",
   "scripts": {
@@ -26,10 +26,10 @@
     "dist": "npm run build && npm run min"
   },
   "devDependencies": {
-    "browserify": "^4.1.9",
-    "glob": "^4.0.2",
-    "tap-dot": "~0.2.2",
-    "tape": "~2.13.2",
-    "uglify-js": "^2.4.13"
+    "browserify": "^14.4.0",
+    "glob": "^7.1.2",
+    "tap-dot": "^1.0.5",
+    "tape": "^4.7.0",
+    "uglify-js": "^3.0.25"
   }
 }
