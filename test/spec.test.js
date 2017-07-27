@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var test = require('tape');
 var glob = require('glob');
+var beautify = require('js-beautify').js_beautify;
 
 var dogescript = require('../index');
 
@@ -28,15 +29,25 @@ files.forEach(function (file) {
             t.skip('skipped');
         }
         else {
+            var hasScenarioFile = fs.existsSync(path.join(path.dirname(target), 'scenario.desc'), 'utf8');
+            var scenarioText = path.dirname(file);
+            if(hasScenarioFile)
+            {
+              scenarioText = fs.readFileSync(path.join(path.dirname(target), 'scenario.desc'), 'utf8').trim();
+            }
+             
             var source = fs.readFileSync(target, 'utf8');
-            var expected = fs.readFileSync(path.join(path.dirname(target), 'expect.js'), 'utf8').trim().replace(/\r\n/, '\n');
+            
+            
+            // deal with CRLF from windows folks writing javascript :(
+            var expected = fs.readFileSync(path.join(path.dirname(target), 'expect.js'), 'utf8').trim().replace(/\r\n/gm, '\n');
 
             var actual = dogescript(source, true);
 
             // uncomment this line for debugging
-            // fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
+            fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
 
-            t.equal(actual, expected);
+            t.equal(actual, expected, scenarioText);
         }
     });
 });

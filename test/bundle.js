@@ -1,9 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var dogescript = require('../../');
-
-console.log('doge');
-
-},{"../../":2}],2:[function(require,module,exports){
 /**
  * dogescript - wow so syntax such language
  *
@@ -112,7 +107,7 @@ if (typeof window !== 'undefined' && window !== null) {
     }
 }
 
-},{"./lib/parser":3,"js-beautify":7,"xhr":14}],3:[function(require,module,exports){
+},{"./lib/parser":2,"js-beautify":6,"xhr":13}],2:[function(require,module,exports){
 var multiComment = false;
 var multiLine = false;
 
@@ -173,10 +168,23 @@ module.exports = function parse (line) {
         statement += '"use strict";\n';
     }
 
-    // such function
+   // such function
     if (keys[0] === 'such') {
-        statement += 'function ' + keys[1];
-        if (keys[2] === 'much') {
+        statement += 'function ';
+        
+        // check if anonymous with args
+        if(keys[1] === 'much') 
+        {
+          statement += '(';
+          for (var i = 2; i < keys.length; i++) {
+                statement += keys[i];
+                if (i !== keys.length - 1) statement += ', ';
+            }
+            statement += ') { \n';
+        }
+        else if (keys[2] === 'much') {
+            statement += keys[1]; // set function name
+            
             statement += ' (';
             for (var i = 3; i < keys.length; i++) {
                 statement += keys[i];
@@ -184,6 +192,7 @@ module.exports = function parse (line) {
             }
             statement += ') { \n';
         } else {
+            statement += keys[1]; // set function name
             statement += ' () { \n';
         }
     }
@@ -440,7 +449,7 @@ module.exports = function parse (line) {
     return statement;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var isFunction = require('is-function')
 
 module.exports = forEach
@@ -488,7 +497,7 @@ function forEachObject(object, iterator, context) {
     }
 }
 
-},{"is-function":6}],5:[function(require,module,exports){
+},{"is-function":5}],4:[function(require,module,exports){
 (function (global){
 var win;
 
@@ -505,7 +514,7 @@ if (typeof window !== "undefined") {
 module.exports = win;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 module.exports = isFunction
 
 var toString = Object.prototype.toString
@@ -522,7 +531,7 @@ function isFunction (fn) {
       fn === window.prompt))
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
 The following batches are equivalent:
 
@@ -579,7 +588,7 @@ if (typeof define === "function" && define.amd) {
 }
 
 
-},{"./lib/beautify":10,"./lib/beautify-css":8,"./lib/beautify-html":9}],8:[function(require,module,exports){
+},{"./lib/beautify":9,"./lib/beautify-css":7,"./lib/beautify-html":8}],7:[function(require,module,exports){
 (function (global){
 /*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
@@ -1074,7 +1083,7 @@ if (typeof define === "function" && define.amd) {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 (function (global){
 /*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
@@ -2030,7 +2039,7 @@ if (typeof define === "function" && define.amd) {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./beautify-css.js":8,"./beautify.js":10}],10:[function(require,module,exports){
+},{"./beautify-css.js":7,"./beautify.js":9}],9:[function(require,module,exports){
 (function (global){
 /*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
@@ -4121,7 +4130,7 @@ if (typeof define === "function" && define.amd) {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 module.exports = once
 
 once.proto = once(function () {
@@ -4142,7 +4151,7 @@ function once (fn) {
   }
 }
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var trim = require('trim')
   , forEach = require('for-each')
   , isArray = function(arg) {
@@ -4174,7 +4183,7 @@ module.exports = function (headers) {
 
   return result
 }
-},{"for-each":4,"trim":13}],13:[function(require,module,exports){
+},{"for-each":3,"trim":12}],12:[function(require,module,exports){
 
 exports = module.exports = trim;
 
@@ -4190,7 +4199,7 @@ exports.right = function(str){
   return str.replace(/\s*$/, '');
 };
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var window = require("global/window")
 var once = require("once")
 var parseHeaders = require('parse-headers')
@@ -4369,4 +4378,22 @@ function createXHR(options, callback) {
 
 function noop() {}
 
-},{"global/window":5,"once":11,"parse-headers":12}]},{},[1]);
+},{"global/window":4,"once":10,"parse-headers":11}],14:[function(require,module,exports){
+dogescript = require('../index');
+
+rundoge = function(src)
+{
+  window.eval(dogescript(src));
+}
+
+var input  = document.getElementsByClassName('dogescript')[0];
+var output = document.getElementsByClassName('javascript')[0];
+
+input.addEventListener('keyup', function () {
+    output.value = dogescript(input.value, true);
+});
+
+output.value = dogescript(input.value, true);
+
+
+},{"../index":1}]},{},[14]);
