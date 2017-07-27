@@ -16,6 +16,13 @@ node ./test/spec.test.js | tap-unfunk
 
 To keep the tests sane use foo/bar/baz/buzz as custom identifiers and strings (as they are not doge-like).
 
+## Trying to debug your code.
+1. Browserify the `exerciser.js` file into `bunde.js` with: `browserify exerciser.js > bundle.js`
+2. Load up the exerciser page
+3. Write your dogescript code on the left side (note the produced javascript on the right)
+4. Find the spot in the bundle.js file where you'd like to debug
+5. Set a breakpoint and then press run code()
+
 ## Todo
 
 - fix notrly / but notrly
