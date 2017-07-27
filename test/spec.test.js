@@ -45,7 +45,7 @@ files.forEach(function (file) {
             var actual = dogescript(source, true);
 
             // uncomment this line for debugging
-            fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
+            //fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
 
             t.equal(actual, expected, scenarioText);
         }
