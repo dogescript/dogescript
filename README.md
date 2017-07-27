@@ -5,6 +5,8 @@
 [![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript) [![Build Status](https://secure.travis-ci.org/dogescript/dogescript.svg?branch=master)](http://travis-ci.org/dogescript/dogescript) [![Dependency Status](https://david-dm.org/dogescript/dogescript.svg)](https://david-dm.org/dogescript/dogescript) [![devDependency Status](https://david-dm.org/dogescript/dogescript/dev-status.svg)](https://david-dm.org/dogescript/dogescript#info=devDependencies)
 (aka when Zach went insane)
 
+[![Fork Build Status](https://travis-ci.org/AnEmortalKid/dogescript.svg?branch=master)](https://travis-ci.org/AnEmortalKid/dogescript)
+
 This is an implementation of the best new compile-to-JS language, dogescript. Wow. 
 
 And yes, I am very aware I went about a very, er, *non-conventional*, way of parsing a language, and is probably riddled with bugs and edge-cases. However, this is dogescript, so anything goes!
