@@ -1,0 +1,37 @@
+<html>
+  <head>
+        <title>Hack Debugger</title>
+        <style>
+            textarea {
+                width: 32%;
+                height: 600px;
+                font-family: monospace;
+                font-size: 16px;
+                -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                         box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body>
+    <h1>Deboogable</h1>
+    <p>Click the button to run the dogescript code through the parser.</p>
+    <button onclick="console.log('transforming:\n'+ dogescript(document.getElementsByClassName('dogescript')[0].value))">Run Parser</button>
+    
+    <div>
+      <p style="position:absolute; margin-left:10%">Dogescript</p>
+      <p style="position:absolute; margin-left:45%">Expected</p>
+      <p style="position:absolute; margin-left:75%">Actual</p>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+    <div>
+      <textarea class="dogescript" id="dogescript-code"></textarea>
+      <textarea class="expected" id="expected-code"></textarea>
+      <textarea class="actual" id="actual-code"></textarea>
+    </div>
+    <script src="debugger-harness.js"></script>
+    <script src="debugger-data-loader.js"></script>
+</html>

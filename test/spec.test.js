@@ -26,7 +26,7 @@ files.forEach(function (file) {
 
         var skip = fs.existsSync(path.join(path.dirname(target), 'skip'));
         if (skip) {
-            t.skip('skipped');
+            t.skip('skipped:'+path.dirname(file));
         }
         else {
             var hasScenarioFile = fs.existsSync(path.join(path.dirname(target), 'scenario.desc'), 'utf8');

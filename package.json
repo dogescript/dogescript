@@ -19,8 +19,15 @@
   },
   "bin": "./bin/dogescript.js",
   "scripts": {
-    "clean": "node ./test/clean.js",
+    "clean": "node ./test/clean.js && npm run debug:clean && npm run exerciser:clean",
     "test": "node ./test/spec.test.js | tap-dot",
+    "test:verbose": "node ./test/spec.test.js",
+    "exerciser:clean": "node ./test/debug/exerciser-clean.js",
+    "exerciser:make": "browserify ./test/debug/exerciser.js > ./test/debug/exerciser-bundle.js",
+    "debug:clean": "node ./test/debug/debugger-clean.js",
+    "debug:make": "node ./test/debugmaker.js",
+    "debug:harness": "browserify ./test/debug/debugger-setup.js > ./test/debug/debugger-harness.js",
+    "debug": "npm run debug:harness && npm run debug:make",
     "build": "browserify index.js -s dogescript > dist/dogescript.js",
     "min": "uglifyjs dist/dogescript.js > dist/dogescript.min.js",
     "dist": "npm run build && npm run min"
