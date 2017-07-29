@@ -18,6 +18,12 @@ process.argv.forEach(function (val, index, array) {
     var testPath = path.join(specDir, val);
     console.log('testPath: '+testPath);
     
+    if(!fs.existsSync(path.join(testPath, 'expect.js')))
+    {
+      console.log('Could not find a test under: ' + testPath);
+      return;
+    }
+    
     // deal with CRLF from windows folks writing javascript :(
     var expected = fs.readFileSync(path.join(testPath, 'expect.js'), 'utf8').trim().replace(/\r\n/gm, '\n');
     console.log('expects:\n'+expected +'\n');
