@@ -1,4 +1,4 @@
-dogescript = require('../index');
+dogescript = require('../../index');
 
 rundoge = function(src)
 {

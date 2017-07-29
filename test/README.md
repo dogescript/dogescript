@@ -17,14 +17,16 @@ node ./test/spec.test.js | tap-unfunk
 
 To keep the tests sane use foo/bar/baz/buzz as custom identifiers and strings (as they are not doge-like).
 
-## Trying to debug your code.
-1. Browserify the `exerciser.js` file into `bunde.js` with: `browserify exerciser.js > bundle.js`
-1. Load up the exerciser page
-1. Write your dogescript code on the left side (note the produced javascript on the right)
-1. Find the spot in the bundle.js file where you'd like to debug
-1. Set a breakpoint and then press run code()
+# Debug package
 
-## Todo
+There are new npm scripts that help with debugging code:
+- `exerciser:make`: loads the most recent dogescript copy and allows you to use the exerciser.html page to write dogescript code and see the converted javascript. Additionally, you can run code and debug through the parser bundled in `exerciser-bundle.js`
+- `debug': runs both `debug:harness` and `debug:make` in that order.
+  - `debug:harness`: loads dogescript from `index.js` into `debug-harness.js`
+  - `debug:make`: takes the last argument given to it as a path to a test. Loads the expected, source and the actual value from the test into `debugger-data-loader.js`.
+After running `npm run debug <PATH>`, you can open up debugger-page and you should see the `source | expected | actual` output. The `Run Parser` button will work similarly to the exerciser, in case you wish to debug why the code parsed the way it parsed.
+  - `debug:clean`: removes both `debugger-harness.js` and `debugger-data-loader.js`
 
-- fix notrly / but notrly
-- make separate case for operators used in rly/much/many
+Assume the `loops/many` test failed after a parser update and you wish to debug why. 
+
+You would run `npm run debug loops/many` which would produce the necessary js files so the `debugger-page` can display the source, expected and actual values.

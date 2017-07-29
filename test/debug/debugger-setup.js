@@ -1,0 +1,2 @@
+dogescript = require('../../index');
+
