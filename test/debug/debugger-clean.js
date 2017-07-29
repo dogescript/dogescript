@@ -2,5 +2,16 @@ var fs = require('fs');
 var path = require('path');
 
 console.log('Cleaning ' + __dirname);
-fs.unlinkSync(path.join(__dirname, 'debugger-data-loader.js'));
-fs.unlinkSync(path.join(__dirname, 'debugger-harness.js'));
+
+var loaderPath = path.join(__dirname, 'debugger-data-loader.js');
+var harnessPath = path.join(__dirname, 'debugger-harness.js');
+
+if(fs.existsSync(loaderPath))
+{
+  fs.unlinkSync(loaderPath);
+}
+
+if(fs.existsSync(harnessPath))
+{
+  fs.unlinkSync(harnessPath);
+}

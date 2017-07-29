@@ -19,9 +19,10 @@
   },
   "bin": "./bin/dogescript.js",
   "scripts": {
-    "clean": "node ./test/clean.js && npm run debug:clean",
+    "clean": "node ./test/clean.js && npm run debug:clean && npm run exerciser:clean",
     "test": "node ./test/spec.test.js | tap-dot",
     "test:verbose": "node ./test/spec.test.js",
+    "exerciser:clean": "node ./test/debug/exerciser-clean.js",
     "exerciser:make": "browserify ./test/debug/exerciser.js > ./test/debug/exerciser-bundle.js",
     "debug:clean": "node ./test/debug/debugger-clean.js",
     "debug:make": "node ./test/debugmaker.js",
