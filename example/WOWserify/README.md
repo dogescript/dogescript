@@ -2,7 +2,7 @@
 
 A sample page displaying dogescript on one text area, and javascript in another.
 
-1. To generate the page, use Browserify on `index.js` and port it over to `bundle.js` with 'browserify index.js > bundle.js`
+1. To generate the javascript, install dependencies at the root directory with `npm i` and run `npm run wowserify`
 
 # To run code
 1. Use the console, there should be a `rundoge` function available which takes dogescript code and uses `window.eval` to execute it
