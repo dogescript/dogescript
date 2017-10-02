@@ -4,3 +4,4 @@ node_modules/
 /*.log
 /test/spec/*/*/dump.js
 example/WOWserify/bundle.js
+test/debug/exerciser-bundle.js
