@@ -46,8 +46,7 @@ Options:
 
 ### Language documentation
 
-* Introduction to Dogescript - http://alexdantas.net/stuff/posts/introduction-to-dogescript/
-* `LANGUAGE.md`
+* [`LANGUAGE.md`](/LANGUAGE.md)
 
 ### Projects using dogescript
 
