@@ -3,7 +3,6 @@
 ## dogescript 
 
 [![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript) [![Build Status](https://secure.travis-ci.org/dogescript/dogescript.svg?branch=master)](http://travis-ci.org/dogescript/dogescript) [![Dependency Status](https://david-dm.org/dogescript/dogescript.svg)](https://david-dm.org/dogescript/dogescript) [![devDependency Status](https://david-dm.org/dogescript/dogescript/dev-status.svg)](https://david-dm.org/dogescript/dogescript#info=devDependencies)
-(aka when Zach went insane)
 
 This is an implementation of the best new compile-to-JS language, dogescript. Wow. 
 
@@ -69,15 +68,19 @@ Options:
 
 ### Contributors
 
-Dogescript has been made possible thanks to the contributions of many people. Thank you to everyone who has contributed in some way!
+Dogescript was originally created by [Zach Bruggeman](https://twitter.com/zachbruggeman), and is now maintained by the [@dogescript/core](https://github.com/orgs/dogescript/people) team. Thank you to every contributor who's helped along the way!
 
-```bash
+```
 $ git log --format='%aN' | sort -u
-
+Alistair Mersereau
+AnEmortalKid
 Bart van der Schoor
+Bartvds
 Ben Atkin
+Cassidy Bridges
 Chad Engler
 Chris Wheatley
+Christina Liu
 Daniel Lockhart
 Elan Shanker
 Erik Erwitt
@@ -85,12 +88,14 @@ Jacob Groundwater
 Joe Dailey
 Johann Philipp Strathausen
 Joseph Dailey
+Mario Nachbaur
 Nicholas Scheurich
 Patrick Piemonte
 Ray Toal
 Zach Bruggeman
 achesak
 alehander42
+alistair.mersereau
 dogejs
 jasdev
 noformnocontent
