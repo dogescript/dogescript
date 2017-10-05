@@ -20,6 +20,7 @@ dogescript files are `.djs`. Should dogescript be ported to other languages, the
 * `very [var] is [value]` - `var [var] = [value]`
 * `[var] is [value]` - `[var] = [value]`
 * `such [name] much [variables]` - `function [name] ([variables])`
+* `such much [variables]` - `function ([variables])`
 * `wow` - `}`
 * `wow&` - `})`
 * `wow [var]` - `return [var]; }`
