@@ -143,7 +143,7 @@ such much a b c
 wow
 ```
 
-An anonymous function passed in as an argument to a call, is simply declared with `much` and its arguments. The following sample is a dogescript version of a [Tape](link) test declared in `dogescript`.
+An anonymous function passed in as an argument to a call, is simply declared with `much` and its arguments. The following sample is a dogescript version of a [Tape](https://ci.testling.com/guide/tape) test declared in `dogescript`.
 
 ```dogescript
 plz test with 'such example' much t
