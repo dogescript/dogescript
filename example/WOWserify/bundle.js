@@ -1,4 +1,4 @@
-;(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var dogescript = require('../../');
 
 var input  = document.getElementsByClassName('dogescript')[0];
@@ -10,11 +10,15 @@ input.addEventListener('keyup', function () {
 
 output.value = dogescript(input.value, true);
 
+rundoge = function(src)
+{
+  window.eval(dogescript(src));
+}
 },{"../../":2}],2:[function(require,module,exports){
 /**
  * dogescript - wow so syntax such language
  *
- * Copyright (c) 2013 Zach Bruggeman
+ * Copyright (c) 2013-2014 Zach Bruggeman
  *
  * dogescript is licensed under the MIT License.
  *
@@ -23,11 +27,13 @@ output.value = dogescript(input.value, true);
  */
 
 var beautify = require('js-beautify').js_beautify;
+var xhr      = require('xhr');
 
-var parser   = require('./lib/parser');
+var parser = require('./lib/parser');
 
-module.exports = function (file, beauty) {
-    var lines = file.split('\n');
+function parse (file, beauty, dogeMode) {
+    if (dogeMode) var lines = file.split(/ {3,}|\r?\n/);
+    else var lines = file.split(/\r?\n/);
     var script = '';
 
     for (var i = 0; i < lines.length; i++) {
@@ -38,60 +44,205 @@ module.exports = function (file, beauty) {
     else return script;
 }
 
-},{"./lib/parser":3,"js-beautify":4}],3:[function(require,module,exports){
-var remove = require('lodash.remove');
+module.exports = parse;
+
+if (typeof window !== 'undefined' && window !== null) {
+
+    var queue = [];
+    var seen = [];
+
+    var stepQueue = function () {
+        while (queue.length > 0 && queue[0].ready) {
+            var script = queue.shift();
+            exec(script.text);
+        }
+    }
+
+    var exec = function (source) {
+        var js = ';\n' + parse(source);
+        if (js) {
+            with (window) {
+                eval(js);
+            }
+        }
+    }
+
+    var getLoadEval = function (script) {
+        var res = {
+            type: 'load',
+            ready: false,
+            text: ''
+        };
+
+        xhr(script.getAttribute('src'), function (err, resp, body) {
+            if (err) {
+                throw err;
+            }
+            res.ready = true;
+            if (body) {
+                res.text = body;
+            }
+            stepQueue();
+        });
+        return res;
+    }
+
+    var getInlineEval = function (script) {
+        return {
+            type: 'inline',
+            ready: true,
+            text: script.innerHTML
+        };
+    }
+
+    var processTags = function () {
+        var scripts = document.getElementsByTagName('script');
+
+        for (var i = 0; i < scripts.length; i++) {
+            var script = scripts[i];
+            if (seen.indexOf(script) > -1) {
+                continue;
+            }
+            seen.push(script);
+
+            if (script.getAttribute('type') === 'text/dogescript') {
+                if (script.getAttribute('src')) {
+                    queue.push(getLoadEval(script));
+                } else {
+                    queue.push(getInlineEval(script));
+                }
+            }
+        }
+        stepQueue();
+    }
+
+    if (window.addEventListener) {
+      window.addEventListener('DOMContentLoaded', processTags);
+    } else {
+      window.attachEvent('onload', processTags);
+    }
+}
+
+},{"./lib/parser":3,"js-beautify":7,"xhr":14}],3:[function(require,module,exports){
+var multiComment = false;
+var multiLine = false;
+
+var validKeys = {
+    'is': ' === ',
+    'not': ' !== ',
+    'and':  ' && ',
+    'or':  ' || ',
+    'next':  '; ',
+    'as':  ' = ',
+    'more':  ' += ',
+    'less':  ' -= ',
+    'lots': ' *= ',
+    'few': ' /= ',
+    'very': ' var ',
+    'smaller': ' < ',
+    'bigger': ' > ',
+    'smallerish': ' <= ',
+    'biggerish': ' >= ',
+    'notrly': ' ! '
+};
+
+var valid = [
+    'such',
+    'wow',
+    'wow&',
+    'plz',
+    '.plz',
+    'dose',
+    'very',
+    'shh',
+    'quiet',
+    'loud',
+    'rly',
+    'but',
+    'many',
+    'much',
+    'so',
+    'trained',
+    'debooger',
+    'maybe'
+];
 
 module.exports = function parse (line) {
+    // replace dogeument, windoge and debooger
+    line = line.replace(/dogeument/g, 'document').replace(/windoge/g, 'window');
+
     var keys = line.match(/'[^']+'|\S+/g);
-    var valid = ['such', 'wow', 'plz', '.plz', 'very', 'shh', 'rly', 'many', 'much', 'so'];
     var statement = '';
 
-    if (keys === null) return line + '\n'
+    if (keys === null) return line + '\n';
 
     // not dogescript, such javascript
-    if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is') return line + '\n';
+    if (valid.indexOf(keys[0]) === -1 && keys[1] !== 'is' && keys[1] !== 'dose' || multiComment && keys[0] !== 'loud' || multiLine && keys[0] !== 'wow') return line + '\n';
 
-    // such function
+    // trained use strict
+    if (keys[0] === 'trained') {
+        statement += '"use strict";\n';
+    }
+
+   // such function
     if (keys[0] === 'such') {
-        statement += 'function ' + keys[1];
-
-        if (keys[2] === 'much') {
-            statement += ' ('
+        statement += 'function ';
+        
+        // check if anonymous with args
+        if(keys[1] === 'much') 
+        {
+          statement += '(';
+          for (var i = 2; i < keys.length; i++) {
+                statement += keys[i];
+                if (i !== keys.length - 1) statement += ', ';
+            }
+            statement += ') { \n';
+        }
+        else if (keys[2] === 'much') {
+            statement += keys[1]; // set function name
+            
+            statement += ' (';
             for (var i = 3; i < keys.length; i++) {
                 statement += keys[i];
-                if (i !== keys.length - 1) statement += ', '
+                if (i !== keys.length - 1) statement += ', ';
             }
             statement += ') { \n';
         } else {
+            statement += keys[1]; // set function name
             statement += ' () { \n';
         }
     }
 
-    // wow end function and return 
-    if (keys[0] === 'wow') {
+    // wow end function and return
+    if (keys[0] === 'wow' || keys[0] === 'wow&') {
+        multiLine = false;
         if (typeof keys[1] !== 'undefined') {
-            statement += 'return'
+            statement += 'return';
             for (var i = 1; i < keys.length; i++) {
                 statement += ' ' + keys[i];
             }
-            statement += ';\n'
-            statement += '} \n';
+            statement += ';\n';
+            if (keys[0] === 'wow&') statement += '}) \n';
+            else statement += '} \n';
+        } else if (keys[0] === 'wow&') {
+            statement += '}) \n';
         } else {
             statement += '} \n';
         }
     }
 
     // plz execute function
-    if (keys[0] === 'plz' || keys[0] === '.plz') {
-        if (keys[0].charAt(0) === '.') statement += '.';
-        if (keys[1] === 'console.loge') keys[1] = 'console.log';
+    if (keys[0] === 'plz' || keys[0] === '.plz' || keys[0] === 'dose' || keys[1] === 'dose') {
+        if (keys[1] === 'dose') statement += keys.shift();
+        if (keys[0].charAt(0) === '.' || keys[0] === 'dose') statement += '.';
+        if (keys[1] === 'console.loge' || keys[1] === 'loge') keys[1] = keys[1].slice(0, -1);
         if (keys[2] === 'with') {
             statement += keys[1] + '(';
             dupe = keys.slice(0);
             for (var i = 3; i < keys.length; i++) {
                 if (keys[i] === ',' || keys[i] === '&') continue;
                 if (keys[i] === 'much') { // lambda functions - thanks @00Davo!
-        
+
                     statement += 'function (';
                     if (keys[i + 1]) {
                         for (var j = i + 1; j < keys.length; j++) {
@@ -112,11 +263,15 @@ module.exports = function parse (line) {
             }
             if (statement.substr(-2) === ', ') statement = statement.slice(0, -2);
             if (statement.substr(-3) === ', ]' || statement.substr(-3) === ', }' ) statement = statement.replace(statement.substr(-3), statement.substr(-1));
-            if (dupe[keys.length - 1].slice(-1) === '&') statement += ')\n'
+            if (dupe[keys.length - 1].slice(-1) === '&') statement += ')\n';
             else statement += ');\n';
         } else {
-            if (keys[1].slice(-1) === '&') statement += keys[1] + '()\n';
-            else statement += keys[1] + '();\n';
+            if (keys[1].slice(-1) === '&') {
+                keys[1] = keys[1].slice(0, -1);
+                statement += keys[1] + '()\n';
+            } else {
+                statement += keys[1] + '();\n';
+            }
         }
     }
 
@@ -133,18 +288,38 @@ module.exports = function parse (line) {
                     if (i !== keys.length - 1) statement += ', ';
                 }
             }
-            statement += ');\n'
+            statement += ');\n';
             return statement;
         }
-        if (keys.length > 3) {
-            var recurse = ''
+        if (keys[3] === 'much') {
+            statement += 'function ';
+            if (keys[4]) {
+                statement += '(';
+                for (var i = 4; i < keys.length; i++) {
+                    statement += keys[i];
+                    if (i !== keys.length - 1) statement += ', ';
+                }
+                statement += ') { \n';
+            } else {
+                statement += ' () { \n';
+            }
+            return statement;
+        }
+        if (keys.length > 4) {
+            var recurse = '';
             for (var i = 3; i < keys.length; i++) {
                 if (keys[i].substr(-1) === ',' && keys[i].charAt(keys[i].length - 2) !== '}') keys[i] = keys[i].slice(0, -1);
                 recurse += keys[i] + ' ';
             }
-            statement += parse(recurse);
+            if (valid.indexOf(keys[3]) !== -1 || (keys[4] === 'is' || keys[4] === 'dose')) statement += parse(recurse);
+            else statement += recurse + ';\n';
         } else {
-            statement += keys[3] + ';\n';
+            if (keys[3] === 'obj') {
+                statement += '{\n';
+                multiLine = true;
+            } else {
+                statement += keys[3] + ';\n';
+            }
         }
     }
 
@@ -157,14 +332,14 @@ module.exports = function parse (line) {
                 for (var i = 5; i < keys.length; i++) {
                     if (keys[i] === ',') continue;
                     statement += keys[i];
-                    if (i !== keys.length - 1) statement += ', '
+                    if (i !== keys.length - 1) statement += ', ';
                 }
             }
-            statement += ');\n'
+            statement += ');\n';
             return statement;
         }
         if (keys.length > 2) {
-            var recurse = ''
+            var recurse = '';
             for (var i = 2; i < keys.length; i++) {
                 recurse += keys[i] + ' ';
             }
@@ -172,102 +347,92 @@ module.exports = function parse (line) {
         } else {
             statement += keys[2] + ';\n';
         }
-    } 
+    }
 
     // shh comment
     if (keys[0] === 'shh') {
-        statement += '// '
+        statement += '//';
         for (var i = 1; i < keys.length; i++) {
-            statement += keys[i] + ' ';
+            statement += ' ' + keys[i];
         }
         statement += '\n';
+    }
+
+    // quiet start multi-line comment
+    if (keys[0] === 'quiet') {
+        statement += '/*';
+        multiComment = true;
+        for (var i = 1; i < keys.length; i++) {
+            statement += ' ' + keys[i];
+        }
+        statement += '\n';
+    }
+
+    // loud end multi-line comment
+    if (keys[0] === 'loud') {
+        statement += '*/';
+        multiComment = false;
+        for (var i = 1; i < keys.length; i++) {
+            statement += ' ' + keys[i];
+        }
+        statement += '\n';
+    }
+
+    var keyParser = function (key) {
+        if (validKeys.hasOwnProperty(key)) {
+            statement += validKeys[key];
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // rly if
     if (keys[0] === 'rly') {
         statement += 'if (';
         for (var i = 1; i < keys.length; i++) {
-            if (keys[i] === 'is') {
-                statement += ' === ';
-                continue;
-            } else if (keys[i] === 'not') {
-                statement += ' !== ';
-                continue;
-            } else if (keys[i] === 'and') {
-                statement += ' && ';
-                continue;
-            } else if (keys[i] === 'or') {
-                statement += ' || ';
-                continue;
-            }
+            var parsed = keyParser(keys[i]);
+            if (parsed) continue;
             statement += keys[i] + ' ';
         }
-        statement += ') {\n'
+        statement += ') {\n';
+    }
+
+    // but else
+    if (keys[0] === 'but') {
+        if (keys[1] === 'rly') {
+          statement += '} else if (';
+          for (var i = 2; i < keys.length; i++) {
+              var parsed = keyParser(keys[i]);
+              if (parsed) continue;
+              statement += keys[i] + ' ';
+          }
+          statement += ') {\n';
+        } else {
+          statement += '} else {\n';
+        }
     }
 
     // many while
     if (keys[0] === 'many') {
         statement += 'while (';
         for (var i = 1; i < keys.length; i++) {
-            if (keys[i] === 'is') {
-                statement += ' === ';
-                continue;
-            } else if (keys[i] === 'not') {
-                statement += ' !== ';
-                continue;
-            } else if (keys[i] === 'and') {
-                statement += ' && ';
-                continue;
-            } else if (keys[i] === 'or') {
-                statement += ' || ';
-                continue;
-            }
+            var parsed = keyParser(keys[i]);
+            if (parsed) continue;
             statement += keys[i] + ' ';
         }
-        statement += ') {\n'
+        statement += ') {\n';
     }
 
     // much for
     if (keys[0] === 'much') {
         statement += 'for (';
         for (var i = 1; i < keys.length; i++) {
-            if (keys[i] === 'is') {
-                statement += ' === ';
-                continue;
-            } else if (keys[i] === 'not') {
-                statement += ' !== ';
-                continue;
-            } else if (keys[i] === 'and') {
-                statement += ' && ';
-                continue;
-            } else if (keys[i] === 'or') {
-                statement += ' || ';
-                continue;
-            } else if (keys[i] === "next") {
-                statement += '; '
-                continue;
-            } else if (keys[i] === 'as') {
-                statement += ' = '
-                continue;
-            } else if (keys[i] === 'more') {
-                statement += ' += '
-                continue;
-            } else if (keys[i] === 'less') {
-                statement += ' -= '
-                continue;
-            } else if (keys[i] === 'lots') {
-                statement += ' *= '
-                continue;
-            } else if (keys[i] === 'few') {
-                statement += ' /= '
-                continue;
-            } else if (keys[i] === 'very') {
-                statement += ' var '
-                continue;
-            }
+            var parsed = keyParser(keys[i]);
+            if (parsed) continue;
             statement += keys[i] + ' ';
         }
-        statement += ') {\n'
+        statement += ') {\n';
     }
 
     // so require (thanks @maxogden!)
@@ -275,13 +440,114 @@ module.exports = function parse (line) {
         if (keys[2] === 'as') {
             statement += 'var ' + keys[3] + ' = require(\'' + keys[1] + '\');\n';
         } else {
-            statement += 'var ' + keys[1] + ' = require(\'' + keys[1] + '\');\n';
+            // try to make a simple name
+            var mod = keys[1];
+            // test for relative module, optional chop extension
+            var m = /^..?\/.*?([\w-]+)(\.\w+)?$/.exec(mod);
+            if (m) {
+                mod = m[1];
+            }
+            mod = mod.replace(/-/g, '_');
+            statement += 'var ' + mod + ' = require(\'' + keys[1] + '\');\n';
         }
+    }
+
+    // maybe boolean operator
+    if (keys[0] === 'maybe') {
+        statement += '(!!+Math.round(Math.random()))';
+    }
+
+    // debooger debugger
+    if (keys[0] === 'debooger') {
+        statement += 'debugger;'
     }
 
     return statement;
 }
-},{"lodash.remove":8}],4:[function(require,module,exports){
+
+},{}],4:[function(require,module,exports){
+var isFunction = require('is-function')
+
+module.exports = forEach
+
+var toString = Object.prototype.toString
+var hasOwnProperty = Object.prototype.hasOwnProperty
+
+function forEach(list, iterator, context) {
+    if (!isFunction(iterator)) {
+        throw new TypeError('iterator must be a function')
+    }
+
+    if (arguments.length < 3) {
+        context = this
+    }
+    
+    if (toString.call(list) === '[object Array]')
+        forEachArray(list, iterator, context)
+    else if (typeof list === 'string')
+        forEachString(list, iterator, context)
+    else
+        forEachObject(list, iterator, context)
+}
+
+function forEachArray(array, iterator, context) {
+    for (var i = 0, len = array.length; i < len; i++) {
+        if (hasOwnProperty.call(array, i)) {
+            iterator.call(context, array[i], i, array)
+        }
+    }
+}
+
+function forEachString(string, iterator, context) {
+    for (var i = 0, len = string.length; i < len; i++) {
+        // no such thing as a sparse string.
+        iterator.call(context, string.charAt(i), i, string)
+    }
+}
+
+function forEachObject(object, iterator, context) {
+    for (var k in object) {
+        if (hasOwnProperty.call(object, k)) {
+            iterator.call(context, object[k], k, object)
+        }
+    }
+}
+
+},{"is-function":6}],5:[function(require,module,exports){
+(function (global){
+var win;
+
+if (typeof window !== "undefined") {
+    win = window;
+} else if (typeof global !== "undefined") {
+    win = global;
+} else if (typeof self !== "undefined"){
+    win = self;
+} else {
+    win = {};
+}
+
+module.exports = win;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],6:[function(require,module,exports){
+module.exports = isFunction
+
+var toString = Object.prototype.toString
+
+function isFunction (fn) {
+  var string = toString.call(fn)
+  return string === '[object Function]' ||
+    (typeof fn === 'function' && string !== '[object RegExp]') ||
+    (typeof window !== 'undefined' &&
+     // IE8 and below
+     (fn === window.setTimeout ||
+      fn === window.alert ||
+      fn === window.confirm ||
+      fn === window.prompt))
+};
+
+},{}],7:[function(require,module,exports){
 /**
 The following batches are equivalent:
 
@@ -297,29 +563,50 @@ var beautify_html = require('js-beautify').html_beautify;
 
 All methods returned accept two arguments, the source string and an options object.
 **/
-var js_beautify = require('./lib/beautify').js_beautify;
-var css_beautify = require('./lib/beautify-css').css_beautify;
-var html_beautify = require('./lib/beautify-html').html_beautify;
 
-// the default is js
-var beautify = function (src, config) {
-    return js_beautify(src, config);
-};
+function get_beautify(js_beautify, css_beautify, html_beautify) {
+    // the default is js
+    var beautify = function (src, config) {
+        return js_beautify.js_beautify(src, config);
+    };
 
-// short aliases
-beautify.js   = js_beautify;
-beautify.css  = css_beautify;
-beautify.html = html_beautify;
+    // short aliases
+    beautify.js   = js_beautify.js_beautify;
+    beautify.css  = css_beautify.css_beautify;
+    beautify.html = html_beautify.html_beautify;
 
-// legacy aliases
-beautify.js_beautify   = js_beautify;
-beautify.css_beautify  = css_beautify;
-beautify.html_beautify = html_beautify;
+    // legacy aliases
+    beautify.js_beautify   = js_beautify.js_beautify;
+    beautify.css_beautify  = css_beautify.css_beautify;
+    beautify.html_beautify = html_beautify.html_beautify;
 
-module.exports = beautify;
+    return beautify;
+}
 
-},{"./lib/beautify":7,"./lib/beautify-css":5,"./lib/beautify-html":6}],5:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+if (typeof define === "function" && define.amd) {
+    // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
+    define([
+        "./lib/beautify",
+        "./lib/beautify-css",
+        "./lib/beautify-html"
+    ], function(js_beautify, css_beautify, html_beautify) {
+        return get_beautify(js_beautify, css_beautify, html_beautify);
+    });
+} else {
+    (function(mod) {
+        var js_beautify = require('./lib/beautify');
+        var css_beautify = require('./lib/beautify-css');
+        var html_beautify = require('./lib/beautify-html');
+
+        mod.exports = get_beautify(js_beautify, css_beautify, html_beautify);
+
+    })(module);
+}
+
+
+},{"./lib/beautify":10,"./lib/beautify-css":8,"./lib/beautify-html":9}],8:[function(require,module,exports){
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -352,22 +639,29 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
     Written by Harutyun Amirjanyan, (amirjanyan@gmail.com)
 
-    Based on code initially developed by: Einar Lielmanis, <elfz@laacz.lv>
+    Based on code initially developed by: Einar Lielmanis, <einar@jsbeautifier.org>
         http://jsbeautifier.org/
 
     Usage:
         css_beautify(source_text);
         css_beautify(source_text, options);
 
-    The options are:
-        indent_size (default 4)          — indentation size,
-        indent_char (default space)      — character to indent with,
+    The options are (default in brackets):
+        indent_size (4)                   — indentation size,
+        indent_char (space)               — character to indent with,
+        selector_separator_newline (true) - separate selectors with newline or
+                                            not (e.g. "a,\nbr" or "a, br")
+        end_with_newline (false)          - end with a newline
+        newline_between_rules (true)      - add a new line after every css rule
 
     e.g
 
     css_beautify(css_source_text, {
       'indent_size': 1,
-      'indent_char': '\t'
+      'indent_char': '\t',
+      'selector_separator': ' ',
+      'end_with_newline': false,
+      'newline_between_rules': true
     });
 */
 
@@ -377,13 +671,28 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 (function() {
     function css_beautify(source_text, options) {
         options = options || {};
+        source_text = source_text || '';
+        // HACK: newline parsing inconsistent. This brute force normalizes the input.
+        source_text = source_text.replace(/\r\n|[\r\u2028\u2029]/g, '\n')
+
         var indentSize = options.indent_size || 4;
         var indentCharacter = options.indent_char || ' ';
+        var selectorSeparatorNewline = (options.selector_separator_newline === undefined) ? true : options.selector_separator_newline;
+        var end_with_newline = (options.end_with_newline === undefined) ? false : options.end_with_newline;
+        var newline_between_rules = (options.newline_between_rules === undefined) ? true : options.newline_between_rules;
+        var eol = options.eol ? options.eol : '\n';
 
         // compatibility
         if (typeof indentSize === "string") {
             indentSize = parseInt(indentSize, 10);
         }
+
+        if(options.indent_with_tabs){
+            indentCharacter = '\t';
+            indentSize = 1;
+        }
+
+        eol = eol.replace(/\\r/, '\r').replace(/\\n/, '\n')
 
 
         // tokenizer
@@ -392,23 +701,31 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
         var pos = -1,
             ch;
+        var parenLevel = 0;
 
         function next() {
             ch = source_text.charAt(++pos);
-            return ch;
+            return ch || '';
         }
 
-        function peek() {
-            return source_text.charAt(pos + 1);
+        function peek(skipWhitespace) {
+            var result = '';
+            var prev_pos = pos;
+            if (skipWhitespace) {
+                eatWhitespace();
+            }
+            result = source_text.charAt(pos + 1) || '';
+            pos = prev_pos - 1;
+            next();
+            return result;
         }
 
-        function eatString(comma) {
+        function eatString(endChars) {
             var start = pos;
             while (next()) {
                 if (ch === "\\") {
                     next();
-                    next();
-                } else if (ch === comma) {
+                } else if (endChars.indexOf(ch) !== -1) {
                     break;
                 } else if (ch === "\n") {
                     break;
@@ -417,51 +734,94 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             return source_text.substring(start, pos + 1);
         }
 
+        function peekString(endChar) {
+            var prev_pos = pos;
+            var str = eatString(endChar);
+            pos = prev_pos - 1;
+            next();
+            return str;
+        }
+
         function eatWhitespace() {
-            var start = pos;
+            var result = '';
             while (whiteRe.test(peek())) {
-                pos++;
+                next();
+                result += ch;
             }
-            return pos !== start;
+            return result;
         }
 
         function skipWhitespace() {
-            var start = pos;
-            do {} while (whiteRe.test(next()));
-            return pos !== start + 1;
+            var result = '';
+            if (ch && whiteRe.test(ch)) {
+                result = ch;
+            }
+            while (whiteRe.test(next())) {
+                result += ch;
+            }
+            return result;
         }
 
-        function eatComment() {
+        function eatComment(singleLine) {
             var start = pos;
+            singleLine = peek() === "/";
             next();
             while (next()) {
-                if (ch === "*" && peek() === "/") {
-                    pos++;
+                if (!singleLine && ch === "*" && peek() === "/") {
+                    next();
                     break;
+                } else if (singleLine && ch === "\n") {
+                    return source_text.substring(start, pos);
                 }
             }
 
-            return source_text.substring(start, pos + 1);
+            return source_text.substring(start, pos) + ch;
         }
 
 
         function lookBack(str) {
-            return source_text.substring(pos - str.length, pos).toLowerCase() === str;
+            return source_text.substring(pos - str.length, pos).toLowerCase() ===
+                str;
+        }
+
+        // Nested pseudo-class if we are insideRule
+        // and the next special character found opens
+        // a new block
+        function foundNestedPseudoClass() {
+            var openParen = 0;
+            for (var i = pos + 1; i < source_text.length; i++) {
+                var ch = source_text.charAt(i);
+                if (ch === "{") {
+                    return true;
+                } else if (ch === '(') {
+                    // pseudoclasses can contain ()
+                    openParen += 1;
+                } else if (ch === ')') {
+                    if (openParen == 0) {
+                        return false;
+                    }
+                    openParen -= 1;
+                } else if (ch === ";" || ch === "}") {
+                    return false;
+                }
+            }
+            return false;
         }
 
         // printer
-        var indentString = source_text.match(/^[\r\n]*[\t ]*/)[0];
-        var singleIndent = Array(indentSize + 1).join(indentCharacter);
+        var basebaseIndentString = source_text.match(/^[\t ]*/)[0];
+        var singleIndent = new Array(indentSize + 1).join(indentCharacter);
         var indentLevel = 0;
+        var nestedLevel = 0;
 
         function indent() {
             indentLevel++;
-            indentString += singleIndent;
+            basebaseIndentString += singleIndent;
         }
 
         function outdent() {
             indentLevel--;
-            indentString = indentString.slice(0, -indentSize);
+            basebaseIndentString = basebaseIndentString.slice(0, -indentSize);
         }
 
         var print = {};
@@ -476,52 +836,167 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             print.newLine();
         };
 
-        print.newLine = function(keepWhitespace) {
-            if (!keepWhitespace) {
-                while (whiteRe.test(output[output.length - 1])) {
-                    output.pop();
-                }
-            }
+        print._lastCharWhitespace = function() {
+            return whiteRe.test(output[output.length - 1]);
+        };
 
+        print.newLine = function(keepWhitespace) {
             if (output.length) {
+                if (!keepWhitespace && output[output.length - 1] !== '\n') {
+                    print.trim();
+                }
+
                 output.push('\n');
-            }
-            if (indentString) {
-                output.push(indentString);
+
+                if (basebaseIndentString) {
+                    output.push(basebaseIndentString);
+                }
             }
         };
         print.singleSpace = function() {
-            if (output.length && !whiteRe.test(output[output.length - 1])) {
+            if (output.length && !print._lastCharWhitespace()) {
                 output.push(' ');
             }
         };
+
+        print.preserveSingleSpace = function() {
+            if (isAfterSpace) {
+                print.singleSpace();
+            }
+        };
+
+        print.trim = function() {
+            while (print._lastCharWhitespace()) {
+                output.pop();
+            }
+        };
+
+
         var output = [];
-        if (indentString) {
-            output.push(indentString);
-        }
         /*_____________________--------------------_____________________*/
 
+        var insideRule = false;
+        var insidePropertyValue = false;
+        var enteringConditionalGroup = false;
+        var top_ch = '';
+        var last_top_ch = '';
+
         while (true) {
-            var isAfterSpace = skipWhitespace();
+            var whitespace = skipWhitespace();
+            var isAfterSpace = whitespace !== '';
+            var isAfterNewline = whitespace.indexOf('\n') !== -1;
+            last_top_ch = top_ch;
+            top_ch = ch;
 
             if (!ch) {
                 break;
-            }
+            } else if (ch === '/' && peek() === '*') { /* css comment */
+                var header = indentLevel === 0;
 
+                if (isAfterNewline || header) {
+                    print.newLine();
+                }
 
-            if (ch === '{') {
-                indent();
-                print["{"](ch);
+                output.push(eatComment());
+                print.newLine();
+                if (header) {
+                    print.newLine(true);
+                }
+            } else if (ch === '/' && peek() === '/') { // single line comment
+                if (!isAfterNewline && last_top_ch !== '{' ) {
+                    print.trim();
+                }
+                print.singleSpace();
+                output.push(eatComment());
+                print.newLine();
+            } else if (ch === '@') {
+                print.preserveSingleSpace();
+                output.push(ch);
+
+                // strip trailing space, if present, for hash property checks
+                var variableOrRule = peekString(": ,;{}()[]/='\"");
+
+                if (variableOrRule.match(/[ :]$/)) {
+                    // we have a variable or pseudo-class, add it and insert one space before continuing
+                    next();
+                    variableOrRule = eatString(": ").replace(/\s$/, '');
+                    output.push(variableOrRule);
+                    print.singleSpace();
+                }
+
+                variableOrRule = variableOrRule.replace(/\s$/, '')
+
+                // might be a nesting at-rule
+                if (variableOrRule in css_beautify.NESTED_AT_RULE) {
+                    nestedLevel += 1;
+                    if (variableOrRule in css_beautify.CONDITIONAL_GROUP_RULE) {
+                        enteringConditionalGroup = true;
+                    }
+                }
+            } else if (ch === '#' && peek() === '{') {
+              print.preserveSingleSpace();
+              output.push(eatString('}'));
+            } else if (ch === '{') {
+                if (peek(true) === '}') {
+                    eatWhitespace();
+                    next();
+                    print.singleSpace();
+                    output.push("{}");
+                    print.newLine();
+                    if (newline_between_rules && indentLevel === 0) {
+                        print.newLine(true);
+                    }
+                } else {
+                    indent();
+                    print["{"](ch);
+                    // when entering conditional groups, only rulesets are allowed
+                    if (enteringConditionalGroup) {
+                        enteringConditionalGroup = false;
+                        insideRule = (indentLevel > nestedLevel);
+                    } else {
+                        // otherwise, declarations are also allowed
+                        insideRule = (indentLevel >= nestedLevel);
+                    }
+                }
             } else if (ch === '}') {
                 outdent();
                 print["}"](ch);
+                insideRule = false;
+                insidePropertyValue = false;
+                if (nestedLevel) {
+                    nestedLevel--;
+                }
+                if (newline_between_rules && indentLevel === 0) {
+                    print.newLine(true);
+                }
+            } else if (ch === ":") {
+                eatWhitespace();
+                if ((insideRule || enteringConditionalGroup) &&
+                    !(lookBack("&") || foundNestedPseudoClass())) {
+                    // 'property: value' delimiter
+                    // which could be in a conditional group query
+                    insidePropertyValue = true;
+                    output.push(':');
+                    print.singleSpace();
+                } else {
+                    // sass/less parent reference don't use a space
+                    // sass nested pseudo-class don't use a space
+                    if (peek() === ":") {
+                        // pseudo-element
+                        next();
+                        output.push("::");
+                    } else {
+                        // pseudo-class
+                        output.push(':');
+                    }
+                }
             } else if (ch === '"' || ch === '\'') {
+                print.preserveSingleSpace();
                 output.push(eatString(ch));
             } else if (ch === ';') {
-                output.push(ch, '\n', indentString);
-            } else if (ch === '/' && peek() === '*') { // comment
+                insidePropertyValue = false;
+                output.push(ch);
                 print.newLine();
-                output.push(eatComment(), "\n", indentString);
             } else if (ch === '(') { // may be a url
                 if (lookBack("url")) {
                     output.push(ch);
@@ -534,41 +1009,80 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                         }
                     }
                 } else {
-                    if (isAfterSpace) {
-                        print.singleSpace();
-                    }
+                    parenLevel++;
+                    print.preserveSingleSpace();
                     output.push(ch);
                     eatWhitespace();
                 }
             } else if (ch === ')') {
                 output.push(ch);
+                parenLevel--;
             } else if (ch === ',') {
+                output.push(ch);
                 eatWhitespace();
-                output.push(ch);
-                print.singleSpace();
-            } else if (ch === ']') {
-                output.push(ch);
-            } else if (ch === '[' || ch === '=') { // no whitespace before or after
-                eatWhitespace();
-                output.push(ch);
-            } else {
-                if (isAfterSpace) {
+                if (selectorSeparatorNewline && !insidePropertyValue && parenLevel < 1) {
+                    print.newLine();
+                } else {
                     print.singleSpace();
                 }
-
+            } else if (ch === ']') {
+                output.push(ch);
+            } else if (ch === '[') {
+                print.preserveSingleSpace();
+                output.push(ch);
+            } else if (ch === '=') { // no whitespace before or after
+                eatWhitespace()
+                ch = '=';
+                output.push(ch);
+            } else {
+                print.preserveSingleSpace();
                 output.push(ch);
             }
         }
 
 
-        var sweetCode = output.join('').replace(/[\n ]+$/, '');
+        var sweetCode = '';
+        if (basebaseIndentString) {
+            sweetCode += basebaseIndentString;
+        }
+
+        sweetCode += output.join('').replace(/[\r\n\t ]+$/, '');
+
+        // establish end_with_newline
+        if (end_with_newline) {
+            sweetCode += '\n';
+        }
+
+        if (eol != '\n') {
+            sweetCode = sweetCode.replace(/[\n]/g, eol);
+        }
+
         return sweetCode;
     }
 
-    if (typeof define === "function") {
-        // Add support for require.js
-        define(function(require, exports, module) {
-            exports.css_beautify = css_beautify;
+    // https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule
+    css_beautify.NESTED_AT_RULE = {
+        "@page": true,
+        "@font-face": true,
+        "@keyframes": true,
+        // also in CONDITIONAL_GROUP_RULE below
+        "@media": true,
+        "@supports": true,
+        "@document": true
+    };
+    css_beautify.CONDITIONAL_GROUP_RULE = {
+        "@media": true,
+        "@supports": true,
+        "@document": true
+    };
+
+    /*global define */
+    if (typeof define === "function" && define.amd) {
+        // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
+        define([], function() {
+            return {
+                css_beautify: css_beautify
+            };
         });
     } else if (typeof exports !== "undefined") {
         // Add support for CommonJS. Just put this file somewhere on your require.paths
@@ -584,8 +1098,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }());
 
-},{}],6:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],9:[function(require,module,exports){
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -618,7 +1134,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
   Written by Nochum Sossonko, (nsossonko@hotmail.com)
 
-  Based on code initially developed by: Einar Lielmanis, <elfz@laacz.lv>
+  Based on code initially developed by: Einar Lielmanis, <einar@jsbeautifier.org>
     http://jsbeautifier.org/
 
   Usage:
@@ -631,14 +1147,16 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     indent_size (default 4)          — indentation size,
     indent_char (default space)      — character to indent with,
     wrap_line_length (default 250)            -  maximum amount of characters per line (0 = disable)
-    brace_style (default "collapse") - "collapse" | "expand" | "end-expand"
-            put braces on the same line as control statements (default), or put braces on own line (Allman / ANSI style), or just put end braces on own line.
+    brace_style (default "collapse") - "collapse" | "expand" | "end-expand" | "none"
+            put braces on the same line as control statements (default), or put braces on own line (Allman / ANSI style), or just put end braces on own line, or attempt to keep them where they are.
     unformatted (defaults to inline tags) - list of tags, that shouldn't be reformatted
     indent_scripts (default normal)  - "keep"|"separate"|"normal"
     preserve_newlines (default true) - whether existing line breaks before elements should be preserved
                                         Only works before elements, not inside tags or for text.
     max_preserve_newlines (default unlimited) - maximum number of line breaks to be preserved in one chunk
     indent_handlebars (default false) - format and indent {{#foo}} and {{/foo}}
+    end_with_newline (false)          - end with a newline
+    extra_liners (default [head,body,/html]) -List of tags that should have an extra newline before them.
 
     e.g.
 
@@ -651,7 +1169,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
       'unformatted': ['a', 'sub', 'sup', 'b', 'i', 'u'],
       'preserve_newlines': true,
       'max_preserve_newlines': 5,
-      'indent_handlebars': false
+      'indent_handlebars': false,
+      'extra_liners': ['/html']
     });
 */
 
@@ -665,6 +1184,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         return s.replace(/^\s+/g, '');
     }
 
+    function rtrim(s) {
+        return s.replace(/\s+$/g,'');
+    }
+
     function style_html(html_source, options, js_beautify, css_beautify) {
         //Wrapper function to invoke all the necessary constructors and deal with the output.
 
@@ -676,25 +1199,49 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             brace_style,
             unformatted,
             preserve_newlines,
-            max_preserve_newlines;
+            max_preserve_newlines,
+            indent_handlebars,
+            wrap_attributes,
+            wrap_attributes_indent_size,
+            end_with_newline,
+            extra_liners,
+            eol;
 
         options = options || {};
 
         // backwards compatibility to 1.3.4
         if ((options.wrap_line_length === undefined || parseInt(options.wrap_line_length, 10) === 0) &&
-                (options.max_char === undefined || parseInt(options.max_char, 10) === 0)) {
+                (options.max_char !== undefined && parseInt(options.max_char, 10) !== 0)) {
             options.wrap_line_length = options.max_char;
         }
 
-        indent_inner_html = options.indent_inner_html || false;
-        indent_size = parseInt(options.indent_size || 4, 10);
-        indent_character = options.indent_char || ' ';
-        brace_style = options.brace_style || 'collapse';
-        wrap_line_length = options.wrap_line_length === 0 ? 32786 : parseInt(options.wrap_line_length || 250, 10);
-        unformatted = options.unformatted || ['a', 'span', 'bdo', 'em', 'strong', 'dfn', 'code', 'samp', 'kbd', 'var', 'cite', 'abbr', 'acronym', 'q', 'sub', 'sup', 'tt', 'i', 'b', 'big', 'small', 'u', 's', 'strike', 'font', 'ins', 'del', 'pre', 'address', 'dt', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-        preserve_newlines = options.preserve_newlines || true;
-        max_preserve_newlines = preserve_newlines ? parseInt(options.max_preserve_newlines || 32786, 10) : 0;
-        indent_handlebars = options.indent_handlebars || false;
+        indent_inner_html = (options.indent_inner_html === undefined) ? false : options.indent_inner_html;
+        indent_size = (options.indent_size === undefined) ? 4 : parseInt(options.indent_size, 10);
+        indent_character = (options.indent_char === undefined) ? ' ' : options.indent_char;
+        brace_style = (options.brace_style === undefined) ? 'collapse' : options.brace_style;
+        wrap_line_length =  parseInt(options.wrap_line_length, 10) === 0 ? 32786 : parseInt(options.wrap_line_length || 250, 10);
+        unformatted = options.unformatted || ['a', 'span', 'img', 'bdo', 'em', 'strong', 'dfn', 'code', 'samp', 'kbd',
+            'var', 'cite', 'abbr', 'acronym', 'q', 'sub', 'sup', 'tt', 'i', 'b', 'big', 'small', 'u', 's', 'strike',
+            'font', 'ins', 'del', 'pre', 'address', 'dt', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        preserve_newlines = (options.preserve_newlines === undefined) ? true : options.preserve_newlines;
+        max_preserve_newlines = preserve_newlines ?
+            (isNaN(parseInt(options.max_preserve_newlines, 10)) ? 32786 : parseInt(options.max_preserve_newlines, 10))
+            : 0;
+        indent_handlebars = (options.indent_handlebars === undefined) ? false : options.indent_handlebars;
+        wrap_attributes = (options.wrap_attributes === undefined) ? 'auto' : options.wrap_attributes;
+        wrap_attributes_indent_size = (options.wrap_attributes_indent_size === undefined) ? indent_size : parseInt(options.wrap_attributes_indent_size, 10) || indent_size;
+        end_with_newline = (options.end_with_newline === undefined) ? false : options.end_with_newline;
+        extra_liners = (typeof options.extra_liners == 'object') && options.extra_liners ?
+            options.extra_liners.concat() : (typeof options.extra_liners === 'string') ?
+            options.extra_liners.split(',') : 'head,body,/html'.split(',');
+        eol = options.eol ? options.eol : '\n';
+
+        if(options.indent_with_tabs){
+            indent_character = '\t';
+            indent_size = 1;
+        }
+
+        eol = eol.replace(/\\r/, '\r').replace(/\\n/, '\n')
 
         function Parser() {
 
@@ -713,8 +1260,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
             this.Utils = { //Uilities made available to the various functions
                 whitespace: "\n\r\t ".split(''),
-                single_token: 'br,input,link,meta,!doctype,basefont,base,area,hr,wbr,param,img,isindex,?xml,embed,?php,?,?='.split(','), //all the single tags for HTML
-                extra_liners: 'head,body,/html'.split(','), //for tags that need a line of whitespace before them
+                single_token: 'br,input,link,meta,source,!doctype,basefont,base,area,hr,wbr,param,img,isindex,embed'.split(','), //all the single tags for HTML
+                extra_liners: extra_liners, //for tags that need a line of whitespace before them
                 in_array: function(what, arr) {
                     for (var i = 0; i < arr.length; i++) {
                         if (what === arr[i]) {
@@ -723,6 +1270,16 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     }
                     return false;
                 }
+            };
+
+            // Return true if the given text is composed entirely of whitespace.
+            this.is_whitespace = function(text) {
+                for (var n = 0; n < text.length; text++) {
+                    if (!this.Utils.in_array(text.charAt(n), this.Utils.whitespace)) {
+                        return false;
+                    }
+                }
+                return true;
             };
 
             this.traverse_whitespace = function() {
@@ -744,8 +1301,19 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 return false;
             };
 
-            this.get_content = function() { //function to capture regular content between tags
+            // Append a space to the given content (string array) or, if we are
+            // at the wrap_line_length, append a newline/indentation.
+            this.space_or_wrap = function(content) {
+                if (this.line_char_count >= this.wrap_line_length) { //insert a line when the wrap_line_length is reached
+                    this.print_newline(false, content);
+                    this.print_indentation(content);
+                } else {
+                    this.line_char_count++;
+                    content.push(' ');
+                }
+            };
 
+            this.get_content = function() { //function to capture regular content between tags
                 var input_char = '',
                     content = [],
                     space = false; //if a space is needed
@@ -756,10 +1324,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     }
 
                     if (this.traverse_whitespace()) {
-                        if (content.length) {
-                            space = true;
-                        }
-                        continue; //don't want to insert unnecessary space
+                        this.space_or_wrap(content);
+                        continue;
                     }
 
                     if (indent_handlebars) {
@@ -771,6 +1337,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                         if (peek3 === '{{#' || peek3 === '{{/') {
                             // These are tags and not content.
                             break;
+                        } else if (peek3 === '{{!') {
+                            return [this.get_tag(), 'TK_TAG_HANDLEBARS_COMMENT'];
                         } else if (this.input.substr(this.pos, 2) === '{{') {
                             if (this.get_tag(true) === '{{else}}') {
                                 break;
@@ -780,17 +1348,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
                     input_char = this.input.charAt(this.pos);
                     this.pos++;
-
-                    if (space) {
-                        if (this.line_char_count >= this.wrap_line_length) { //insert a line when the wrap_line_length is reached
-                            this.print_newline(false, content);
-                            this.print_indentation(content);
-                        } else {
-                            this.line_char_count++;
-                            content.push(' ');
-                        }
-                        space = false;
-                    }
                     this.line_char_count++;
                     content.push(input_char); //letter at-a-time (or string) inserted to an array
                 }
@@ -871,6 +1428,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     content = [],
                     comment = '',
                     space = false,
+                    first_attr = true,
                     tag_start, tag_end,
                     tag_start_char,
                     orig_pos = this.pos,
@@ -907,14 +1465,21 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
                     if (content.length && content[content.length - 1] !== '=' && input_char !== '>' && space) {
                         //no space after = or before >
-                        if (this.line_char_count >= this.wrap_line_length) {
-                            this.print_newline(false, content);
-                            this.print_indentation(content);
-                        } else {
-                            content.push(' ');
-                            this.line_char_count++;
-                        }
+                        this.space_or_wrap(content);
                         space = false;
+                        if (!first_attr && wrap_attributes === 'force' &&  input_char !== '/') {
+                            this.print_newline(true, content);
+                            this.print_indentation(content);
+                            for (var count = 0; count < wrap_attributes_indent_size; count++) {
+                                content.push(indent_character);
+                            }
+                        }
+                        for (var i = 0; i < content.length; i++) {
+                          if (content[i] === ' ') {
+                            first_attr = false;
+                            break;
+                          }
+                        }
                     }
 
                     if (indent_handlebars && tag_start_char === '<') {
@@ -935,8 +1500,8 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     }
 
                     if (indent_handlebars && !tag_start_char) {
-                        if (content.length >= 2 && content[content.length - 1] === '{' && content[content.length - 2] == '{') {
-                            if (input_char === '#' || input_char === '/') {
+                        if (content.length >= 2 && content[content.length - 1] === '{' && content[content.length - 2] === '{') {
+                            if (input_char === '#' || input_char === '/' || input_char === '!') {
                                 tag_start = this.pos - 3;
                             } else {
                                 tag_start = this.pos - 2;
@@ -948,7 +1513,14 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     this.line_char_count++;
                     content.push(input_char); //inserts character at-a-time (or string)
 
-                    if (content[1] && content[1] === '!') { //if we're in a comment, do something special
+                    if (content[1] && (content[1] === '!' || content[1] === '?' || content[1] === '%')) { //if we're in a comment, do something special
+                        // We treat all comments as literals, even more than preformatted tags
+                        // we just look for the appropriate close tag
+                        content = [this.get_comment(tag_start)];
+                        break;
+                    }
+
+                    if (indent_handlebars && content[1] && content[1] === '{' && content[2] && content[2] === '!') { //if we're in a comment, do something special
                         // We treat all comments as literals, even more than preformatted tags
                         // we just look for the appropriate close tag
                         content = [this.get_comment(tag_start)];
@@ -966,15 +1538,15 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
                 if (tag_complete.indexOf(' ') !== -1) { //if there's whitespace, thats where the tag name ends
                     tag_index = tag_complete.indexOf(' ');
-                } else if (tag_complete[0] === '{') {
+                } else if (tag_complete.charAt(0) === '{') {
                     tag_index = tag_complete.indexOf('}');
                 } else { //otherwise go with the tag ending
                     tag_index = tag_complete.indexOf('>');
                 }
-                if (tag_complete[0] === '<' || !indent_handlebars) {
+                if (tag_complete.charAt(0) === '<' || !indent_handlebars) {
                     tag_offset = 1;
                 } else {
-                    tag_offset = tag_complete[2] === '#' ? 3 : 2;
+                    tag_offset = tag_complete.charAt(2) === '#' ? 3 : 2;
                 }
                 var tag_check = tag_complete.substring(tag_offset, tag_index).toLowerCase();
                 if (tag_complete.charAt(tag_complete.length - 2) === '/' ||
@@ -982,35 +1554,33 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     if (!peek) {
                         this.tag_type = 'SINGLE';
                     }
-                } else if (indent_handlebars && tag_complete[0] === '{' && tag_check === 'else') {
+                } else if (indent_handlebars && tag_complete.charAt(0) === '{' && tag_check === 'else') {
                     if (!peek) {
                         this.indent_to_tag('if');
                         this.tag_type = 'HANDLEBARS_ELSE';
                         this.indent_content = true;
                         this.traverse_whitespace();
                     }
-                } else if (tag_check === 'script') { //for later script handling
+                } else if (this.is_unformatted(tag_check, unformatted)) { // do not reformat the "unformatted" tags
+                    comment = this.get_unformatted('</' + tag_check + '>', tag_complete); //...delegate to get_unformatted function
+                    content.push(comment);
+                    tag_end = this.pos - 1;
+                    this.tag_type = 'SINGLE';
+                } else if (tag_check === 'script' &&
+                    (tag_complete.search('type') === -1 ||
+                    (tag_complete.search('type') > -1 &&
+                    tag_complete.search(/\b(text|application)\/(x-)?(javascript|ecmascript|jscript|livescript)/) > -1))) {
                     if (!peek) {
                         this.record_tag(tag_check);
                         this.tag_type = 'SCRIPT';
                     }
-                } else if (tag_check === 'style') { //for future style handling (for now it justs uses get_content)
+                } else if (tag_check === 'style' &&
+                    (tag_complete.search('type') === -1 ||
+                    (tag_complete.search('type') > -1 && tag_complete.search('text/css') > -1))) {
                     if (!peek) {
                         this.record_tag(tag_check);
                         this.tag_type = 'STYLE';
                     }
-                } else if (this.is_unformatted(tag_check, unformatted)) { // do not reformat the "unformatted" tags
-                    comment = this.get_unformatted('</' + tag_check + '>', tag_complete); //...delegate to get_unformatted function
-                    content.push(comment);
-                    // Preserve collapsed whitespace either before or after this tag.
-                    if (tag_start > 0 && this.Utils.in_array(this.input.charAt(tag_start - 1), this.Utils.whitespace)) {
-                        content.splice(0, 0, this.input.charAt(tag_start - 1));
-                    }
-                    tag_end = this.pos - 1;
-                    if (this.Utils.in_array(this.input.charAt(tag_end + 1), this.Utils.whitespace)) {
-                        content.push(this.input.charAt(tag_end + 1));
-                    }
-                    this.tag_type = 'SINGLE';
                 } else if (tag_check.charAt(0) === '!') { //peek for <! comment
                     // for comments content is already correct.
                     if (!peek) {
@@ -1021,17 +1591,19 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     if (tag_check.charAt(0) === '/') { //this tag is a double tag so check for tag-ending
                         this.retrieve_tag(tag_check.substring(1)); //remove it and all ancestors
                         this.tag_type = 'END';
-                        this.traverse_whitespace();
                     } else { //otherwise it's a start-tag
                         this.record_tag(tag_check); //push it on the tag stack
                         if (tag_check.toLowerCase() !== 'html') {
                             this.indent_content = true;
                         }
                         this.tag_type = 'START';
-
-                        // Allow preserving of newlines after a start tag
-                        this.traverse_whitespace();
                     }
+
+                    // Allow preserving of newlines after a start or end tag
+                    if (this.traverse_whitespace()) {
+                        this.space_or_wrap(content);
+                    }
+
                     if (this.Utils.in_array(tag_check, this.Utils.extra_liners)) { //check if this double needs an extra line
                         this.print_newline(false, this.output);
                         if (this.output.length && this.output[this.output.length - 2] !== '\n') {
@@ -1062,7 +1634,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     comment += input_char;
 
                     // only need to check for the delimiter if the last chars match
-                    if (comment[comment.length - 1] === delimiter[delimiter.length - 1] &&
+                    if (comment.charAt(comment.length - 1) === delimiter.charAt(delimiter.length - 1) &&
                         comment.indexOf(delimiter) !== -1) {
                         break;
                     }
@@ -1080,6 +1652,15 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                             matched = true;
                         } else if (comment.indexOf('<!--') === 0) { // <!-- comment ...
                             delimiter = '-->';
+                            matched = true;
+                        } else if (comment.indexOf('{{!') === 0) { // {{! handlebars comment
+                            delimiter = '}}';
+                            matched = true;
+                        } else if (comment.indexOf('<?') === 0) { // {{! handlebars comment
+                            delimiter = '?>';
+                            matched = true;
+                        } else if (comment.indexOf('<%') === 0) { // {{! handlebars comment
+                            delimiter = '%>';
                             matched = true;
                         }
                     }
@@ -1130,7 +1711,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     this.line_char_count++;
                     space = true;
 
-                    if (indent_handlebars && input_char === '{' && content.length && content[content.length - 2] === '{') {
+                    if (indent_handlebars && input_char === '{' && content.length && content.charAt(content.length - 2) === '{') {
                         // Handlebars expressions in strings should also be unformatted.
                         content += this.get_unformatted('}}');
                         // These expressions are opaque.  Ignore delimiters found in them.
@@ -1194,7 +1775,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 //unformatted?
                 var next_tag = this.get_tag(true /* peek. */ );
 
-                // tets next_tag to see if it is just html tag (no external content)
+                // test next_tag to see if it is just html tag (no external content)
                 var tag = (next_tag || "").match(/^\s*<\s*\/?([a-z]*)\s*[^>]*>\s*$/);
 
                 // if next_tag comes back but is not an isolated tag, then
@@ -1210,6 +1791,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             this.printer = function(js_source, indent_character, indent_size, wrap_line_length, brace_style) { //handles input/output and some other printing functions
 
                 this.input = js_source || ''; //gets the input for the Parser
+
+                // HACK: newline parsing inconsistent. This brute force normalizes the input.
+                this.input = this.input.replace(/\r\n|[\r\u2028\u2029]/g, '\n')
+
                 this.output = [];
                 this.indent_character = indent_character;
                 this.indent_string = '';
@@ -1229,6 +1814,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                         return;
                     }
                     if (force || (arr[arr.length - 1] !== '\n')) { //we might want the extra line
+                        if ((arr[arr.length - 1] !== '\n')) {
+                            arr[arr.length - 1] = rtrim(arr[arr.length - 1]);
+                        }
                         arr.push('\n');
                     }
                 };
@@ -1241,6 +1829,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 };
 
                 this.print_token = function(text) {
+                    // Avoid printing initial whitespace.
+                    if (this.is_whitespace(text) && !this.output.length) {
+                        return;
+                    }
                     if (text || text !== '') {
                         if (this.output.length && this.output[this.output.length - 1] === '\n') {
                             this.print_indentation(this.output);
@@ -1251,8 +1843,14 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 };
 
                 this.print_token_raw = function(text) {
+                    // If we are going to print newlines, truncate trailing
+                    // whitespace, as the newlines will represent the space.
+                    if (this.newlines > 0) {
+                        text = rtrim(text);
+                    }
+
                     if (text && text !== '') {
-                        if (text.length > 1 && text[text.length - 1] === '\n') {
+                        if (text.length > 1 && text.charAt(text.length - 1) === '\n') {
                             // unformatted tags can grab newlines as their last character
                             this.output.push(text.slice(0, -1));
                             this.print_newline(false, this.output);
@@ -1319,7 +1917,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                             tag_extracted_from_last_output = multi_parser.output[multi_parser.output.length - 1].match(/(?:<|{{#)\s*(\w+)/);
                         }
                         if (tag_extracted_from_last_output === null ||
-                            tag_extracted_from_last_output[1] !== tag_name) {
+                            (tag_extracted_from_last_output[1] !== tag_name && !multi_parser.Utils.in_array(tag_extracted_from_last_output[1], unformatted))) {
                             multi_parser.print_newline(false, multi_parser.output);
                         }
                     }
@@ -1328,7 +1926,7 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                     break;
                 case 'TK_TAG_SINGLE':
                     // Don't add a newline before elements that should remain unformatted.
-                    var tag_check = multi_parser.token_text.match(/^\s*<([a-z]+)/i);
+                    var tag_check = multi_parser.token_text.match(/^\s*<([a-z-]+)/i);
                     if (!tag_check || !multi_parser.Utils.in_array(tag_check[1], unformatted)) {
                         multi_parser.print_newline(false, multi_parser.output);
                     }
@@ -1342,6 +1940,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                         multi_parser.indent_content = false;
                     }
                     multi_parser.current_mode = 'CONTENT';
+                    break;
+                case 'TK_TAG_HANDLEBARS_COMMENT':
+                    multi_parser.print_token(multi_parser.token_text);
+                    multi_parser.current_mode = 'TAG';
                     break;
                 case 'TK_CONTENT':
                     multi_parser.print_token(multi_parser.token_text);
@@ -1368,8 +1970,14 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
                         var indentation = multi_parser.get_full_indent(script_indent_level);
                         if (_beautifier) {
+
                             // call the Beautifier if avaliable
-                            text = _beautifier(text.replace(/^\s*/, indentation), options);
+                            var Child_options = function() {
+                                this.eol = '\n';
+                            };
+                            Child_options.prototype = options;
+                            var child_options = new Child_options();
+                            text = _beautifier(text.replace(/^\s*/, indentation), child_options);
                         } else {
                             // simply indent the string otherwise
                             var white = text.match(/^\s*/)[0];
@@ -1380,36 +1988,57 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                                 .replace(/\s+$/, '');
                         }
                         if (text) {
-                            multi_parser.print_token_raw(indentation + trim(text));
-                            multi_parser.print_newline(false, multi_parser.output);
+                            multi_parser.print_token_raw(text);
+                            multi_parser.print_newline(true, multi_parser.output);
                         }
                     }
                     multi_parser.current_mode = 'TAG';
+                    break;
+                default:
+                    // We should not be getting here but we don't want to drop input on the floor
+                    // Just output the text and move on
+                    if (multi_parser.token_text !== '') {
+                        multi_parser.print_token(multi_parser.token_text);
+                    }
                     break;
             }
             multi_parser.last_token = multi_parser.token_type;
             multi_parser.last_text = multi_parser.token_text;
         }
-        return multi_parser.output.join('');
+        var sweet_code = multi_parser.output.join('').replace(/[\r\n\t ]+$/, '');
+
+        // establish end_with_newline
+        if (end_with_newline) {
+            sweet_code += '\n';
+        }
+
+        if (eol != '\n') {
+            sweet_code = sweet_code.replace(/[\n]/g, eol);
+        }
+
+        return sweet_code;
     }
 
-    if (typeof define === "function") {
-        // Add support for require.js
-        define(["./beautify.js", "./beautify-css.js"], function(js_beautify, css_beautify) {
+    if (typeof define === "function" && define.amd) {
+        // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
+        define(["require", "./beautify", "./beautify-css"], function(requireamd) {
+            var js_beautify =  requireamd("./beautify");
+            var css_beautify =  requireamd("./beautify-css");
+
             return {
               html_beautify: function(html_source, options) {
-                return style_html(html_source, options, js_beautify, css_beautify);
+                return style_html(html_source, options, js_beautify.js_beautify, css_beautify.css_beautify);
               }
             };
         });
     } else if (typeof exports !== "undefined") {
         // Add support for CommonJS. Just put this file somewhere on your require.paths
         // and you will be able to `var html_beautify = require("beautify").html_beautify`.
-        var js_beautify = require('./beautify.js').js_beautify;
-        var css_beautify = require('./beautify-css.js').css_beautify;
+        var js_beautify = require('./beautify.js');
+        var css_beautify = require('./beautify-css.js');
 
         exports.html_beautify = function(html_source, options) {
-            return style_html(html_source, options, js_beautify, css_beautify);
+            return style_html(html_source, options, js_beautify.js_beautify, css_beautify.css_beautify);
         };
     } else if (typeof window !== "undefined") {
         // If we're running a web page and don't have either of the above, add our one global
@@ -1425,8 +2054,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }());
 
-},{"./beautify-css.js":5,"./beautify.js":7}],7:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./beautify-css.js":8,"./beautify.js":10}],10:[function(require,module,exports){
+(function (global){
+/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
 /*
 
   The MIT License (MIT)
@@ -1477,12 +2108,20 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
     jslint_happy (default false) - if true, then jslint-stricter mode is enforced.
 
-            jslint_happy   !jslint_happy
+            jslint_happy        !jslint_happy
             ---------------------------------
-             function ()      function()
+            function ()         function()
 
-    brace_style (default "collapse") - "collapse" | "expand" | "end-expand"
-            put braces on the same line as control statements (default), or put braces on own line (Allman / ANSI style), or just put end braces on own line.
+            switch () {         switch() {
+            case 1:               case 1:
+              break;                break;
+            }                   }
+
+    space_after_anon_function (default false) - should the space before an anonymous function's parens be added, "function()" vs "function ()",
+          NOTE: This option is overriden by jslint_happy (i.e. if jslint_happy is true, space_after_anon_function is true by design)
+
+    brace_style (default "collapse") - "collapse" | "expand" | "end-expand" | "none"
+            put braces on the same line as control statements (default), or put braces on own line (Allman / ANSI style), or just put end braces on own line, or attempt to keep them where they are.
 
     space_before_conditional (default true) - should the space before conditional statement be added, "if(true)" vs "if (true)",
 
@@ -1491,6 +2130,9 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
     wrap_line_length (default unlimited) - lines should wrap at next opportunity after this number of characters.
           NOTE: This is not a hard limit. Lines will continue until a point where a newline would
                 be preserved if it were present.
+
+    end_with_newline (default false)  - end output with a newline
+
 
     e.g
 
@@ -1501,39 +2143,94 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 */
 
-
 (function() {
+
+    var acorn = {};
+    (function (exports) {
+      // This section of code is taken from acorn.
+      //
+      // Acorn was written by Marijn Haverbeke and released under an MIT
+      // license. The Unicode regexps (for identifiers and whitespace) were
+      // taken from [Esprima](http://esprima.org) by Ariya Hidayat.
+      //
+      // Git repositories for Acorn are available at
+      //
+      //     http://marijnhaverbeke.nl/git/acorn
+      //     https://github.com/marijnh/acorn.git
+
+      // ## Character categories
+
+      // Big ugly regular expressions that match characters in the
+      // whitespace, identifier, and identifier-start categories. These
+      // are only applied when a character is found to actually have a
+      // code point above 128.
+
+      var nonASCIIwhitespace = /[\u1680\u180e\u2000-\u200a\u202f\u205f\u3000\ufeff]/;
+      var nonASCIIidentifierStartChars = "\xaa\xb5\xba\xc0-\xd6\xd8-\xf6\xf8-\u02c1\u02c6-\u02d1\u02e0-\u02e4\u02ec\u02ee\u0370-\u0374\u0376\u0377\u037a-\u037d\u0386\u0388-\u038a\u038c\u038e-\u03a1\u03a3-\u03f5\u03f7-\u0481\u048a-\u0527\u0531-\u0556\u0559\u0561-\u0587\u05d0-\u05ea\u05f0-\u05f2\u0620-\u064a\u066e\u066f\u0671-\u06d3\u06d5\u06e5\u06e6\u06ee\u06ef\u06fa-\u06fc\u06ff\u0710\u0712-\u072f\u074d-\u07a5\u07b1\u07ca-\u07ea\u07f4\u07f5\u07fa\u0800-\u0815\u081a\u0824\u0828\u0840-\u0858\u08a0\u08a2-\u08ac\u0904-\u0939\u093d\u0950\u0958-\u0961\u0971-\u0977\u0979-\u097f\u0985-\u098c\u098f\u0990\u0993-\u09a8\u09aa-\u09b0\u09b2\u09b6-\u09b9\u09bd\u09ce\u09dc\u09dd\u09df-\u09e1\u09f0\u09f1\u0a05-\u0a0a\u0a0f\u0a10\u0a13-\u0a28\u0a2a-\u0a30\u0a32\u0a33\u0a35\u0a36\u0a38\u0a39\u0a59-\u0a5c\u0a5e\u0a72-\u0a74\u0a85-\u0a8d\u0a8f-\u0a91\u0a93-\u0aa8\u0aaa-\u0ab0\u0ab2\u0ab3\u0ab5-\u0ab9\u0abd\u0ad0\u0ae0\u0ae1\u0b05-\u0b0c\u0b0f\u0b10\u0b13-\u0b28\u0b2a-\u0b30\u0b32\u0b33\u0b35-\u0b39\u0b3d\u0b5c\u0b5d\u0b5f-\u0b61\u0b71\u0b83\u0b85-\u0b8a\u0b8e-\u0b90\u0b92-\u0b95\u0b99\u0b9a\u0b9c\u0b9e\u0b9f\u0ba3\u0ba4\u0ba8-\u0baa\u0bae-\u0bb9\u0bd0\u0c05-\u0c0c\u0c0e-\u0c10\u0c12-\u0c28\u0c2a-\u0c33\u0c35-\u0c39\u0c3d\u0c58\u0c59\u0c60\u0c61\u0c85-\u0c8c\u0c8e-\u0c90\u0c92-\u0ca8\u0caa-\u0cb3\u0cb5-\u0cb9\u0cbd\u0cde\u0ce0\u0ce1\u0cf1\u0cf2\u0d05-\u0d0c\u0d0e-\u0d10\u0d12-\u0d3a\u0d3d\u0d4e\u0d60\u0d61\u0d7a-\u0d7f\u0d85-\u0d96\u0d9a-\u0db1\u0db3-\u0dbb\u0dbd\u0dc0-\u0dc6\u0e01-\u0e30\u0e32\u0e33\u0e40-\u0e46\u0e81\u0e82\u0e84\u0e87\u0e88\u0e8a\u0e8d\u0e94-\u0e97\u0e99-\u0e9f\u0ea1-\u0ea3\u0ea5\u0ea7\u0eaa\u0eab\u0ead-\u0eb0\u0eb2\u0eb3\u0ebd\u0ec0-\u0ec4\u0ec6\u0edc-\u0edf\u0f00\u0f40-\u0f47\u0f49-\u0f6c\u0f88-\u0f8c\u1000-\u102a\u103f\u1050-\u1055\u105a-\u105d\u1061\u1065\u1066\u106e-\u1070\u1075-\u1081\u108e\u10a0-\u10c5\u10c7\u10cd\u10d0-\u10fa\u10fc-\u1248\u124a-\u124d\u1250-\u1256\u1258\u125a-\u125d\u1260-\u1288\u128a-\u128d\u1290-\u12b0\u12b2-\u12b5\u12b8-\u12be\u12c0\u12c2-\u12c5\u12c8-\u12d6\u12d8-\u1310\u1312-\u1315\u1318-\u135a\u1380-\u138f\u13a0-\u13f4\u1401-\u166c\u166f-\u167f\u1681-\u169a\u16a0-\u16ea\u16ee-\u16f0\u1700-\u170c\u170e-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176c\u176e-\u1770\u1780-\u17b3\u17d7\u17dc\u1820-\u1877\u1880-\u18a8\u18aa\u18b0-\u18f5\u1900-\u191c\u1950-\u196d\u1970-\u1974\u1980-\u19ab\u19c1-\u19c7\u1a00-\u1a16\u1a20-\u1a54\u1aa7\u1b05-\u1b33\u1b45-\u1b4b\u1b83-\u1ba0\u1bae\u1baf\u1bba-\u1be5\u1c00-\u1c23\u1c4d-\u1c4f\u1c5a-\u1c7d\u1ce9-\u1cec\u1cee-\u1cf1\u1cf5\u1cf6\u1d00-\u1dbf\u1e00-\u1f15\u1f18-\u1f1d\u1f20-\u1f45\u1f48-\u1f4d\u1f50-\u1f57\u1f59\u1f5b\u1f5d\u1f5f-\u1f7d\u1f80-\u1fb4\u1fb6-\u1fbc\u1fbe\u1fc2-\u1fc4\u1fc6-\u1fcc\u1fd0-\u1fd3\u1fd6-\u1fdb\u1fe0-\u1fec\u1ff2-\u1ff4\u1ff6-\u1ffc\u2071\u207f\u2090-\u209c\u2102\u2107\u210a-\u2113\u2115\u2119-\u211d\u2124\u2126\u2128\u212a-\u212d\u212f-\u2139\u213c-\u213f\u2145-\u2149\u214e\u2160-\u2188\u2c00-\u2c2e\u2c30-\u2c5e\u2c60-\u2ce4\u2ceb-\u2cee\u2cf2\u2cf3\u2d00-\u2d25\u2d27\u2d2d\u2d30-\u2d67\u2d6f\u2d80-\u2d96\u2da0-\u2da6\u2da8-\u2dae\u2db0-\u2db6\u2db8-\u2dbe\u2dc0-\u2dc6\u2dc8-\u2dce\u2dd0-\u2dd6\u2dd8-\u2dde\u2e2f\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303c\u3041-\u3096\u309d-\u309f\u30a1-\u30fa\u30fc-\u30ff\u3105-\u312d\u3131-\u318e\u31a0-\u31ba\u31f0-\u31ff\u3400-\u4db5\u4e00-\u9fcc\ua000-\ua48c\ua4d0-\ua4fd\ua500-\ua60c\ua610-\ua61f\ua62a\ua62b\ua640-\ua66e\ua67f-\ua697\ua6a0-\ua6ef\ua717-\ua71f\ua722-\ua788\ua78b-\ua78e\ua790-\ua793\ua7a0-\ua7aa\ua7f8-\ua801\ua803-\ua805\ua807-\ua80a\ua80c-\ua822\ua840-\ua873\ua882-\ua8b3\ua8f2-\ua8f7\ua8fb\ua90a-\ua925\ua930-\ua946\ua960-\ua97c\ua984-\ua9b2\ua9cf\uaa00-\uaa28\uaa40-\uaa42\uaa44-\uaa4b\uaa60-\uaa76\uaa7a\uaa80-\uaaaf\uaab1\uaab5\uaab6\uaab9-\uaabd\uaac0\uaac2\uaadb-\uaadd\uaae0-\uaaea\uaaf2-\uaaf4\uab01-\uab06\uab09-\uab0e\uab11-\uab16\uab20-\uab26\uab28-\uab2e\uabc0-\uabe2\uac00-\ud7a3\ud7b0-\ud7c6\ud7cb-\ud7fb\uf900-\ufa6d\ufa70-\ufad9\ufb00-\ufb06\ufb13-\ufb17\ufb1d\ufb1f-\ufb28\ufb2a-\ufb36\ufb38-\ufb3c\ufb3e\ufb40\ufb41\ufb43\ufb44\ufb46-\ufbb1\ufbd3-\ufd3d\ufd50-\ufd8f\ufd92-\ufdc7\ufdf0-\ufdfb\ufe70-\ufe74\ufe76-\ufefc\uff21-\uff3a\uff41-\uff5a\uff66-\uffbe\uffc2-\uffc7\uffca-\uffcf\uffd2-\uffd7\uffda-\uffdc";
+      var nonASCIIidentifierChars = "\u0300-\u036f\u0483-\u0487\u0591-\u05bd\u05bf\u05c1\u05c2\u05c4\u05c5\u05c7\u0610-\u061a\u0620-\u0649\u0672-\u06d3\u06e7-\u06e8\u06fb-\u06fc\u0730-\u074a\u0800-\u0814\u081b-\u0823\u0825-\u0827\u0829-\u082d\u0840-\u0857\u08e4-\u08fe\u0900-\u0903\u093a-\u093c\u093e-\u094f\u0951-\u0957\u0962-\u0963\u0966-\u096f\u0981-\u0983\u09bc\u09be-\u09c4\u09c7\u09c8\u09d7\u09df-\u09e0\u0a01-\u0a03\u0a3c\u0a3e-\u0a42\u0a47\u0a48\u0a4b-\u0a4d\u0a51\u0a66-\u0a71\u0a75\u0a81-\u0a83\u0abc\u0abe-\u0ac5\u0ac7-\u0ac9\u0acb-\u0acd\u0ae2-\u0ae3\u0ae6-\u0aef\u0b01-\u0b03\u0b3c\u0b3e-\u0b44\u0b47\u0b48\u0b4b-\u0b4d\u0b56\u0b57\u0b5f-\u0b60\u0b66-\u0b6f\u0b82\u0bbe-\u0bc2\u0bc6-\u0bc8\u0bca-\u0bcd\u0bd7\u0be6-\u0bef\u0c01-\u0c03\u0c46-\u0c48\u0c4a-\u0c4d\u0c55\u0c56\u0c62-\u0c63\u0c66-\u0c6f\u0c82\u0c83\u0cbc\u0cbe-\u0cc4\u0cc6-\u0cc8\u0cca-\u0ccd\u0cd5\u0cd6\u0ce2-\u0ce3\u0ce6-\u0cef\u0d02\u0d03\u0d46-\u0d48\u0d57\u0d62-\u0d63\u0d66-\u0d6f\u0d82\u0d83\u0dca\u0dcf-\u0dd4\u0dd6\u0dd8-\u0ddf\u0df2\u0df3\u0e34-\u0e3a\u0e40-\u0e45\u0e50-\u0e59\u0eb4-\u0eb9\u0ec8-\u0ecd\u0ed0-\u0ed9\u0f18\u0f19\u0f20-\u0f29\u0f35\u0f37\u0f39\u0f41-\u0f47\u0f71-\u0f84\u0f86-\u0f87\u0f8d-\u0f97\u0f99-\u0fbc\u0fc6\u1000-\u1029\u1040-\u1049\u1067-\u106d\u1071-\u1074\u1082-\u108d\u108f-\u109d\u135d-\u135f\u170e-\u1710\u1720-\u1730\u1740-\u1750\u1772\u1773\u1780-\u17b2\u17dd\u17e0-\u17e9\u180b-\u180d\u1810-\u1819\u1920-\u192b\u1930-\u193b\u1951-\u196d\u19b0-\u19c0\u19c8-\u19c9\u19d0-\u19d9\u1a00-\u1a15\u1a20-\u1a53\u1a60-\u1a7c\u1a7f-\u1a89\u1a90-\u1a99\u1b46-\u1b4b\u1b50-\u1b59\u1b6b-\u1b73\u1bb0-\u1bb9\u1be6-\u1bf3\u1c00-\u1c22\u1c40-\u1c49\u1c5b-\u1c7d\u1cd0-\u1cd2\u1d00-\u1dbe\u1e01-\u1f15\u200c\u200d\u203f\u2040\u2054\u20d0-\u20dc\u20e1\u20e5-\u20f0\u2d81-\u2d96\u2de0-\u2dff\u3021-\u3028\u3099\u309a\ua640-\ua66d\ua674-\ua67d\ua69f\ua6f0-\ua6f1\ua7f8-\ua800\ua806\ua80b\ua823-\ua827\ua880-\ua881\ua8b4-\ua8c4\ua8d0-\ua8d9\ua8f3-\ua8f7\ua900-\ua909\ua926-\ua92d\ua930-\ua945\ua980-\ua983\ua9b3-\ua9c0\uaa00-\uaa27\uaa40-\uaa41\uaa4c-\uaa4d\uaa50-\uaa59\uaa7b\uaae0-\uaae9\uaaf2-\uaaf3\uabc0-\uabe1\uabec\uabed\uabf0-\uabf9\ufb20-\ufb28\ufe00-\ufe0f\ufe20-\ufe26\ufe33\ufe34\ufe4d-\ufe4f\uff10-\uff19\uff3f";
+      var nonASCIIidentifierStart = new RegExp("[" + nonASCIIidentifierStartChars + "]");
+      var nonASCIIidentifier = new RegExp("[" + nonASCIIidentifierStartChars + nonASCIIidentifierChars + "]");
+
+      // Whether a single character denotes a newline.
+
+      var newline = exports.newline = /[\n\r\u2028\u2029]/;
+
+      // Matches a whole line break (where CRLF is considered a single
+      // line break). Used to count lines.
+
+      var lineBreak = exports.lineBreak = /\r\n|[\n\r\u2028\u2029]/g;
+
+      // Test whether a given character code starts an identifier.
+
+      var isIdentifierStart = exports.isIdentifierStart = function(code) {
+        if (code < 65) return code === 36;
+        if (code < 91) return true;
+        if (code < 97) return code === 95;
+        if (code < 123)return true;
+        return code >= 0xaa && nonASCIIidentifierStart.test(String.fromCharCode(code));
+      };
+
+      // Test whether a given character is part of an identifier.
+
+      var isIdentifierChar = exports.isIdentifierChar = function(code) {
+        if (code < 48) return code === 36;
+        if (code < 58) return true;
+        if (code < 65) return false;
+        if (code < 91) return true;
+        if (code < 97) return code === 95;
+        if (code < 123)return true;
+        return code >= 0xaa && nonASCIIidentifier.test(String.fromCharCode(code));
+      };
+    })(acorn);
+
+    function in_array(what, arr) {
+        for (var i = 0; i < arr.length; i += 1) {
+            if (arr[i] === what) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function trim(s) {
+        return s.replace(/^\s+|\s+$/g, '');
+    }
+
+    function ltrim(s) {
+        return s.replace(/^\s+/g, '');
+    }
+
+    function rtrim(s) {
+        return s.replace(/\s+$/g, '');
+    }
+
     function js_beautify(js_source_text, options) {
         "use strict";
         var beautifier = new Beautifier(js_source_text, options);
         return beautifier.beautify();
     }
 
-    function Beautifier(js_source_text, options) {
-        "use strict";
-        var input, output_lines;
-        var token_text, token_type, last_type, last_last_text, indent_string;
-        var flags, previous_flags, flag_store;
-        var whitespace, wordchar, punct, parser_pos, line_starters, digits;
-        var prefix;
-        var input_wanted_newline;
-        var output_wrapped, output_space_before_token;
-        var input_length, n_newlines, whitespace_before_token;
-        var handlers, MODE, opt;
-        var preindent_string = '';
-
-        whitespace = "\n\r\t ".split('');
-        wordchar = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$'.split('');
-        digits = '0123456789'.split('');
-
-        punct = '+ - * / % & ++ -- = += -= *= /= %= == === != !== > < >= <= >> << >>> >>>= >>= <<= && &= | || ! !! , : ? ^ ^= |= ::';
-        punct += ' <%= <% %> <?= <? ?>'; // try to be a good boy and try not to break the markup language identifiers
-        punct = punct.split(' ');
-
-        // words which should always start on new line.
-        line_starters = 'continue,try,throw,return,var,if,switch,case,default,for,while,break,function'.split(',');
-
-        MODE = {
+    var MODE = {
             BlockStatement: 'BlockStatement', // 'BLOCK'
             Statement: 'Statement', // 'STATEMENT'
             ObjectLiteral: 'ObjectLiteral', // 'OBJECT',
@@ -1543,30 +2240,43 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             Expression: 'Expression' //'(EXPRESSION)'
         };
 
+    function Beautifier(js_source_text, options) {
+        "use strict";
+        var output
+        var tokens = [], token_pos;
+        var Tokenizer;
+        var current_token;
+        var last_type, last_last_text, indent_string;
+        var flags, previous_flags, flag_store;
+        var prefix;
+
+        var handlers, opt;
+        var baseIndentString = '';
+
         handlers = {
             'TK_START_EXPR': handle_start_expr,
             'TK_END_EXPR': handle_end_expr,
             'TK_START_BLOCK': handle_start_block,
             'TK_END_BLOCK': handle_end_block,
             'TK_WORD': handle_word,
+            'TK_RESERVED': handle_word,
             'TK_SEMICOLON': handle_semicolon,
             'TK_STRING': handle_string,
             'TK_EQUALS': handle_equals,
             'TK_OPERATOR': handle_operator,
             'TK_COMMA': handle_comma,
             'TK_BLOCK_COMMENT': handle_block_comment,
-            'TK_INLINE_COMMENT': handle_inline_comment,
             'TK_COMMENT': handle_comment,
             'TK_DOT': handle_dot,
-            'TK_UNKNOWN': handle_unknown
+            'TK_UNKNOWN': handle_unknown,
+            'TK_EOF': handle_eof
         };
 
         function create_flags(flags_base, mode) {
             var next_indent_level = 0;
             if (flags_base) {
                 next_indent_level = flags_base.indentation_level;
-                next_indent_level += (flags_base.var_line && flags_base.var_line_reindented) ? 1 : 0;
-                if (!just_added_newline() &&
+                if (!output.just_added_newline() &&
                     flags_base.line_indent_level > next_indent_level) {
                     next_indent_level = flags_base.line_indent_level;
                 }
@@ -1577,12 +2287,11 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 parent: flags_base,
                 last_text: flags_base ? flags_base.last_text : '', // last token text
                 last_word: flags_base ? flags_base.last_word : '', // last 'TK_WORD' passed
-                var_line: false,
-                var_line_tainted: false,
-                var_line_reindented: false,
-                in_html_comment: false,
+                declaration_statement: false,
+                declaration_assignment: false,
                 multiline_frame: false,
                 if_block: false,
+                else_block: false,
                 do_block: false,
                 do_while: false,
                 in_case_statement: false, // switch(..){ INSIDE HERE }
@@ -1590,19 +2299,10 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
                 case_body: false, // the indented case-action block
                 indentation_level: next_indent_level,
                 line_indent_level: flags_base ? flags_base.line_indent_level : next_indent_level,
-                start_line_index: output_lines.length,
-                had_comment: false,
+                start_line_index: output.get_line_number(),
                 ternary_depth: 0
-            }
-            return next_flags;
-        }
-
-        // Using object instead of string to allow for later expansion of info about each line
-
-        function create_output_line() {
-            return {
-                text: []
             };
+            return next_flags;
         }
 
         // Some interpreters have unexpected results with foo = baz || bar;
@@ -1610,9 +2310,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         opt = {};
 
         // compatibility
-        if (options.space_after_anon_function !== undefined && options.jslint_happy === undefined) {
-            options.jslint_happy = options.space_after_anon_function;
-        }
         if (options.braces_on_own_line !== undefined) { //graceful handling of deprecated option
             opt.brace_style = options.braces_on_own_line ? "expand" : "collapse";
         }
@@ -1626,21 +2323,36 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
         opt.indent_size = options.indent_size ? parseInt(options.indent_size, 10) : 4;
         opt.indent_char = options.indent_char ? options.indent_char : ' ';
+        opt.eol = options.eol ? options.eol : '\n';
         opt.preserve_newlines = (options.preserve_newlines === undefined) ? true : options.preserve_newlines;
         opt.break_chained_methods = (options.break_chained_methods === undefined) ? false : options.break_chained_methods;
         opt.max_preserve_newlines = (options.max_preserve_newlines === undefined) ? 0 : parseInt(options.max_preserve_newlines, 10);
         opt.space_in_paren = (options.space_in_paren === undefined) ? false : options.space_in_paren;
+        opt.space_in_empty_paren = (options.space_in_empty_paren === undefined) ? false : options.space_in_empty_paren;
         opt.jslint_happy = (options.jslint_happy === undefined) ? false : options.jslint_happy;
+        opt.space_after_anon_function = (options.space_after_anon_function === undefined) ? false : options.space_after_anon_function;
         opt.keep_array_indentation = (options.keep_array_indentation === undefined) ? false : options.keep_array_indentation;
         opt.space_before_conditional = (options.space_before_conditional === undefined) ? true : options.space_before_conditional;
         opt.unescape_strings = (options.unescape_strings === undefined) ? false : options.unescape_strings;
         opt.wrap_line_length = (options.wrap_line_length === undefined) ? 0 : parseInt(options.wrap_line_length, 10);
         opt.e4x = (options.e4x === undefined) ? false : options.e4x;
+        opt.end_with_newline = (options.end_with_newline === undefined) ? false : options.end_with_newline;
+        opt.comma_first = (options.comma_first === undefined) ? false : options.comma_first;
+
+        // For testing of beautify ignore:start directive
+        opt.test_output_raw = (options.test_output_raw === undefined) ? false : options.test_output_raw;
+
+        // force opt.space_after_anon_function to true if opt.jslint_happy
+        if(opt.jslint_happy) {
+            opt.space_after_anon_function = true;
+        }
 
         if(options.indent_with_tabs){
             opt.indent_char = '\t';
             opt.indent_size = 1;
         }
+
+        opt.eol = opt.eol.replace(/\\r/, '\r').replace(/\\n/, '\n')
 
         //----------------------------------
         indent_string = '';
@@ -1649,20 +2361,23 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             opt.indent_size -= 1;
         }
 
-        while (js_source_text && (js_source_text.charAt(0) === ' ' || js_source_text.charAt(0) === '\t')) {
-            preindent_string += js_source_text.charAt(0);
-            js_source_text = js_source_text.substring(1);
+        var preindent_index = 0;
+        if(js_source_text && js_source_text.length) {
+            while ( (js_source_text.charAt(preindent_index) === ' ' ||
+                    js_source_text.charAt(preindent_index) === '\t')) {
+                baseIndentString += js_source_text.charAt(preindent_index);
+                preindent_index += 1;
+            }
+            js_source_text = js_source_text.substring(preindent_index);
         }
-        input = js_source_text;
-        // cache the source's length.
-        input_length = js_source_text.length;
 
         last_type = 'TK_START_BLOCK'; // last token type
         last_last_text = ''; // pre-last token text
-        output_lines = [create_output_line()];
-        output_wrapped = false;
-        output_space_before_token = false;
-        whitespace_before_token = [];
+        output = new Output(indent_string, baseIndentString);
+
+        // If testing the ignore directive, start with output disable set to true
+        output.raw = opt.test_output_raw;
+
 
         // Stack of parsing/formatting states, including MODE.
         // We tokenize, parse, and output in an almost purely a forward-only stream of token input
@@ -1677,97 +2392,71 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
         flag_store = [];
         set_mode(MODE.BlockStatement);
 
-        parser_pos = 0;
-
         this.beautify = function() {
+
             /*jshint onevar:true */
-            var t, i, keep_whitespace, sweet_code;
+            var local_token, sweet_code;
+            Tokenizer = new tokenizer(js_source_text, opt, indent_string);
+            tokens = Tokenizer.tokenize();
+            token_pos = 0;
 
-            while (true) {
-                t = get_next_token();
-                token_text = t[0];
-                token_type = t[1];
-
-                if (token_type === 'TK_EOF') {
-                    break;
+            while (local_token = get_token()) {
+                for(var i = 0; i < local_token.comments_before.length; i++) {
+                    // The cleanest handling of inline comments is to treat them as though they aren't there.
+                    // Just continue formatting and the behavior should be logical.
+                    // Also ignore unknown tokens.  Again, this should result in better behavior.
+                    handle_token(local_token.comments_before[i]);
                 }
+                handle_token(local_token);
 
-                keep_whitespace = opt.keep_array_indentation && is_array(flags.mode);
-                input_wanted_newline = n_newlines > 0;
+                last_last_text = flags.last_text;
+                last_type = local_token.type;
+                flags.last_text = local_token.text;
 
-                if (keep_whitespace) {
-                    for (i = 0; i < n_newlines; i += 1) {
-                        print_newline(i > 0);
-                    }
-                } else {
-                    if (opt.max_preserve_newlines && n_newlines > opt.max_preserve_newlines) {
-                        n_newlines = opt.max_preserve_newlines;
-                    }
-
-                    if (opt.preserve_newlines) {
-                        if (n_newlines > 1) {
-                            print_newline();
-                            for (i = 1; i < n_newlines; i += 1) {
-                                print_newline(true);
-                            }
-                        }
-                    }
-                }
-
-                handlers[token_type]();
-
-                // The cleanest handling of inline comments is to treat them as though they aren't there.
-                // Just continue formatting and the behavior should be logical.
-                // Also ignore unknown tokens.  Again, this should result in better behavior.
-                if (token_type !== 'TK_INLINE_COMMENT' && token_type !== 'TK_COMMENT' &&
-                    token_type !== 'TK_BLOCK_COMMENT' && token_type !== 'TK_UNKNOWN') {
-                    last_last_text = flags.last_text;
-                    last_type = token_type;
-                    flags.last_text = token_text;
-                }
-                flags.had_comment = (token_type === 'TK_INLINE_COMMENT' || token_type === 'TK_COMMENT'
-                    || token_type === 'TK_BLOCK_COMMENT');
+                token_pos += 1;
             }
 
-
-            sweet_code = output_lines[0].text.join('');
-            for (var line_index = 1; line_index < output_lines.length; line_index++) {
-                sweet_code += '\n' + output_lines[line_index].text.join('');
+            sweet_code = output.get_code();
+            if (opt.end_with_newline) {
+                sweet_code += '\n';
             }
-            sweet_code = sweet_code.replace(/[\r\n ]+$/, '');
+
+            if (opt.eol != '\n') {
+                sweet_code = sweet_code.replace(/[\n]/g, opt.eol);
+            }
+
             return sweet_code;
         };
 
-        function trim_output(eat_newlines) {
-            eat_newlines = (eat_newlines === undefined) ? false : eat_newlines;
+        function handle_token(local_token) {
+            var newlines = local_token.newlines;
+            var keep_whitespace = opt.keep_array_indentation && is_array(flags.mode);
 
-            if (output_lines.length) {
-                trim_output_line(output_lines[output_lines.length - 1], eat_newlines);
+            if (keep_whitespace) {
+                for (i = 0; i < newlines; i += 1) {
+                    print_newline(i > 0);
+                }
+            } else {
+                if (opt.max_preserve_newlines && newlines > opt.max_preserve_newlines) {
+                    newlines = opt.max_preserve_newlines;
+                }
 
-                while (eat_newlines && output_lines.length > 1 &&
-                    output_lines[output_lines.length - 1].text.length === 0) {
-                    output_lines.pop();
-                    trim_output_line(output_lines[output_lines.length - 1], eat_newlines);
+                if (opt.preserve_newlines) {
+                    if (local_token.newlines > 1) {
+                        print_newline();
+                        for (var i = 1; i < newlines; i += 1) {
+                            print_newline(true);
+                        }
+                    }
                 }
             }
-        }
 
-        function trim_output_line(line) {
-            while (line.text.length &&
-                (line.text[line.text.length - 1] === ' ' ||
-                    line.text[line.text.length - 1] === indent_string ||
-                    line.text[line.text.length - 1] === preindent_string)) {
-                line.text.pop();
-            }
-        }
-
-        function trim(s) {
-            return s.replace(/^\s+|\s+$/g, '');
+            current_token = local_token;
+            handlers[current_token.type]();
         }
 
         // we could use just string.split, but
         // IE doesn't like returning empty strings
-
         function split_newlines(s) {
             //return s.split(/\x0d\x0a|\x0a/);
 
@@ -1785,119 +2474,69 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             return out;
         }
 
-        function just_added_newline() {
-            var line = output_lines[output_lines.length - 1];
-            return line.text.length === 0;
-        }
-
-        function just_added_blankline() {
-            if (just_added_newline()) {
-                if (output_lines.length === 1) {
-                    return true; // start of the file and newline = blank
-                }
-
-                var line = output_lines[output_lines.length - 2];
-                return line.text.length === 0;
-            }
-            return false;
-        }
-
         function allow_wrap_or_preserved_newline(force_linewrap) {
             force_linewrap = (force_linewrap === undefined) ? false : force_linewrap;
-            if (opt.wrap_line_length && !force_linewrap) {
-                var line = output_lines[output_lines.length - 1];
-                var proposed_line_length = 0;
-                // never wrap the first token of a line.
-                if (line.text.length > 0) {
-                    proposed_line_length = line.text.join('').length + token_text.length +
-                        (output_space_before_token ? 1 : 0);
-                    if (proposed_line_length >= opt.wrap_line_length) {
-                        force_linewrap = true;
-                    }
-                }
-            }
-            if (((opt.preserve_newlines && input_wanted_newline) || force_linewrap) && !just_added_newline()) {
-                print_newline(false, true);
 
-                // Expressions and array literals already indent their contents.
-                if (!(is_array(flags.mode) || is_expression(flags.mode))) {
-                    output_wrapped = true;
+            // Never wrap the first token on a line
+            if (output.just_added_newline()) {
+                return
+            }
+
+            if ((opt.preserve_newlines && current_token.wanted_newline) || force_linewrap) {
+                print_newline(false, true);
+            } else if (opt.wrap_line_length) {
+                var proposed_line_length = output.current_line.get_character_count() + current_token.text.length +
+                    (output.space_before_token ? 1 : 0);
+                if (proposed_line_length >= opt.wrap_line_length) {
+                    print_newline(false, true);
                 }
             }
         }
 
         function print_newline(force_newline, preserve_statement_flags) {
-            output_wrapped = false;
-            output_space_before_token = false;
-
             if (!preserve_statement_flags) {
-                if (flags.last_text !== ';') {
+                if (flags.last_text !== ';' && flags.last_text !== ',' && flags.last_text !== '=' && last_type !== 'TK_OPERATOR') {
                     while (flags.mode === MODE.Statement && !flags.if_block && !flags.do_block) {
                         restore_mode();
                     }
                 }
             }
 
-            if (output_lines.length === 1 && just_added_newline()) {
-                return; // no newline on start of file
-            }
-
-            if (force_newline || !just_added_newline()) {
+            if (output.add_new_line(force_newline)) {
                 flags.multiline_frame = true;
-                output_lines.push(create_output_line());
             }
         }
 
         function print_token_line_indentation() {
-            if (just_added_newline()) {
-                var line = output_lines[output_lines.length - 1];
-                if (opt.keep_array_indentation && is_array(flags.mode) && input_wanted_newline) {
-                    // prevent removing of this whitespace as redundant
-                    line.text.push('');
-                    for (var i = 0; i < whitespace_before_token.length; i += 1) {
-                        line.text.push(whitespace_before_token[i]);
-                    }
-                } else {
-                    if (preindent_string) {
-                        line.text.push(preindent_string);
-                    }
-
-                    print_indent_string(flags.indentation_level +
-                        (flags.var_line && flags.var_line_reindented ? 1 : 0) +
-                        (output_wrapped ? 1 : 0));
-                }
-            }
-        }
-
-        function print_indent_string(level) {
-            // Never indent your first output indent at the start of the file
-            if (output_lines.length > 1) {
-                var line = output_lines[output_lines.length - 1];
-
-                flags.line_indent_level = level;
-                for (var i = 0; i < level; i += 1) {
-                    line.text.push(indent_string);
-                }
-            }
-        }
-
-        function print_token_space_before() {
-            var line = output_lines[output_lines.length - 1];
-            if (output_space_before_token && line.text.length) {
-                var last_output = line.text[line.text.length - 1];
-                if (last_output !== ' ' && last_output !== indent_string) { // prevent occassional duplicate space
-                    line.text.push(' ');
+            if (output.just_added_newline()) {
+                if (opt.keep_array_indentation && is_array(flags.mode) && current_token.wanted_newline) {
+                    output.current_line.push(current_token.whitespace_before);
+                    output.space_before_token = false;
+                } else if (output.set_indent(flags.indentation_level)) {
+                    flags.line_indent_level = flags.indentation_level;
                 }
             }
         }
 
         function print_token(printable_token) {
-            printable_token = printable_token || token_text;
+            if (output.raw) {
+                output.add_raw_token(current_token)
+                return;
+            }
+
+            if (opt.comma_first && last_type === 'TK_COMMA'
+                && output.just_added_newline()) {
+                if(output.previous_line.last() === ',') {
+                    output.previous_line.pop();
+                    print_token_line_indentation();
+                    output.add_token(',');
+                    output.space_before_token = true;
+                }
+            }
+
+            printable_token = printable_token || current_token.text;
             print_token_line_indentation();
-            output_wrapped = false;
-            print_token_space_before();
-            output_space_before_token = false;
-            output_lines[output_lines.length - 1].text.push(printable_token);
+            output.add_token(printable_token);
         }
 
         function indent() {
@@ -1908,43 +2547,6 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             if (flags.indentation_level > 0 &&
                 ((!flags.parent) || flags.indentation_level > flags.parent.indentation_level))
                 flags.indentation_level -= 1;
-        }
-
-        function remove_redundant_indentation(frame) {
-            // This implementation is effective but has some issues:
-            //     - less than great performance due to array splicing
-            //     - can cause line wrap to happen too soon due to indent removal
-            //           after wrap points are calculated
-            // These issues are minor compared to ugly indentation.
-
-            if (frame.multiline_frame) return;
-
-            // remove one indent from each line inside this section
-            var index = frame.start_line_index;
-            var splice_index = 0;
-            var line;
-
-            while (index < output_lines.length) {
-                line = output_lines[index];
-                index++;
-
-                // skip empty lines
-                if (line.text.length === 0) {
-                    continue;
-                }
-
-                // skip the preindent string if present
-                if (preindent_string && line.text[0] === preindent_string) {
-                    splice_index = 1;
-                } else {
-                    splice_index = 0;
-                }
-
-                // remove one indent, if present
-                if (line.text[splice_index] === indent_string) {
-                    line.text.splice(splice_index, 1);
-                }
-            }
         }
 
         function set_mode(mode) {
@@ -1970,33 +2572,48 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             if (flag_store.length > 0) {
                 previous_flags = flags;
                 flags = flag_store.pop();
+                if (previous_flags.mode === MODE.Statement) {
+                    output.remove_redundant_indentation(previous_flags);
+                }
             }
         }
 
         function start_of_object_property() {
-            return flags.mode === MODE.ObjectLiteral && flags.last_text === ':' &&
-                flags.ternary_depth === 0;
+            return flags.parent.mode === MODE.ObjectLiteral && flags.mode === MODE.Statement && (
+                (flags.last_text === ':' && flags.ternary_depth === 0) || (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['get', 'set'])));
         }
 
         function start_of_statement() {
             if (
-                (flags.last_text === 'do' ||
-                    (flags.last_text === 'else' && token_text !== 'if') ||
-                    (last_type === 'TK_END_EXPR' && (previous_flags.mode === MODE.ForInitializer || previous_flags.mode === MODE.Conditional)))) {
+                    (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['var', 'let', 'const']) && current_token.type === 'TK_WORD') ||
+                    (last_type === 'TK_RESERVED' && flags.last_text === 'do') ||
+                    (last_type === 'TK_RESERVED' && flags.last_text === 'return' && !current_token.wanted_newline) ||
+                    (last_type === 'TK_RESERVED' && flags.last_text === 'else' && !(current_token.type === 'TK_RESERVED' && current_token.text === 'if')) ||
+                    (last_type === 'TK_END_EXPR' && (previous_flags.mode === MODE.ForInitializer || previous_flags.mode === MODE.Conditional)) ||
+                    (last_type === 'TK_WORD' && flags.mode === MODE.BlockStatement
+                        && !flags.in_case
+                        && !(current_token.text === '--' || current_token.text === '++')
+                        && last_last_text !== 'function'
+                        && current_token.type !== 'TK_WORD' && current_token.type !== 'TK_RESERVED') ||
+                    (flags.mode === MODE.ObjectLiteral && (
+                        (flags.last_text === ':' && flags.ternary_depth === 0) || (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['get', 'set']))))
+                ) {
+
+                set_mode(MODE.Statement);
+                indent();
+
+                if (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['var', 'let', 'const']) && current_token.type === 'TK_WORD') {
+                    flags.declaration_statement = true;
+                }
+
                 // Issue #276:
                 // If starting a new statement with [if, for, while, do], push to a new line.
                 // if (a) if (b) if(c) d(); else e(); else f();
-                allow_wrap_or_preserved_newline(
-                    in_array(token_text, ['do', 'for', 'if', 'while']));
-
-                set_mode(MODE.Statement);
-                // Issue #275:
-                // If starting on a newline, all of a statement should be indented.
-                // if not, use line wrapping logic for indent.
-                if (just_added_newline()) {
-                    indent();
-                    output_wrapped = false;
+                if (!start_of_object_property()) {
+                    allow_wrap_or_preserved_newline(
+                        current_token.type === 'TK_RESERVED' && in_array(current_token.text, ['do', 'for', 'if', 'while']));
                 }
+
                 return true;
             }
             return false;
@@ -2012,18 +2629,1435 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             return true;
         }
 
+        function each_line_matches_indent(lines, indent) {
+            var i = 0,
+                len = lines.length,
+                line;
+            for (; i < len; i++) {
+                line = lines[i];
+                // allow empty lines to pass through
+                if (line && line.indexOf(indent) !== 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         function is_special_word(word) {
             return in_array(word, ['case', 'return', 'do', 'if', 'throw', 'else']);
         }
 
-        function in_array(what, arr) {
-            for (var i = 0; i < arr.length; i += 1) {
-                if (arr[i] === what) {
-                    return true;
+        function get_token(offset) {
+            var index = token_pos + (offset || 0);
+            return (index < 0 || index >= tokens.length) ? null : tokens[index];
+        }
+
+        function handle_start_expr() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+            }
+
+            var next_mode = MODE.Expression;
+            if (current_token.text === '[') {
+
+                if (last_type === 'TK_WORD' || flags.last_text === ')') {
+                    // this is array index specifier, break immediately
+                    // a[x], fn()[x]
+                    if (last_type === 'TK_RESERVED' && in_array(flags.last_text, Tokenizer.line_starters)) {
+                        output.space_before_token = true;
+                    }
+                    set_mode(next_mode);
+                    print_token();
+                    indent();
+                    if (opt.space_in_paren) {
+                        output.space_before_token = true;
+                    }
+                    return;
                 }
+
+                next_mode = MODE.ArrayLiteral;
+                if (is_array(flags.mode)) {
+                    if (flags.last_text === '[' ||
+                        (flags.last_text === ',' && (last_last_text === ']' || last_last_text === '}'))) {
+                        // ], [ goes to new line
+                        // }, [ goes to new line
+                        if (!opt.keep_array_indentation) {
+                            print_newline();
+                        }
+                    }
+                }
+
+            } else {
+                if (last_type === 'TK_RESERVED' && flags.last_text === 'for') {
+                    next_mode = MODE.ForInitializer;
+                } else if (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['if', 'while'])) {
+                    next_mode = MODE.Conditional;
+                } else {
+                    // next_mode = MODE.Expression;
+                }
+            }
+
+            if (flags.last_text === ';' || last_type === 'TK_START_BLOCK') {
+                print_newline();
+            } else if (last_type === 'TK_END_EXPR' || last_type === 'TK_START_EXPR' || last_type === 'TK_END_BLOCK' || flags.last_text === '.') {
+                // TODO: Consider whether forcing this is required.  Review failing tests when removed.
+                allow_wrap_or_preserved_newline(current_token.wanted_newline);
+                // do nothing on (( and )( and ][ and ]( and .(
+            } else if (!(last_type === 'TK_RESERVED' && current_token.text === '(') && last_type !== 'TK_WORD' && last_type !== 'TK_OPERATOR') {
+                output.space_before_token = true;
+            } else if ((last_type === 'TK_RESERVED' && (flags.last_word === 'function' || flags.last_word === 'typeof')) ||
+                (flags.last_text === '*' && last_last_text === 'function')) {
+                // function() vs function ()
+                if (opt.space_after_anon_function) {
+                    output.space_before_token = true;
+                }
+            } else if (last_type === 'TK_RESERVED' && (in_array(flags.last_text, Tokenizer.line_starters) || flags.last_text === 'catch')) {
+                if (opt.space_before_conditional) {
+                    output.space_before_token = true;
+                }
+            }
+
+            // Should be a space between await and an IIFE
+            if(current_token.text === '(' && last_type === 'TK_RESERVED' && flags.last_word === 'await'){
+                output.space_before_token = true;
+            }
+
+            // Support of this kind of newline preservation.
+            // a = (b &&
+            //     (c || d));
+            if (current_token.text === '(') {
+                if (last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
+                    if (!start_of_object_property()) {
+                        allow_wrap_or_preserved_newline();
+                    }
+                }
+            }
+
+            set_mode(next_mode);
+            print_token();
+            if (opt.space_in_paren) {
+                output.space_before_token = true;
+            }
+
+            // In all cases, if we newline while inside an expression it should be indented.
+            indent();
+        }
+
+        function handle_end_expr() {
+            // statements inside expressions are not valid syntax, but...
+            // statements must all be closed when their container closes
+            while (flags.mode === MODE.Statement) {
+                restore_mode();
+            }
+
+            if (flags.multiline_frame) {
+                allow_wrap_or_preserved_newline(current_token.text === ']' && is_array(flags.mode) && !opt.keep_array_indentation);
+            }
+
+            if (opt.space_in_paren) {
+                if (last_type === 'TK_START_EXPR' && ! opt.space_in_empty_paren) {
+                    // () [] no inner space in empty parens like these, ever, ref #320
+                    output.trim();
+                    output.space_before_token = false;
+                } else {
+                    output.space_before_token = true;
+                }
+            }
+            if (current_token.text === ']' && opt.keep_array_indentation) {
+                print_token();
+                restore_mode();
+            } else {
+                restore_mode();
+                print_token();
+            }
+            output.remove_redundant_indentation(previous_flags);
+
+            // do {} while () // no statement required after
+            if (flags.do_while && previous_flags.mode === MODE.Conditional) {
+                previous_flags.mode = MODE.Expression;
+                flags.do_block = false;
+                flags.do_while = false;
+
+            }
+        }
+
+        function handle_start_block() {
+            // Check if this is should be treated as a ObjectLiteral
+            var next_token = get_token(1)
+            var second_token = get_token(2)
+            if (second_token && (
+                    (second_token.text === ':' && in_array(next_token.type, ['TK_STRING', 'TK_WORD', 'TK_RESERVED']))
+                    || (in_array(next_token.text, ['get', 'set']) && in_array(second_token.type, ['TK_WORD', 'TK_RESERVED']))
+                )) {
+                // We don't support TypeScript,but we didn't break it for a very long time.
+                // We'll try to keep not breaking it.
+                if (!in_array(last_last_text, ['class','interface'])) {
+                    set_mode(MODE.ObjectLiteral);
+                } else {
+                    set_mode(MODE.BlockStatement);
+                }
+            } else {
+                set_mode(MODE.BlockStatement);
+            }
+
+            var empty_braces = !next_token.comments_before.length &&  next_token.text === '}';
+            var empty_anonymous_function = empty_braces && flags.last_word === 'function' &&
+                last_type === 'TK_END_EXPR';
+
+            if (opt.brace_style === "expand" ||
+                (opt.brace_style === "none" && current_token.wanted_newline)) {
+                if (last_type !== 'TK_OPERATOR' &&
+                    (empty_anonymous_function ||
+                        last_type === 'TK_EQUALS' ||
+                        (last_type === 'TK_RESERVED' && is_special_word(flags.last_text) && flags.last_text !== 'else'))) {
+                    output.space_before_token = true;
+                } else {
+                    print_newline(false, true);
+                }
+            } else { // collapse
+                if (last_type !== 'TK_OPERATOR' && last_type !== 'TK_START_EXPR') {
+                    if (last_type === 'TK_START_BLOCK') {
+                        print_newline();
+                    } else {
+                        output.space_before_token = true;
+                    }
+                } else {
+                    // if TK_OPERATOR or TK_START_EXPR
+                    if (is_array(previous_flags.mode) && flags.last_text === ',') {
+                        if (last_last_text === '}') {
+                            // }, { in array context
+                            output.space_before_token = true;
+                        } else {
+                            print_newline(); // [a, b, c, {
+                        }
+                    }
+                }
+            }
+            print_token();
+            indent();
+        }
+
+        function handle_end_block() {
+            // statements must all be closed when their container closes
+            while (flags.mode === MODE.Statement) {
+                restore_mode();
+            }
+            var empty_braces = last_type === 'TK_START_BLOCK';
+
+            if (opt.brace_style === "expand") {
+                if (!empty_braces) {
+                    print_newline();
+                }
+            } else {
+                // skip {}
+                if (!empty_braces) {
+                    if (is_array(flags.mode) && opt.keep_array_indentation) {
+                        // we REALLY need a newline here, but newliner would skip that
+                        opt.keep_array_indentation = false;
+                        print_newline();
+                        opt.keep_array_indentation = true;
+
+                    } else {
+                        print_newline();
+                    }
+                }
+            }
+            restore_mode();
+            print_token();
+        }
+
+        function handle_word() {
+            if (current_token.type === 'TK_RESERVED' && flags.mode !== MODE.ObjectLiteral &&
+                in_array(current_token.text, ['set', 'get'])) {
+                current_token.type = 'TK_WORD';
+            }
+
+            if (current_token.type === 'TK_RESERVED' && flags.mode === MODE.ObjectLiteral) {
+                var next_token = get_token(1);
+                if (next_token.text == ':') {
+                    current_token.type = 'TK_WORD';
+                }
+            }
+
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+            } else if (current_token.wanted_newline && !is_expression(flags.mode) &&
+                (last_type !== 'TK_OPERATOR' || (flags.last_text === '--' || flags.last_text === '++')) &&
+                last_type !== 'TK_EQUALS' &&
+                (opt.preserve_newlines || !(last_type === 'TK_RESERVED' && in_array(flags.last_text, ['var', 'let', 'const', 'set', 'get'])))) {
+
+                print_newline();
+            }
+
+            if (flags.do_block && !flags.do_while) {
+                if (current_token.type === 'TK_RESERVED' && current_token.text === 'while') {
+                    // do {} ## while ()
+                    output.space_before_token = true;
+                    print_token();
+                    output.space_before_token = true;
+                    flags.do_while = true;
+                    return;
+                } else {
+                    // do {} should always have while as the next word.
+                    // if we don't see the expected while, recover
+                    print_newline();
+                    flags.do_block = false;
+                }
+            }
+
+            // if may be followed by else, or not
+            // Bare/inline ifs are tricky
+            // Need to unwind the modes correctly: if (a) if (b) c(); else d(); else e();
+            if (flags.if_block) {
+                if (!flags.else_block && (current_token.type === 'TK_RESERVED' && current_token.text === 'else')) {
+                    flags.else_block = true;
+                } else {
+                    while (flags.mode === MODE.Statement) {
+                        restore_mode();
+                    }
+                    flags.if_block = false;
+                    flags.else_block = false;
+                }
+            }
+
+            if (current_token.type === 'TK_RESERVED' && (current_token.text === 'case' || (current_token.text === 'default' && flags.in_case_statement))) {
+                print_newline();
+                if (flags.case_body || opt.jslint_happy) {
+                    // switch cases following one another
+                    deindent();
+                    flags.case_body = false;
+                }
+                print_token();
+                flags.in_case = true;
+                flags.in_case_statement = true;
+                return;
+            }
+
+            if (current_token.type === 'TK_RESERVED' && current_token.text === 'function') {
+                if (in_array(flags.last_text, ['}', ';']) || (output.just_added_newline() && ! in_array(flags.last_text, ['[', '{', ':', '=', ',']))) {
+                    // make sure there is a nice clean space of at least one blank line
+                    // before a new function definition
+                    if ( !output.just_added_blankline() && !current_token.comments_before.length) {
+                        print_newline();
+                        print_newline(true);
+                    }
+                }
+                if (last_type === 'TK_RESERVED' || last_type === 'TK_WORD') {
+                    if (last_type === 'TK_RESERVED' && in_array(flags.last_text, ['get', 'set', 'new', 'return', 'export', 'async'])) {
+                        output.space_before_token = true;
+                    } else if (last_type === 'TK_RESERVED' && flags.last_text === 'default' && last_last_text === 'export') {
+                        output.space_before_token = true;
+                    } else {
+                        print_newline();
+                    }
+                } else if (last_type === 'TK_OPERATOR' || flags.last_text === '=') {
+                    // foo = function
+                    output.space_before_token = true;
+                } else if (!flags.multiline_frame && (is_expression(flags.mode) || is_array(flags.mode))) {
+                    // (function
+                } else {
+                    print_newline();
+                }
+            }
+
+            if (last_type === 'TK_COMMA' || last_type === 'TK_START_EXPR' || last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
+                if (!start_of_object_property()) {
+                    allow_wrap_or_preserved_newline();
+                }
+            }
+
+            if (current_token.type === 'TK_RESERVED' &&  in_array(current_token.text, ['function', 'get', 'set'])) {
+                print_token();
+                flags.last_word = current_token.text;
+                return;
+            }
+
+            prefix = 'NONE';
+
+            if (last_type === 'TK_END_BLOCK') {
+                if (!(current_token.type === 'TK_RESERVED' && in_array(current_token.text, ['else', 'catch', 'finally']))) {
+                    prefix = 'NEWLINE';
+                } else {
+                    if (opt.brace_style === "expand" ||
+                        opt.brace_style === "end-expand" ||
+                        (opt.brace_style === "none" && current_token.wanted_newline)) {
+                        prefix = 'NEWLINE';
+                    } else {
+                        prefix = 'SPACE';
+                        output.space_before_token = true;
+                    }
+                }
+            } else if (last_type === 'TK_SEMICOLON' && flags.mode === MODE.BlockStatement) {
+                // TODO: Should this be for STATEMENT as well?
+                prefix = 'NEWLINE';
+            } else if (last_type === 'TK_SEMICOLON' && is_expression(flags.mode)) {
+                prefix = 'SPACE';
+            } else if (last_type === 'TK_STRING') {
+                prefix = 'NEWLINE';
+            } else if (last_type === 'TK_RESERVED' || last_type === 'TK_WORD' ||
+                (flags.last_text === '*' && last_last_text === 'function')) {
+                prefix = 'SPACE';
+            } else if (last_type === 'TK_START_BLOCK') {
+                prefix = 'NEWLINE';
+            } else if (last_type === 'TK_END_EXPR') {
+                output.space_before_token = true;
+                prefix = 'NEWLINE';
+            }
+
+            if (current_token.type === 'TK_RESERVED' && in_array(current_token.text, Tokenizer.line_starters) && flags.last_text !== ')') {
+                if (flags.last_text === 'else' || flags.last_text === 'export') {
+                    prefix = 'SPACE';
+                } else {
+                    prefix = 'NEWLINE';
+                }
+
+            }
+
+            if (current_token.type === 'TK_RESERVED' && in_array(current_token.text, ['else', 'catch', 'finally'])) {
+                if (last_type !== 'TK_END_BLOCK' ||
+                    opt.brace_style === "expand" ||
+                    opt.brace_style === "end-expand" ||
+                    (opt.brace_style === "none" && current_token.wanted_newline)) {
+                    print_newline();
+                } else {
+                    output.trim(true);
+                    var line = output.current_line;
+                    // If we trimmed and there's something other than a close block before us
+                    // put a newline back in.  Handles '} // comment' scenario.
+                    if (line.last() !== '}') {
+                        print_newline();
+                    }
+                    output.space_before_token = true;
+                }
+            } else if (prefix === 'NEWLINE') {
+                if (last_type === 'TK_RESERVED' && is_special_word(flags.last_text)) {
+                    // no newline between 'return nnn'
+                    output.space_before_token = true;
+                } else if (last_type !== 'TK_END_EXPR') {
+                    if ((last_type !== 'TK_START_EXPR' || !(current_token.type === 'TK_RESERVED' && in_array(current_token.text, ['var', 'let', 'const']))) && flags.last_text !== ':') {
+                        // no need to force newline on 'var': for (var x = 0...)
+                        if (current_token.type === 'TK_RESERVED' && current_token.text === 'if' && flags.last_text === 'else') {
+                            // no newline for } else if {
+                            output.space_before_token = true;
+                        } else {
+                            print_newline();
+                        }
+                    }
+                } else if (current_token.type === 'TK_RESERVED' && in_array(current_token.text, Tokenizer.line_starters) && flags.last_text !== ')') {
+                    print_newline();
+                }
+            } else if (flags.multiline_frame && is_array(flags.mode) && flags.last_text === ',' && last_last_text === '}') {
+                print_newline(); // }, in lists get a newline treatment
+            } else if (prefix === 'SPACE') {
+                output.space_before_token = true;
+            }
+            print_token();
+            flags.last_word = current_token.text;
+
+            if (current_token.type === 'TK_RESERVED' && current_token.text === 'do') {
+                flags.do_block = true;
+            }
+
+            if (current_token.type === 'TK_RESERVED' && current_token.text === 'if') {
+                flags.if_block = true;
+            }
+        }
+
+        function handle_semicolon() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+                // Semicolon can be the start (and end) of a statement
+                output.space_before_token = false;
+            }
+            while (flags.mode === MODE.Statement && !flags.if_block && !flags.do_block) {
+                restore_mode();
+            }
+            print_token();
+        }
+
+        function handle_string() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+                // One difference - strings want at least a space before
+                output.space_before_token = true;
+            } else if (last_type === 'TK_RESERVED' || last_type === 'TK_WORD') {
+                output.space_before_token = true;
+            } else if (last_type === 'TK_COMMA' || last_type === 'TK_START_EXPR' || last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
+                if (!start_of_object_property()) {
+                    allow_wrap_or_preserved_newline();
+                }
+            } else {
+                print_newline();
+            }
+            print_token();
+        }
+
+        function handle_equals() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+            }
+
+            if (flags.declaration_statement) {
+                // just got an '=' in a var-line, different formatting/line-breaking, etc will now be done
+                flags.declaration_assignment = true;
+            }
+            output.space_before_token = true;
+            print_token();
+            output.space_before_token = true;
+        }
+
+        function handle_comma() {
+            if (flags.declaration_statement) {
+                if (is_expression(flags.parent.mode)) {
+                    // do not break on comma, for(var a = 1, b = 2)
+                    flags.declaration_assignment = false;
+                }
+
+                print_token();
+
+                if (flags.declaration_assignment) {
+                    flags.declaration_assignment = false;
+                    print_newline(false, true);
+                } else {
+                    output.space_before_token = true;
+                    // for comma-first, we want to allow a newline before the comma
+                    // to turn into a newline after the comma, which we will fixup later
+                    if (opt.comma_first) {
+                        allow_wrap_or_preserved_newline();
+                    }
+                }
+                return;
+            }
+
+            print_token();
+            if (flags.mode === MODE.ObjectLiteral ||
+                (flags.mode === MODE.Statement && flags.parent.mode === MODE.ObjectLiteral)) {
+                if (flags.mode === MODE.Statement) {
+                    restore_mode();
+                }
+                print_newline();
+            } else {
+                // EXPR or DO_BLOCK
+                output.space_before_token = true;
+                // for comma-first, we want to allow a newline before the comma
+                // to turn into a newline after the comma, which we will fixup later
+                if (opt.comma_first) {
+                    allow_wrap_or_preserved_newline();
+                }
+            }
+
+        }
+
+        function handle_operator() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+            }
+
+            if (last_type === 'TK_RESERVED' && is_special_word(flags.last_text)) {
+                // "return" had a special handling in TK_WORD. Now we need to return the favor
+                output.space_before_token = true;
+                print_token();
+                return;
+            }
+
+            // hack for actionscript's import .*;
+            if (current_token.text === '*' && last_type === 'TK_DOT') {
+                print_token();
+                return;
+            }
+
+            if (current_token.text === ':' && flags.in_case) {
+                flags.case_body = true;
+                indent();
+                print_token();
+                print_newline();
+                flags.in_case = false;
+                return;
+            }
+
+            if (current_token.text === '::') {
+                // no spaces around exotic namespacing syntax operator
+                print_token();
+                return;
+            }
+
+            // Allow line wrapping between operators
+            if (last_type === 'TK_OPERATOR') {
+                allow_wrap_or_preserved_newline();
+            }
+
+            var space_before = true;
+            var space_after = true;
+
+            if (in_array(current_token.text, ['--', '++', '!', '~']) || (in_array(current_token.text, ['-', '+']) && (in_array(last_type, ['TK_START_BLOCK', 'TK_START_EXPR', 'TK_EQUALS', 'TK_OPERATOR']) || in_array(flags.last_text, Tokenizer.line_starters) || flags.last_text === ','))) {
+                // unary operators (and binary +/- pretending to be unary) special cases
+
+                space_before = false;
+                space_after = false;
+
+                // http://www.ecma-international.org/ecma-262/5.1/#sec-7.9.1
+                // if there is a newline between -- or ++ and anything else we should preserve it.
+                if (current_token.wanted_newline && (current_token.text === '--' || current_token.text === '++')) {
+                    print_newline(false, true);
+                }
+
+                if (flags.last_text === ';' && is_expression(flags.mode)) {
+                    // for (;; ++i)
+                    //        ^^^
+                    space_before = true;
+                }
+
+                if (last_type === 'TK_RESERVED') {
+                    space_before = true;
+                } else if (last_type === 'TK_END_EXPR') {
+                    space_before = !(flags.last_text === ']' && (current_token.text === '--' || current_token.text === '++'));
+                } else if (last_type === 'TK_OPERATOR') {
+                    // a++ + ++b;
+                    // a - -b
+                    space_before = in_array(current_token.text, ['--', '-', '++', '+']) && in_array(flags.last_text, ['--', '-', '++', '+']);
+                    // + and - are not unary when preceeded by -- or ++ operator
+                    // a-- + b
+                    // a * +b
+                    // a - -b
+                    if (in_array(current_token.text, ['+', '-']) && in_array(flags.last_text, ['--', '++'])) {
+                        space_after = true;
+                    }
+                }
+
+                if ((flags.mode === MODE.BlockStatement || flags.mode === MODE.Statement) && (flags.last_text === '{' || flags.last_text === ';')) {
+                    // { foo; --i }
+                    // foo(); --bar;
+                    print_newline();
+                }
+            } else if (current_token.text === ':') {
+                if (flags.ternary_depth === 0) {
+                    // Colon is invalid javascript outside of ternary and object, but do our best to guess what was meant.
+                    space_before = false;
+                } else {
+                    flags.ternary_depth -= 1;
+                }
+            } else if (current_token.text === '?') {
+                flags.ternary_depth += 1;
+            } else if (current_token.text === '*' && last_type === 'TK_RESERVED' && flags.last_text === 'function') {
+                space_before = false;
+                space_after = false;
+            }
+            output.space_before_token = output.space_before_token || space_before;
+            print_token();
+            output.space_before_token = space_after;
+        }
+
+        function handle_block_comment() {
+            if (output.raw) {
+                output.add_raw_token(current_token)
+                if (current_token.directives && current_token.directives['preserve'] === 'end') {
+                    // If we're testing the raw output behavior, do not allow a directive to turn it off.
+                    if (!opt.test_output_raw) {
+                        output.raw = false;
+                    }
+                }
+                return;
+            }
+
+            if (current_token.directives) {
+                print_newline(false, true);
+                print_token();
+                if (current_token.directives['preserve'] === 'start') {
+                    output.raw = true;
+                }
+                print_newline(false, true);
+                return;
+            }
+
+            // inline block
+            if (!acorn.newline.test(current_token.text) && !current_token.wanted_newline) {
+                output.space_before_token = true;
+                print_token();
+                output.space_before_token = true;
+                return;
+            }
+
+            var lines = split_newlines(current_token.text);
+            var j; // iterator for this case
+            var javadoc = false;
+            var starless = false;
+            var lastIndent = current_token.whitespace_before;
+            var lastIndentLength = lastIndent.length;
+
+            // block comment starts with a new line
+            print_newline(false, true);
+            if (lines.length > 1) {
+                if (all_lines_start_with(lines.slice(1), '*')) {
+                    javadoc = true;
+                }
+                else if (each_line_matches_indent(lines.slice(1), lastIndent)) {
+                    starless = true;
+                }
+            }
+
+            // first line always indented
+            print_token(lines[0]);
+            for (j = 1; j < lines.length; j++) {
+                print_newline(false, true);
+                if (javadoc) {
+                    // javadoc: reformat and re-indent
+                    print_token(' ' + ltrim(lines[j]));
+                } else if (starless && lines[j].length > lastIndentLength) {
+                    // starless: re-indent non-empty content, avoiding trim
+                    print_token(lines[j].substring(lastIndentLength));
+                } else {
+                    // normal comments output raw
+                    output.add_token(lines[j]);
+                }
+            }
+
+            // for comments of more than one line, make sure there's a new line after
+            print_newline(false, true);
+        }
+
+        function handle_comment() {
+            if (current_token.wanted_newline) {
+                print_newline(false, true);
+            } else {
+                output.trim(true);
+            }
+
+            output.space_before_token = true;
+            print_token();
+            print_newline(false, true);
+        }
+
+        function handle_dot() {
+            if (start_of_statement()) {
+                // The conditional starts the statement if appropriate.
+            }
+
+            if (last_type === 'TK_RESERVED' && is_special_word(flags.last_text)) {
+                output.space_before_token = true;
+            } else {
+                // allow preserved newlines before dots in general
+                // force newlines on dots after close paren when break_chained - for bar().baz()
+                allow_wrap_or_preserved_newline(flags.last_text === ')' && opt.break_chained_methods);
+            }
+
+            print_token();
+        }
+
+        function handle_unknown() {
+            print_token();
+
+            if (current_token.text[current_token.text.length - 1] === '\n') {
+                print_newline();
+            }
+        }
+
+        function handle_eof() {
+            // Unwind any open statements
+            while (flags.mode === MODE.Statement) {
+                restore_mode();
+            }
+        }
+    }
+
+
+    function OutputLine(parent) {
+        var _character_count = 0;
+        // use indent_count as a marker for lines that have preserved indentation
+        var _indent_count = -1;
+
+        var _items = [];
+        var _empty = true;
+
+        this.set_indent = function(level) {
+            _character_count = parent.baseIndentLength + level * parent.indent_length
+            _indent_count = level;
+        }
+
+        this.get_character_count = function() {
+            return _character_count;
+        }
+
+        this.is_empty = function() {
+            return _empty;
+        }
+
+        this.last = function() {
+            if (!this._empty) {
+              return _items[_items.length - 1];
+            } else {
+              return null;
+            }
+        }
+
+        this.push = function(input) {
+            _items.push(input);
+            _character_count += input.length;
+            _empty = false;
+        }
+
+        this.pop = function() {
+            var item = null;
+            if (!_empty) {
+                item = _items.pop();
+                _character_count -= item.length;
+                _empty = _items.length === 0;
+            }
+            return item;
+        }
+
+        this.remove_indent = function() {
+            if (_indent_count > 0) {
+                _indent_count -= 1;
+                _character_count -= parent.indent_length
+            }
+        }
+
+        this.trim = function() {
+            while (this.last() === ' ') {
+                var item = _items.pop();
+                _character_count -= 1;
+            }
+            _empty = _items.length === 0;
+        }
+
+        this.toString = function() {
+            var result = '';
+            if (!this._empty) {
+                if (_indent_count >= 0) {
+                    result = parent.indent_cache[_indent_count];
+                }
+                result += _items.join('')
+            }
+            return result;
+        }
+    }
+
+    function Output(indent_string, baseIndentString) {
+        baseIndentString = baseIndentString || '';
+        this.indent_cache = [ baseIndentString ];
+        this.baseIndentLength = baseIndentString.length;
+        this.indent_length = indent_string.length;
+        this.raw = false;
+
+        var lines =[];
+        this.baseIndentString = baseIndentString;
+        this.indent_string = indent_string;
+        this.previous_line = null;
+        this.current_line = null;
+        this.space_before_token = false;
+
+        this.add_outputline = function() {
+            this.previous_line = this.current_line;
+            this.current_line = new OutputLine(this);
+            lines.push(this.current_line);
+        }
+
+        // initialize
+        this.add_outputline();
+
+
+        this.get_line_number = function() {
+            return lines.length;
+        }
+
+        // Using object instead of string to allow for later expansion of info about each line
+        this.add_new_line = function(force_newline) {
+            if (this.get_line_number() === 1 && this.just_added_newline()) {
+                return false; // no newline on start of file
+            }
+
+            if (force_newline || !this.just_added_newline()) {
+                if (!this.raw) {
+                    this.add_outputline();
+                }
+                return true;
+            }
+
+            return false;
+        }
+
+        this.get_code = function() {
+            var sweet_code = lines.join('\n').replace(/[\r\n\t ]+$/, '');
+            return sweet_code;
+        }
+
+        this.set_indent = function(level) {
+            // Never indent your first output indent at the start of the file
+            if (lines.length > 1) {
+                while(level >= this.indent_cache.length) {
+                    this.indent_cache.push(this.indent_cache[this.indent_cache.length - 1] + this.indent_string);
+                }
+
+                this.current_line.set_indent(level);
+                return true;
+            }
+            this.current_line.set_indent(0);
+            return false;
+        }
+
+        this.add_raw_token = function(token) {
+            for (var x = 0; x < token.newlines; x++) {
+                this.add_outputline();
+            }
+            this.current_line.push(token.whitespace_before);
+            this.current_line.push(token.text);
+            this.space_before_token = false;
+        }
+
+        this.add_token = function(printable_token) {
+            this.add_space_before_token();
+            this.current_line.push(printable_token);
+        }
+
+        this.add_space_before_token = function() {
+            if (this.space_before_token && !this.just_added_newline()) {
+                this.current_line.push(' ');
+            }
+            this.space_before_token = false;
+        }
+
+        this.remove_redundant_indentation = function (frame) {
+            // This implementation is effective but has some issues:
+            //     - can cause line wrap to happen too soon due to indent removal
+            //           after wrap points are calculated
+            // These issues are minor compared to ugly indentation.
+
+            if (frame.multiline_frame ||
+                frame.mode === MODE.ForInitializer ||
+                frame.mode === MODE.Conditional) {
+                return;
+            }
+
+            // remove one indent from each line inside this section
+            var index = frame.start_line_index;
+            var line;
+
+            var output_length = lines.length;
+            while (index < output_length) {
+                lines[index].remove_indent();
+                index++;
+            }
+        }
+
+        this.trim = function(eat_newlines) {
+            eat_newlines = (eat_newlines === undefined) ? false : eat_newlines;
+
+            this.current_line.trim(indent_string, baseIndentString);
+
+            while (eat_newlines && lines.length > 1 &&
+                this.current_line.is_empty()) {
+                lines.pop();
+                this.current_line = lines[lines.length - 1]
+                this.current_line.trim();
+            }
+
+            this.previous_line = lines.length > 1 ? lines[lines.length - 2] : null;
+        }
+
+        this.just_added_newline = function() {
+            return this.current_line.is_empty();
+        }
+
+        this.just_added_blankline = function() {
+            if (this.just_added_newline()) {
+                if (lines.length === 1) {
+                    return true; // start of the file and newline = blank
+                }
+
+                var line = lines[lines.length - 2];
+                return line.is_empty();
             }
             return false;
         }
+    }
+
+
+    var Token = function(type, text, newlines, whitespace_before, mode, parent) {
+        this.type = type;
+        this.text = text;
+        this.comments_before = [];
+        this.newlines = newlines || 0;
+        this.wanted_newline = newlines > 0;
+        this.whitespace_before = whitespace_before || '';
+        this.parent = null;
+        this.directives = null;
+    }
+
+    function tokenizer(input, opts, indent_string) {
+
+        var whitespace = "\n\r\t ".split('');
+        var digit = /[0-9]/;
+        var digit_hex = /[0123456789abcdefABCDEF]/;
+
+        var punct = ('+ - * / % & ++ -- = += -= *= /= %= == === != !== > < >= <= >> << >>> >>>= >>= <<= && &= | || ! ~ , : ? ^ ^= |= :: =>'
+                +' <%= <% %> <?= <? ?>').split(' '); // try to be a good boy and try not to break the markup language identifiers
+
+        // words which should always start on new line.
+        this.line_starters = 'continue,try,throw,return,var,let,const,if,switch,case,default,for,while,break,function,import,export'.split(',');
+        var reserved_words = this.line_starters.concat(['do', 'in', 'else', 'get', 'set', 'new', 'catch', 'finally', 'typeof', 'yield', 'async', 'await']);
+
+        //  /* ... */ comment ends with nearest */ or end of file
+        var block_comment_pattern = /([\s\S]*?)((?:\*\/)|$)/g;
+
+        // comment ends just before nearest linefeed or end of file
+        var comment_pattern = /([^\n\r\u2028\u2029]*)/g;
+
+        var directives_block_pattern = /\/\* beautify( \w+[:]\w+)+ \*\//g;
+        var directive_pattern = / (\w+)[:](\w+)/g;
+        var directives_end_ignore_pattern = /([\s\S]*?)((?:\/\*\sbeautify\signore:end\s\*\/)|$)/g;
+
+        var template_pattern = /((<\?php|<\?=)[\s\S]*?\?>)|(<%[\s\S]*?%>)/g
+
+        var n_newlines, whitespace_before_token, in_html_comment, tokens, parser_pos;
+        var input_length;
+
+        this.tokenize = function() {
+            // cache the source's length.
+            input_length = input.length
+            parser_pos = 0;
+            in_html_comment = false
+            tokens = [];
+
+            var next, last;
+            var token_values;
+            var open = null;
+            var open_stack = [];
+            var comments = [];
+
+            while (!(last && last.type === 'TK_EOF')) {
+                token_values = tokenize_next();
+                next = new Token(token_values[1], token_values[0], n_newlines, whitespace_before_token);
+                while(next.type === 'TK_COMMENT' || next.type === 'TK_BLOCK_COMMENT' || next.type === 'TK_UNKNOWN') {
+                    if (next.type === 'TK_BLOCK_COMMENT') {
+                        next.directives = token_values[2];
+                    }
+                    comments.push(next);
+                    token_values = tokenize_next();
+                    next = new Token(token_values[1], token_values[0], n_newlines, whitespace_before_token);
+                }
+
+                if (comments.length) {
+                    next.comments_before = comments;
+                    comments = [];
+                }
+
+                if (next.type === 'TK_START_BLOCK' || next.type === 'TK_START_EXPR') {
+                    next.parent = last;
+                    open_stack.push(open);
+                    open = next;
+                }  else if ((next.type === 'TK_END_BLOCK' || next.type === 'TK_END_EXPR') &&
+                    (open && (
+                        (next.text === ']' && open.text === '[') ||
+                        (next.text === ')' && open.text === '(') ||
+                        (next.text === '}' && open.text === '{')))) {
+                    next.parent = open.parent;
+                    open = open_stack.pop();
+                }
+
+                tokens.push(next);
+                last = next;
+            }
+
+            return tokens;
+        }
+
+        function get_directives (text) {
+            if (!text.match(directives_block_pattern)) {
+                return null;
+            }
+
+            var directives = {};
+            directive_pattern.lastIndex = 0;
+            var directive_match = directive_pattern.exec(text);
+
+            while (directive_match) {
+                directives[directive_match[1]] = directive_match[2];
+                directive_match = directive_pattern.exec(text);
+            }
+
+            return directives;
+        }
+
+        function tokenize_next() {
+            var i, resulting_string;
+            var whitespace_on_this_line = [];
+
+            n_newlines = 0;
+            whitespace_before_token = '';
+
+            if (parser_pos >= input_length) {
+                return ['', 'TK_EOF'];
+            }
+
+            var last_token;
+            if (tokens.length) {
+                last_token = tokens[tokens.length-1];
+            } else {
+                // For the sake of tokenizing we can pretend that there was on open brace to start
+                last_token = new Token('TK_START_BLOCK', '{');
+            }
+
+
+            var c = input.charAt(parser_pos);
+            parser_pos += 1;
+
+            while (in_array(c, whitespace)) {
+
+                if (acorn.newline.test(c)) {
+                    if (!(c === '\n' && input.charAt(parser_pos-2) === '\r')) {
+                        n_newlines += 1;
+                        whitespace_on_this_line = [];
+                    }
+                } else {
+                    whitespace_on_this_line.push(c);
+                }
+
+                if (parser_pos >= input_length) {
+                    return ['', 'TK_EOF'];
+                }
+
+                c = input.charAt(parser_pos);
+                parser_pos += 1;
+            }
+
+            if(whitespace_on_this_line.length) {
+                whitespace_before_token = whitespace_on_this_line.join('');
+            }
+
+            if (digit.test(c)) {
+                var allow_decimal = true;
+                var allow_e = true;
+                var local_digit = digit;
+
+                if (c === '0' && parser_pos < input_length && /[Xx]/.test(input.charAt(parser_pos))) {
+                    // switch to hex number, no decimal or e, just hex digits
+                    allow_decimal = false;
+                    allow_e = false;
+                    c += input.charAt(parser_pos);
+                    parser_pos += 1;
+                    local_digit = digit_hex
+                } else {
+                    // we know this first loop will run.  It keeps the logic simpler.
+                    c = '';
+                    parser_pos -= 1
+                }
+
+                // Add the digits
+                while (parser_pos < input_length && local_digit.test(input.charAt(parser_pos))) {
+                    c += input.charAt(parser_pos);
+                    parser_pos += 1;
+
+                    if (allow_decimal && parser_pos < input_length && input.charAt(parser_pos) === '.') {
+                        c += input.charAt(parser_pos);
+                        parser_pos += 1;
+                        allow_decimal = false;
+                    }
+
+                    if (allow_e && parser_pos < input_length && /[Ee]/.test(input.charAt(parser_pos))) {
+                        c += input.charAt(parser_pos);
+                        parser_pos += 1;
+
+                        if (parser_pos < input_length && /[+-]/.test(input.charAt(parser_pos))) {
+                            c += input.charAt(parser_pos);
+                            parser_pos += 1;
+                        }
+
+                        allow_e = false;
+                        allow_decimal = false;
+                    }
+                }
+
+                return [c, 'TK_WORD'];
+            }
+
+            if (acorn.isIdentifierStart(input.charCodeAt(parser_pos-1))) {
+                if (parser_pos < input_length) {
+                    while (acorn.isIdentifierChar(input.charCodeAt(parser_pos))) {
+                        c += input.charAt(parser_pos);
+                        parser_pos += 1;
+                        if (parser_pos === input_length) {
+                            break;
+                        }
+                    }
+                }
+
+                if (!(last_token.type === 'TK_DOT' ||
+                        (last_token.type === 'TK_RESERVED' && in_array(last_token.text, ['set', 'get'])))
+                    && in_array(c, reserved_words)) {
+                    if (c === 'in') { // hack for 'in' operator
+                        return [c, 'TK_OPERATOR'];
+                    }
+                    return [c, 'TK_RESERVED'];
+                }
+
+                return [c, 'TK_WORD'];
+            }
+
+            if (c === '(' || c === '[') {
+                return [c, 'TK_START_EXPR'];
+            }
+
+            if (c === ')' || c === ']') {
+                return [c, 'TK_END_EXPR'];
+            }
+
+            if (c === '{') {
+                return [c, 'TK_START_BLOCK'];
+            }
+
+            if (c === '}') {
+                return [c, 'TK_END_BLOCK'];
+            }
+
+            if (c === ';') {
+                return [c, 'TK_SEMICOLON'];
+            }
+
+            if (c === '/') {
+                var comment = '';
+                // peek for comment /* ... */
+                if (input.charAt(parser_pos) === '*') {
+                    parser_pos += 1;
+                    block_comment_pattern.lastIndex = parser_pos;
+                    var comment_match = block_comment_pattern.exec(input);
+                    comment = '/*' + comment_match[0];
+                    parser_pos += comment_match[0].length;
+                    var directives = get_directives(comment);
+                    if (directives && directives['ignore'] === 'start') {
+                        directives_end_ignore_pattern.lastIndex = parser_pos;
+                        comment_match = directives_end_ignore_pattern.exec(input)
+                        comment += comment_match[0];
+                        parser_pos += comment_match[0].length;
+                    }
+                    comment = comment.replace(acorn.lineBreak, '\n');
+                    return [comment, 'TK_BLOCK_COMMENT', directives];
+                }
+                // peek for comment // ...
+                if (input.charAt(parser_pos) === '/') {
+                    parser_pos += 1;
+                    comment_pattern.lastIndex = parser_pos;
+                    var comment_match = comment_pattern.exec(input);
+                    comment = '//' + comment_match[0];
+                    parser_pos += comment_match[0].length;
+                    return [comment, 'TK_COMMENT'];
+                }
+
+            }
+
+            if (c === '`' || c === "'" || c === '"' || // string
+                (
+                    (c === '/') || // regexp
+                    (opts.e4x && c === "<" && input.slice(parser_pos - 1).match(/^<([-a-zA-Z:0-9_.]+|{[^{}]*}|!\[CDATA\[[\s\S]*?\]\])(\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{.*?}))*\s*(\/?)\s*>/)) // xml
+                ) && ( // regex and xml can only appear in specific locations during parsing
+                    (last_token.type === 'TK_RESERVED' && in_array(last_token.text , ['return', 'case', 'throw', 'else', 'do', 'typeof', 'yield'])) ||
+                    (last_token.type === 'TK_END_EXPR' && last_token.text === ')' &&
+                        last_token.parent && last_token.parent.type === 'TK_RESERVED' && in_array(last_token.parent.text, ['if', 'while', 'for'])) ||
+                    (in_array(last_token.type, ['TK_COMMENT', 'TK_START_EXPR', 'TK_START_BLOCK',
+                        'TK_END_BLOCK', 'TK_OPERATOR', 'TK_EQUALS', 'TK_EOF', 'TK_SEMICOLON', 'TK_COMMA'
+                    ]))
+                )) {
+
+                var sep = c,
+                    esc = false,
+                    has_char_escapes = false;
+
+                resulting_string = c;
+
+                if (sep === '/') {
+                    //
+                    // handle regexp
+                    //
+                    var in_char_class = false;
+                    while (parser_pos < input_length &&
+                            ((esc || in_char_class || input.charAt(parser_pos) !== sep) &&
+                            !acorn.newline.test(input.charAt(parser_pos)))) {
+                        resulting_string += input.charAt(parser_pos);
+                        if (!esc) {
+                            esc = input.charAt(parser_pos) === '\\';
+                            if (input.charAt(parser_pos) === '[') {
+                                in_char_class = true;
+                            } else if (input.charAt(parser_pos) === ']') {
+                                in_char_class = false;
+                            }
+                        } else {
+                            esc = false;
+                        }
+                        parser_pos += 1;
+                    }
+                } else if (opts.e4x && sep === '<') {
+                    //
+                    // handle e4x xml literals
+                    //
+                    var xmlRegExp = /<(\/?)([-a-zA-Z:0-9_.]+|{[^{}]*}|!\[CDATA\[[\s\S]*?\]\])(\s+[-a-zA-Z:0-9_.]+\s*=\s*('[^']*'|"[^"]*"|{.*?}))*\s*(\/?)\s*>/g;
+                    var xmlStr = input.slice(parser_pos - 1);
+                    var match = xmlRegExp.exec(xmlStr);
+                    if (match && match.index === 0) {
+                        var rootTag = match[2];
+                        var depth = 0;
+                        while (match) {
+                            var isEndTag = !! match[1];
+                            var tagName = match[2];
+                            var isSingletonTag = ( !! match[match.length - 1]) || (tagName.slice(0, 8) === "![CDATA[");
+                            if (tagName === rootTag && !isSingletonTag) {
+                                if (isEndTag) {
+                                    --depth;
+                                } else {
+                                    ++depth;
+                                }
+                            }
+                            if (depth <= 0) {
+                                break;
+                            }
+                            match = xmlRegExp.exec(xmlStr);
+                        }
+                        var xmlLength = match ? match.index + match[0].length : xmlStr.length;
+                        xmlStr = xmlStr.slice(0, xmlLength);
+                        parser_pos += xmlLength - 1;
+                        xmlStr = xmlStr.replace(acorn.lineBreak, '\n');
+                        return [xmlStr, "TK_STRING"];
+                    }
+                } else {
+                    //
+                    // handle string
+                    //
+                    // Template strings can travers lines without escape characters.
+                    // Other strings cannot
+                    while (parser_pos < input_length &&
+                            (esc || (input.charAt(parser_pos) !== sep &&
+                            (sep === '`' || !acorn.newline.test(input.charAt(parser_pos)))))) {
+                        // Handle \r\n linebreaks after escapes or in template strings
+                        if ((esc || sep === '`') && acorn.newline.test(input.charAt(parser_pos))) {
+                            if (input.charAt(parser_pos) === '\r' && input.charAt(parser_pos + 1) === '\n') {
+                                parser_pos += 1;
+                            }
+                            resulting_string += '\n';
+                        } else {
+                            resulting_string += input.charAt(parser_pos);
+                        }
+                        if (esc) {
+                            if (input.charAt(parser_pos) === 'x' || input.charAt(parser_pos) === 'u') {
+                                has_char_escapes = true;
+                            }
+                            esc = false;
+                        } else {
+                            esc = input.charAt(parser_pos) === '\\';
+                        }
+                        parser_pos += 1;
+                    }
+
+                }
+
+                if (has_char_escapes && opts.unescape_strings) {
+                    resulting_string = unescape_string(resulting_string);
+                }
+
+                if (parser_pos < input_length && input.charAt(parser_pos) === sep) {
+                    resulting_string += sep;
+                    parser_pos += 1;
+
+                    if (sep === '/') {
+                        // regexps may have modifiers /regexp/MOD , so fetch those, too
+                        // Only [gim] are valid, but if the user puts in garbage, do what we can to take it.
+                        while (parser_pos < input_length && acorn.isIdentifierStart(input.charCodeAt(parser_pos))) {
+                            resulting_string += input.charAt(parser_pos);
+                            parser_pos += 1;
+                        }
+                    }
+                }
+                return [resulting_string, 'TK_STRING'];
+            }
+
+            if (c === '#') {
+
+                if (tokens.length === 0 && input.charAt(parser_pos) === '!') {
+                    // shebang
+                    resulting_string = c;
+                    while (parser_pos < input_length && c !== '\n') {
+                        c = input.charAt(parser_pos);
+                        resulting_string += c;
+                        parser_pos += 1;
+                    }
+                    return [trim(resulting_string) + '\n', 'TK_UNKNOWN'];
+                }
+
+
+
+                // Spidermonkey-specific sharp variables for circular references
+                // https://developer.mozilla.org/En/Sharp_variables_in_JavaScript
+                // http://mxr.mozilla.org/mozilla-central/source/js/src/jsscan.cpp around line 1935
+                var sharp = '#';
+                if (parser_pos < input_length && digit.test(input.charAt(parser_pos))) {
+                    do {
+                        c = input.charAt(parser_pos);
+                        sharp += c;
+                        parser_pos += 1;
+                    } while (parser_pos < input_length && c !== '#' && c !== '=');
+                    if (c === '#') {
+                        //
+                    } else if (input.charAt(parser_pos) === '[' && input.charAt(parser_pos + 1) === ']') {
+                        sharp += '[]';
+                        parser_pos += 2;
+                    } else if (input.charAt(parser_pos) === '{' && input.charAt(parser_pos + 1) === '}') {
+                        sharp += '{}';
+                        parser_pos += 2;
+                    }
+                    return [sharp, 'TK_WORD'];
+                }
+            }
+
+            if (c === '<' && (input.charAt(parser_pos) === '?' || input.charAt(parser_pos) === '%')) {
+                template_pattern.lastIndex = parser_pos - 1;
+                var template_match = template_pattern.exec(input);
+                if(template_match) {
+                    c = template_match[0];
+                    parser_pos += c.length - 1;
+                    c = c.replace(acorn.lineBreak, '\n');
+                    return [c, 'TK_STRING'];
+                }
+            }
+
+            if (c === '<' && input.substring(parser_pos - 1, parser_pos + 3) === '<!--') {
+                parser_pos += 3;
+                c = '<!--';
+                while (!acorn.newline.test(input.charAt(parser_pos)) && parser_pos < input_length) {
+                    c += input.charAt(parser_pos);
+                    parser_pos++;
+                }
+                in_html_comment = true;
+                return [c, 'TK_COMMENT'];
+            }
+
+            if (c === '-' && in_html_comment && input.substring(parser_pos - 1, parser_pos + 2) === '-->') {
+                in_html_comment = false;
+                parser_pos += 2;
+                return ['-->', 'TK_COMMENT'];
+            }
+
+            if (c === '.') {
+                return [c, 'TK_DOT'];
+            }
+
+            if (in_array(c, punct)) {
+                while (parser_pos < input_length && in_array(c + input.charAt(parser_pos), punct)) {
+                    c += input.charAt(parser_pos);
+                    parser_pos += 1;
+                    if (parser_pos >= input_length) {
+                        break;
+                    }
+                }
+
+                if (c === ',') {
+                    return [c, 'TK_COMMA'];
+                } else if (c === '=') {
+                    return [c, 'TK_EQUALS'];
+                } else {
+                    return [c, 'TK_OPERATOR'];
+                }
+            }
+
+            return [c, 'TK_UNKNOWN'];
+        }
+
 
         function unescape_string(s) {
             var esc = false,
@@ -2089,969 +4123,14 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
             return out;
         }
 
-        function is_next(find) {
-            var local_pos = parser_pos;
-            var c = input.charAt(local_pos);
-            while (in_array(c, whitespace) && c !== find) {
-                local_pos++;
-                if (local_pos >= input_length) {
-                    return false;
-                }
-                c = input.charAt(local_pos);
-            }
-            return c === find;
-        }
-
-        function get_next_token() {
-            var i, resulting_string;
-
-            n_newlines = 0;
-
-            if (parser_pos >= input_length) {
-                return ['', 'TK_EOF'];
-            }
-
-            input_wanted_newline = false;
-            whitespace_before_token = [];
-
-            var c = input.charAt(parser_pos);
-            parser_pos += 1;
-
-            while (in_array(c, whitespace)) {
-
-                if (c === '\n') {
-                    n_newlines += 1;
-                    whitespace_before_token = [];
-                } else if (n_newlines) {
-                    if (c === indent_string) {
-                        whitespace_before_token.push(indent_string);
-                    } else if (c !== '\r') {
-                        whitespace_before_token.push(' ');
-                    }
-                }
-
-                if (parser_pos >= input_length) {
-                    return ['', 'TK_EOF'];
-                }
-
-                c = input.charAt(parser_pos);
-                parser_pos += 1;
-            }
-
-            if (in_array(c, wordchar)) {
-                if (parser_pos < input_length) {
-                    while (in_array(input.charAt(parser_pos), wordchar)) {
-                        c += input.charAt(parser_pos);
-                        parser_pos += 1;
-                        if (parser_pos === input_length) {
-                            break;
-                        }
-                    }
-                }
-
-                // small and surprisingly unugly hack for 1E-10 representation
-                if (parser_pos !== input_length && c.match(/^[0-9]+[Ee]$/) && (input.charAt(parser_pos) === '-' || input.charAt(parser_pos) === '+')) {
-
-                    var sign = input.charAt(parser_pos);
-                    parser_pos += 1;
-
-                    var t = get_next_token();
-                    c += sign + t[0];
-                    return [c, 'TK_WORD'];
-                }
-
-                if (c === 'in') { // hack for 'in' operator
-                    return [c, 'TK_OPERATOR'];
-                }
-                return [c, 'TK_WORD'];
-            }
-
-            if (c === '(' || c === '[') {
-                return [c, 'TK_START_EXPR'];
-            }
-
-            if (c === ')' || c === ']') {
-                return [c, 'TK_END_EXPR'];
-            }
-
-            if (c === '{') {
-                return [c, 'TK_START_BLOCK'];
-            }
-
-            if (c === '}') {
-                return [c, 'TK_END_BLOCK'];
-            }
-
-            if (c === ';') {
-                return [c, 'TK_SEMICOLON'];
-            }
-
-            if (c === '/') {
-                var comment = '';
-                // peek for comment /* ... */
-                var inline_comment = true;
-                if (input.charAt(parser_pos) === '*') {
-                    parser_pos += 1;
-                    if (parser_pos < input_length) {
-                        while (parser_pos < input_length && !(input.charAt(parser_pos) === '*' && input.charAt(parser_pos + 1) && input.charAt(parser_pos + 1) === '/')) {
-                            c = input.charAt(parser_pos);
-                            comment += c;
-                            if (c === "\n" || c === "\r") {
-                                inline_comment = false;
-                            }
-                            parser_pos += 1;
-                            if (parser_pos >= input_length) {
-                                break;
-                            }
-                        }
-                    }
-                    parser_pos += 2;
-                    if (inline_comment && n_newlines === 0) {
-                        return ['/*' + comment + '*/', 'TK_INLINE_COMMENT'];
-                    } else {
-                        return ['/*' + comment + '*/', 'TK_BLOCK_COMMENT'];
-                    }
-                }
-                // peek for comment // ...
-                if (input.charAt(parser_pos) === '/') {
-                    comment = c;
-                    while (input.charAt(parser_pos) !== '\r' && input.charAt(parser_pos) !== '\n') {
-                        comment += input.charAt(parser_pos);
-                        parser_pos += 1;
-                        if (parser_pos >= input_length) {
-                            break;
-                        }
-                    }
-                    return [comment, 'TK_COMMENT'];
-                }
-
-            }
-
-
-            if (c === "'" || c === '"' || // string
-                (
-                    (c === '/') || // regexp
-                    (opt.e4x && c === "<" && input.slice(parser_pos - 1).match(/^<([-a-zA-Z:0-9_.]+|{[^{}]*}|!\[CDATA\[[\s\S]*?\]\])\s*([-a-zA-Z:0-9_.]+=('[^']*'|"[^"]*"|{[^{}]*})\s*)*\/?\s*>/)) // xml
-                ) && ( // regex and xml can only appear in specific locations during parsing
-                    (last_type === 'TK_WORD' && is_special_word(flags.last_text)) ||
-                    (last_type === 'TK_END_EXPR' && in_array(previous_flags.mode, [MODE.Conditional, MODE.ForInitializer])) ||
-                    (in_array(last_type, ['TK_COMMENT', 'TK_START_EXPR', 'TK_START_BLOCK',
-                        'TK_END_BLOCK', 'TK_OPERATOR', 'TK_EQUALS', 'TK_EOF', 'TK_SEMICOLON', 'TK_COMMA'
-                    ]))
-                )) {
-
-                var sep = c,
-                    esc = false,
-                    has_char_escapes = false;
-
-                resulting_string = c;
-
-                if (parser_pos < input_length) {
-                    if (sep === '/') {
-                        //
-                        // handle regexp
-                        //
-                        var in_char_class = false;
-                        while (esc || in_char_class || input.charAt(parser_pos) !== sep) {
-                            resulting_string += input.charAt(parser_pos);
-                            if (!esc) {
-                                esc = input.charAt(parser_pos) === '\\';
-                                if (input.charAt(parser_pos) === '[') {
-                                    in_char_class = true;
-                                } else if (input.charAt(parser_pos) === ']') {
-                                    in_char_class = false;
-                                }
-                            } else {
-                                esc = false;
-                            }
-                            parser_pos += 1;
-                            if (parser_pos >= input_length) {
-                                // incomplete string/rexp when end-of-file reached.
-                                // bail out with what had been received so far.
-                                return [resulting_string, 'TK_STRING'];
-                            }
-                        }
-                    } else if (opt.e4x && sep === '<') {
-                        //
-                        // handle e4x xml literals
-                        //
-                        var xmlRegExp = /<(\/?)([-a-zA-Z:0-9_.]+|{[^{}]*}|!\[CDATA\[[\s\S]*?\]\])\s*([-a-zA-Z:0-9_.]+=('[^']*'|"[^"]*"|{[^{}]*})\s*)*(\/?)\s*>/g;
-                        var xmlStr = input.slice(parser_pos - 1);
-                        var match = xmlRegExp.exec(xmlStr);
-                        if (match && match.index === 0) {
-                            var rootTag = match[2];
-                            var depth = 0;
-                            while (match) {
-                                var isEndTag = !! match[1];
-                                var tagName = match[2];
-                                var isSingletonTag = ( !! match[match.length - 1]) || (tagName.slice(0, 8) === "![CDATA[");
-                                if (tagName === rootTag && !isSingletonTag) {
-                                    if (isEndTag) {
-                                        --depth;
-                                    } else {
-                                        ++depth;
-                                    }
-                                }
-                                if (depth <= 0) {
-                                    break;
-                                }
-                                match = xmlRegExp.exec(xmlStr);
-                            }
-                            var xmlLength = match ? match.index + match[0].length : xmlStr.length;
-                            parser_pos += xmlLength - 1;
-                            return [xmlStr.slice(0, xmlLength), "TK_STRING"];
-                        }
-                    } else {
-                        //
-                        // handle string
-                        //
-                        while (esc || input.charAt(parser_pos) !== sep) {
-                            resulting_string += input.charAt(parser_pos);
-                            if (esc) {
-                                if (input.charAt(parser_pos) === 'x' || input.charAt(parser_pos) === 'u') {
-                                    has_char_escapes = true;
-                                }
-                                esc = false;
-                            } else {
-                                esc = input.charAt(parser_pos) === '\\';
-                            }
-                            parser_pos += 1;
-                            if (parser_pos >= input_length) {
-                                // incomplete string/rexp when end-of-file reached.
-                                // bail out with what had been received so far.
-                                return [resulting_string, 'TK_STRING'];
-                            }
-                        }
-
-                    }
-                }
-
-                parser_pos += 1;
-                resulting_string += sep;
-
-                if (has_char_escapes && opt.unescape_strings) {
-                    resulting_string = unescape_string(resulting_string);
-                }
-
-                if (sep === '/') {
-                    // regexps may have modifiers /regexp/MOD , so fetch those, too
-                    while (parser_pos < input_length && in_array(input.charAt(parser_pos), wordchar)) {
-                        resulting_string += input.charAt(parser_pos);
-                        parser_pos += 1;
-                    }
-                }
-                return [resulting_string, 'TK_STRING'];
-            }
-
-            if (c === '#') {
-
-
-                if (output_lines.length === 1 && output_lines[0].text.length === 0 &&
-                    input.charAt(parser_pos) === '!') {
-                    // shebang
-                    resulting_string = c;
-                    while (parser_pos < input_length && c !== '\n') {
-                        c = input.charAt(parser_pos);
-                        resulting_string += c;
-                        parser_pos += 1;
-                    }
-                    return [trim(resulting_string) + '\n', 'TK_UNKNOWN'];
-                }
-
-
-
-                // Spidermonkey-specific sharp variables for circular references
-                // https://developer.mozilla.org/En/Sharp_variables_in_JavaScript
-                // http://mxr.mozilla.org/mozilla-central/source/js/src/jsscan.cpp around line 1935
-                var sharp = '#';
-                if (parser_pos < input_length && in_array(input.charAt(parser_pos), digits)) {
-                    do {
-                        c = input.charAt(parser_pos);
-                        sharp += c;
-                        parser_pos += 1;
-                    } while (parser_pos < input_length && c !== '#' && c !== '=');
-                    if (c === '#') {
-                        //
-                    } else if (input.charAt(parser_pos) === '[' && input.charAt(parser_pos + 1) === ']') {
-                        sharp += '[]';
-                        parser_pos += 2;
-                    } else if (input.charAt(parser_pos) === '{' && input.charAt(parser_pos + 1) === '}') {
-                        sharp += '{}';
-                        parser_pos += 2;
-                    }
-                    return [sharp, 'TK_WORD'];
-                }
-            }
-
-            if (c === '<' && input.substring(parser_pos - 1, parser_pos + 3) === '<!--') {
-                parser_pos += 3;
-                c = '<!--';
-                while (input.charAt(parser_pos) !== '\n' && parser_pos < input_length) {
-                    c += input.charAt(parser_pos);
-                    parser_pos++;
-                }
-                flags.in_html_comment = true;
-                return [c, 'TK_COMMENT'];
-            }
-
-            if (c === '-' && flags.in_html_comment && input.substring(parser_pos - 1, parser_pos + 2) === '-->') {
-                flags.in_html_comment = false;
-                parser_pos += 2;
-                return ['-->', 'TK_COMMENT'];
-            }
-
-            if (c === '.') {
-                return [c, 'TK_DOT'];
-            }
-
-            if (in_array(c, punct)) {
-                while (parser_pos < input_length && in_array(c + input.charAt(parser_pos), punct)) {
-                    c += input.charAt(parser_pos);
-                    parser_pos += 1;
-                    if (parser_pos >= input_length) {
-                        break;
-                    }
-                }
-
-                if (c === ',') {
-                    return [c, 'TK_COMMA'];
-                } else if (c === '=') {
-                    return [c, 'TK_EQUALS'];
-                } else {
-                    return [c, 'TK_OPERATOR'];
-                }
-            }
-
-            return [c, 'TK_UNKNOWN'];
-        }
-
-        function handle_start_expr() {
-            if (start_of_statement()) {
-                // The conditional starts the statement if appropriate.
-            }
-
-            var next_mode = MODE.Expression;
-            if (token_text === '[') {
-
-                if (last_type === 'TK_WORD' || flags.last_text === ')') {
-                    // this is array index specifier, break immediately
-                    // a[x], fn()[x]
-                    if (in_array(flags.last_text, line_starters)) {
-                        output_space_before_token = true;
-                    }
-                    set_mode(next_mode);
-                    print_token();
-                    indent();
-                    if (opt.space_in_paren) {
-                        output_space_before_token = true;
-                    }
-                    return;
-                }
-
-                next_mode = MODE.ArrayLiteral;
-                if (is_array(flags.mode)) {
-                    if (flags.last_text === '[' ||
-                        (flags.last_text === ',' && (last_last_text === ']' || last_last_text === '}'))) {
-                        // ], [ goes to new line
-                        // }, [ goes to new line
-                        if (!opt.keep_array_indentation) {
-                            print_newline();
-                        }
-                    }
-                }
-
-            } else {
-                if (flags.last_text === 'for') {
-                    next_mode = MODE.ForInitializer;
-                } else if (in_array(flags.last_text, ['if', 'while'])) {
-                    next_mode = MODE.Conditional;
-                } else {
-                    // next_mode = MODE.Expression;
-                }
-            }
-
-            if (flags.last_text === ';' || last_type === 'TK_START_BLOCK') {
-                print_newline();
-            } else if (last_type === 'TK_END_EXPR' || last_type === 'TK_START_EXPR' || last_type === 'TK_END_BLOCK' || flags.last_text === '.') {
-                // TODO: Consider whether forcing this is required.  Review failing tests when removed.
-                allow_wrap_or_preserved_newline(input_wanted_newline);
-                output_wrapped = false;
-                // do nothing on (( and )( and ][ and ]( and .(
-            } else if (last_type !== 'TK_WORD' && last_type !== 'TK_OPERATOR') {
-                output_space_before_token = true;
-            } else if (flags.last_word === 'function' || flags.last_word === 'typeof') {
-                // function() vs function ()
-                if (opt.jslint_happy) {
-                    output_space_before_token = true;
-                }
-            } else if (in_array(flags.last_text, line_starters) || flags.last_text === 'catch') {
-                if (opt.space_before_conditional) {
-                    output_space_before_token = true;
-                }
-            }
-
-            // Support of this kind of newline preservation.
-            // a = (b &&
-            //     (c || d));
-            if (token_text === '(') {
-                if (last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
-                    if (!start_of_object_property()) {
-                        allow_wrap_or_preserved_newline();
-                    }
-                }
-            }
-
-            set_mode(next_mode);
-            print_token();
-            if (opt.space_in_paren) {
-                output_space_before_token = true;
-            }
-
-            // In all cases, if we newline while inside an expression it should be indented.
-            indent();
-        }
-
-        function handle_end_expr() {
-            // statements inside expressions are not valid syntax, but...
-            // statements must all be closed when their container closes
-            while (flags.mode === MODE.Statement) {
-                restore_mode();
-            }
-
-            if (token_text === ']' && is_array(flags.mode) && flags.multiline_frame && !opt.keep_array_indentation) {
-                print_newline();
-            }
-
-            if (flags.multiline_frame) {
-                allow_wrap_or_preserved_newline();
-            }
-            if (opt.space_in_paren) {
-                if (last_type === 'TK_START_EXPR') {
-                    // () [] no inner space in empty parens like these, ever, ref #320
-                    trim_output();
-                    output_space_before_token = false;
-                } else {
-                    output_space_before_token = true;
-                }
-            }
-            if (token_text === ']' && opt.keep_array_indentation) {
-                print_token();
-                restore_mode();
-            } else {
-                restore_mode();
-                print_token();
-            }
-            remove_redundant_indentation(previous_flags);
-
-            // do {} while () // no statement required after
-            if (flags.do_while && previous_flags.mode === MODE.Conditional) {
-                previous_flags.mode = MODE.Expression;
-                flags.do_block = false;
-                flags.do_while = false;
-
-            }
-        }
-
-        function handle_start_block() {
-            set_mode(MODE.BlockStatement);
-
-            var empty_braces = is_next('}');
-            var empty_anonymous_function = empty_braces && flags.last_word === 'function' &&
-                last_type === 'TK_END_EXPR';
-
-            if (opt.brace_style === "expand") {
-                if (last_type !== 'TK_OPERATOR' &&
-                    (empty_anonymous_function ||
-                        last_type === 'TK_EQUALS' ||
-                        (is_special_word(flags.last_text) && flags.last_text !== 'else'))) {
-                    output_space_before_token = true;
-                } else {
-                    print_newline();
-                }
-            } else { // collapse
-                if (last_type !== 'TK_OPERATOR' && last_type !== 'TK_START_EXPR') {
-                    if (last_type === 'TK_START_BLOCK') {
-                        print_newline();
-                    } else {
-                        output_space_before_token = true;
-                    }
-                } else {
-                    // if TK_OPERATOR or TK_START_EXPR
-                    if (is_array(previous_flags.mode) && flags.last_text === ',') {
-                        if (last_last_text === '}') {
-                            // }, { in array context
-                            output_space_before_token = true;
-                        } else {
-                            print_newline(); // [a, b, c, {
-                        }
-                    }
-                }
-            }
-            print_token();
-            indent();
-        }
-
-        function handle_end_block() {
-            // statements must all be closed when their container closes
-            while (flags.mode === MODE.Statement) {
-                restore_mode();
-            }
-            var empty_braces = last_type === 'TK_START_BLOCK';
-
-            if (opt.brace_style === "expand") {
-                if (!empty_braces) {
-                    print_newline();
-                }
-            } else {
-                // skip {}
-                if (!empty_braces) {
-                    if (is_array(flags.mode) && opt.keep_array_indentation) {
-                        // we REALLY need a newline here, but newliner would skip that
-                        opt.keep_array_indentation = false;
-                        print_newline();
-                        opt.keep_array_indentation = true;
-
-                    } else {
-                        print_newline();
-                    }
-                }
-            }
-            restore_mode();
-            print_token();
-        }
-
-        function handle_word() {
-            if (start_of_statement()) {
-                // The conditional starts the statement if appropriate.
-            } else if (input_wanted_newline && !is_expression(flags.mode) &&
-                (last_type !== 'TK_OPERATOR' || (flags.last_text === '--' || flags.last_text === '++')) &&
-                last_type !== 'TK_EQUALS' &&
-                (opt.preserve_newlines || flags.last_text !== 'var')) {
-
-                print_newline();
-            }
-
-            if (flags.do_block && !flags.do_while) {
-                if (token_text === 'while') {
-                    // do {} ## while ()
-                    output_space_before_token = true;
-                    print_token();
-                    output_space_before_token = true;
-                    flags.do_while = true;
-                    return;
-                } else {
-                    // do {} should always have while as the next word.
-                    // if we don't see the expected while, recover
-                    print_newline();
-                    flags.do_block = false;
-                }
-            }
-
-            // if may be followed by else, or not
-            // Bare/inline ifs are tricky
-            // Need to unwind the modes correctly: if (a) if (b) c(); else d(); else e();
-            if (flags.if_block) {
-                if (token_text !== 'else') {
-                    while (flags.mode === MODE.Statement) {
-                        restore_mode();
-                    }
-                    flags.if_block = false;
-                }
-            }
-
-            if (token_text === 'case' || (token_text === 'default' && flags.in_case_statement)) {
-                print_newline();
-                if (flags.case_body || opt.jslint_happy) {
-                    // switch cases following one another
-                    deindent();
-                    flags.case_body = false;
-                }
-                print_token();
-                flags.in_case = true;
-                flags.in_case_statement = true;
-                return;
-            }
-
-            if (token_text === 'function') {
-                if (flags.var_line && last_type !== 'TK_EQUALS') {
-                    flags.var_line_reindented = true;
-                }
-                if (in_array(flags.last_text, ['}', ';']) || (just_added_newline() && ! in_array(flags.last_text, ['{', ':', '=', ',']))) {
-                    // make sure there is a nice clean space of at least one blank line
-                    // before a new function definition
-                    if ( ! just_added_blankline() && ! flags.had_comment) {
-                        print_newline();
-                        print_newline(true);
-                    }
-                }
-                if (last_type === 'TK_WORD') {
-                    if (flags.last_text === 'get' || flags.last_text === 'set' || flags.last_text === 'new' || flags.last_text === 'return') {
-                        output_space_before_token = true;
-                    } else {
-                        print_newline();
-                    }
-                } else if (last_type === 'TK_OPERATOR' || flags.last_text === '=') {
-                    // foo = function
-                    output_space_before_token = true;
-                } else if (is_expression(flags.mode)) {
-                    // (function
-                } else {
-                    print_newline();
-                }
-            }
-
-            if (last_type === 'TK_COMMA' || last_type === 'TK_START_EXPR' || last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
-                if (!start_of_object_property()) {
-                    allow_wrap_or_preserved_newline();
-                }
-            }
-
-            if (token_text === 'function') {
-                print_token();
-                flags.last_word = token_text;
-                return;
-            }
-
-            prefix = 'NONE';
-
-            if (last_type === 'TK_END_BLOCK') {
-                if (!in_array(token_text, ['else', 'catch', 'finally'])) {
-                    prefix = 'NEWLINE';
-                } else {
-                    if (opt.brace_style === "expand" || opt.brace_style === "end-expand") {
-                        prefix = 'NEWLINE';
-                    } else {
-                        prefix = 'SPACE';
-                        output_space_before_token = true;
-                    }
-                }
-            } else if (last_type === 'TK_SEMICOLON' && flags.mode === MODE.BlockStatement) {
-                // TODO: Should this be for STATEMENT as well?
-                prefix = 'NEWLINE';
-            } else if (last_type === 'TK_SEMICOLON' && is_expression(flags.mode)) {
-                prefix = 'SPACE';
-            } else if (last_type === 'TK_STRING') {
-                prefix = 'NEWLINE';
-            } else if (last_type === 'TK_WORD') {
-                prefix = 'SPACE';
-            } else if (last_type === 'TK_START_BLOCK') {
-                prefix = 'NEWLINE';
-            } else if (last_type === 'TK_END_EXPR') {
-                output_space_before_token = true;
-                prefix = 'NEWLINE';
-            }
-
-            if (in_array(token_text, line_starters) && flags.last_text !== ')') {
-                if (flags.last_text === 'else') {
-                    prefix = 'SPACE';
-                } else {
-                    prefix = 'NEWLINE';
-                }
-
-            }
-
-            if (in_array(token_text, ['else', 'catch', 'finally'])) {
-                if (last_type !== 'TK_END_BLOCK' || opt.brace_style === "expand" || opt.brace_style === "end-expand") {
-                    print_newline();
-                } else {
-                    trim_output(true);
-                    var line = output_lines[output_lines.length - 1];
-                    // If we trimmed and there's something other than a close block before us
-                    // put a newline back in.  Handles '} // comment' scenario.
-                    if (line.text[line.text.length - 1] !== '}') {
-                        print_newline();
-                    }
-                    output_space_before_token = true;
-                }
-            } else if (prefix === 'NEWLINE') {
-                if (is_special_word(flags.last_text)) {
-                    // no newline between 'return nnn'
-                    output_space_before_token = true;
-                } else if (last_type !== 'TK_END_EXPR') {
-                    if ((last_type !== 'TK_START_EXPR' || token_text !== 'var') && flags.last_text !== ':') {
-                        // no need to force newline on 'var': for (var x = 0...)
-                        if (token_text === 'if' && flags.last_word === 'else' && flags.last_text !== '{') {
-                            // no newline for } else if {
-                            output_space_before_token = true;
-                        } else {
-                            flags.var_line = false;
-                            flags.var_line_reindented = false;
-                            print_newline();
-                        }
-                    }
-                } else if (in_array(token_text, line_starters) && flags.last_text !== ')') {
-                    flags.var_line = false;
-                    flags.var_line_reindented = false;
-                    print_newline();
-                }
-            } else if (is_array(flags.mode) && flags.last_text === ',' && last_last_text === '}') {
-                print_newline(); // }, in lists get a newline treatment
-            } else if (prefix === 'SPACE') {
-                output_space_before_token = true;
-            }
-            print_token();
-            flags.last_word = token_text;
-
-            if (token_text === 'var') {
-                flags.var_line = true;
-                flags.var_line_reindented = false;
-                flags.var_line_tainted = false;
-            }
-
-            if (token_text === 'do') {
-                flags.do_block = true;
-            }
-
-            if (token_text === 'if') {
-                flags.if_block = true;
-            }
-        }
-
-        function handle_semicolon() {
-            if (start_of_statement()) {
-                // The conditional starts the statement if appropriate.
-                // Semicolon can be the start (and end) of a statement
-                output_space_before_token = false;
-            }
-            while (flags.mode === MODE.Statement && !flags.if_block && !flags.do_block) {
-                restore_mode();
-            }
-            print_token();
-            flags.var_line = false;
-            flags.var_line_reindented = false;
-            if (flags.mode === MODE.ObjectLiteral) {
-                // if we're in OBJECT mode and see a semicolon, its invalid syntax
-                // recover back to treating this as a BLOCK
-                flags.mode = MODE.BlockStatement;
-            }
-        }
-
-        function handle_string() {
-            if (start_of_statement()) {
-                // The conditional starts the statement if appropriate.
-                // One difference - strings want at least a space before
-                output_space_before_token = true;
-            } else if (last_type === 'TK_WORD') {
-                output_space_before_token = true;
-            } else if (last_type === 'TK_COMMA' || last_type === 'TK_START_EXPR' || last_type === 'TK_EQUALS' || last_type === 'TK_OPERATOR') {
-                if (!start_of_object_property()) {
-                    allow_wrap_or_preserved_newline();
-                }
-            } else {
-                print_newline();
-            }
-            print_token();
-        }
-
-        function handle_equals() {
-            if (flags.var_line) {
-                // just got an '=' in a var-line, different formatting/line-breaking, etc will now be done
-                flags.var_line_tainted = true;
-            }
-            output_space_before_token = true;
-            print_token();
-            output_space_before_token = true;
-        }
-
-        function handle_comma() {
-            if (flags.var_line) {
-                if (is_expression(flags.mode) || last_type === 'TK_END_BLOCK') {
-                    // do not break on comma, for(var a = 1, b = 2)
-                    flags.var_line_tainted = false;
-                }
-
-                if (flags.var_line) {
-                    flags.var_line_reindented = true;
-                }
-
-                print_token();
-
-                if (flags.var_line_tainted) {
-                    flags.var_line_tainted = false;
-                    print_newline();
-                } else {
-                    output_space_before_token = true;
-                }
-                return;
-            }
-
-            if (last_type === 'TK_END_BLOCK' && flags.mode !== MODE.Expression) {
-                print_token();
-                if (flags.mode === MODE.ObjectLiteral && flags.last_text === '}') {
-                    print_newline();
-                } else {
-                    output_space_before_token = true;
-                }
-            } else {
-                if (flags.mode === MODE.ObjectLiteral) {
-                    print_token();
-                    print_newline();
-                } else {
-                    // EXPR or DO_BLOCK
-                    print_token();
-                    output_space_before_token = true;
-                }
-            }
-        }
-
-        function handle_operator() {
-            var space_before = true;
-            var space_after = true;
-            if (is_special_word(flags.last_text)) {
-                // "return" had a special handling in TK_WORD. Now we need to return the favor
-                output_space_before_token = true;
-                print_token();
-                return;
-            }
-
-            // hack for actionscript's import .*;
-            if (token_text === '*' && last_type === 'TK_DOT' && !last_last_text.match(/^\d+$/)) {
-                print_token();
-                return;
-            }
-
-            if (token_text === ':' && flags.in_case) {
-                flags.case_body = true;
-                indent();
-                print_token();
-                print_newline();
-                flags.in_case = false;
-                return;
-            }
-
-            if (token_text === '::') {
-                // no spaces around exotic namespacing syntax operator
-                print_token();
-                return;
-            }
-
-            // http://www.ecma-international.org/ecma-262/5.1/#sec-7.9.1
-            // if there is a newline between -- or ++ and anything else we should preserve it.
-            if (input_wanted_newline && (token_text === '--' || token_text === '++')) {
-                print_newline();
-            }
-
-            if (in_array(token_text, ['--', '++', '!']) || (in_array(token_text, ['-', '+']) && (in_array(last_type, ['TK_START_BLOCK', 'TK_START_EXPR', 'TK_EQUALS', 'TK_OPERATOR']) || in_array(flags.last_text, line_starters) || flags.last_text === ','))) {
-                // unary operators (and binary +/- pretending to be unary) special cases
-
-                space_before = false;
-                space_after = false;
-
-                if (flags.last_text === ';' && is_expression(flags.mode)) {
-                    // for (;; ++i)
-                    //        ^^^
-                    space_before = true;
-                }
-
-                if (last_type === 'TK_WORD' && in_array(flags.last_text, line_starters)) {
-                    space_before = true;
-                }
-
-                if ((flags.mode === MODE.BlockStatement || flags.mode === MODE.Statement) && (flags.last_text === '{' || flags.last_text === ';')) {
-                    // { foo; --i }
-                    // foo(); --bar;
-                    print_newline();
-                }
-            } else if (token_text === ':') {
-                if (flags.ternary_depth === 0) {
-                    if (flags.mode === MODE.BlockStatement) {
-                        flags.mode = MODE.ObjectLiteral;
-                    }
-                    space_before = false;
-                } else {
-                    flags.ternary_depth -= 1;
-                }
-            } else if (token_text === '?') {
-                flags.ternary_depth += 1;
-            }
-            output_space_before_token = output_space_before_token || space_before;
-            print_token();
-            output_space_before_token = space_after;
-        }
-
-        function handle_block_comment() {
-            var lines = split_newlines(token_text);
-            var j; // iterator for this case
-            var javadoc = false;
-
-            // block comment starts with a new line
-            print_newline(false, true);
-            if (lines.length > 1) {
-                if (all_lines_start_with(lines.slice(1), '*')) {
-                    javadoc = true;
-                }
-            }
-
-            // first line always indented
-            print_token(lines[0]);
-            for (j = 1; j < lines.length; j++) {
-                print_newline(false, true);
-                if (javadoc) {
-                    // javadoc: reformat and re-indent
-                    print_token(' ' + trim(lines[j]));
-                } else {
-                    // normal comments output raw
-                    output_lines[output_lines.length - 1].text.push(lines[j]);
-                }
-            }
-
-            // for comments of more than one line, make sure there's a new line after
-            print_newline(false, true);
-        }
-
-        function handle_inline_comment() {
-            output_space_before_token = true;
-            print_token();
-            output_space_before_token = true;
-        }
-
-        function handle_comment() {
-            if (input_wanted_newline) {
-                print_newline(false, true);
-            } else {
-                trim_output(true);
-            }
-
-            output_space_before_token = true;
-            print_token();
-            print_newline(false, true);
-        }
-
-        function handle_dot() {
-            if (is_special_word(flags.last_text)) {
-                output_space_before_token = true;
-            } else {
-                // allow preserved newlines before dots in general
-                // force newlines on dots after close paren when break_chained - for bar().baz()
-                allow_wrap_or_preserved_newline(flags.last_text === ')' && opt.break_chained_methods);
-            }
-
-            print_token();
-        }
-
-        function handle_unknown() {
-            print_token();
-
-            if (token_text[token_text.length - 1] === '\n') {
-                print_newline();
-            }
-        }
     }
 
 
-    if (typeof define === "function") {
-        // Add support for require.js
-        if (typeof define.amd === "undefined") {
-            define(function(require, exports, module) {
-                exports.js_beautify = js_beautify;
-            });
-        } else {
-            // if is AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
-            define([], function() {
-                return js_beautify;
-            });
-        }
-
+    if (typeof define === "function" && define.amd) {
+        // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
+        define([], function() {
+            return { js_beautify: js_beautify };
+        });
     } else if (typeof exports !== "undefined") {
         // Add support for CommonJS. Just put this file somewhere on your require.paths
         // and you will be able to `var js_beautify = require("beautify").js_beautify`.
@@ -3066,1193 +4145,253 @@ var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? 
 
 }());
 
-},{}],8:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createCallback = require('lodash.createcallback');
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],11:[function(require,module,exports){
+module.exports = once
 
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
+once.proto = once(function () {
+  Object.defineProperty(Function.prototype, 'once', {
+    value: function () {
+      return once(this)
+    },
+    configurable: true
+  })
+})
 
-/** Native method shortcuts */
-var splice = arrayRef.splice;
-
-/**
- * Removes all elements from an array that the callback returns truey for
- * and returns an array of removed elements. The callback is bound to `thisArg`
- * and invoked with three arguments; (value, index, array).
- *
- * If a property name is provided for `callback` the created "_.pluck" style
- * callback will return the property value of the given element.
- *
- * If an object is provided for `callback` the created "_.where" style callback
- * will return `true` for elements that have the properties of the given object,
- * else `false`.
- *
- * @static
- * @memberOf _
- * @category Arrays
- * @param {Array} array The array to modify.
- * @param {Function|Object|string} [callback=identity] The function called
- *  per iteration. If a property name or object is provided it will be used
- *  to create a "_.pluck" or "_.where" style callback, respectively.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Array} Returns a new array of removed elements.
- * @example
- *
- * var array = [1, 2, 3, 4, 5, 6];
- * var evens = _.remove(array, function(num) { return num % 2 == 0; });
- *
- * console.log(array);
- * // => [1, 3, 5]
- *
- * console.log(evens);
- * // => [2, 4, 6]
- */
-function remove(array, callback, thisArg) {
-  var index = -1,
-      length = array ? array.length : 0,
-      result = [];
-
-  callback = createCallback(callback, thisArg, 3);
-  while (++index < length) {
-    var value = array[index];
-    if (callback(value, index, array)) {
-      result.push(value);
-      splice.call(array, index--, 1);
-      length--;
-    }
+function once (fn) {
+  var called = false
+  return function () {
+    if (called) return
+    called = true
+    return fn.apply(this, arguments)
   }
-  return result;
 }
 
-module.exports = remove;
+},{}],12:[function(require,module,exports){
+var trim = require('trim')
+  , forEach = require('for-each')
+  , isArray = function(arg) {
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    }
 
-},{"lodash.createcallback":9}],9:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('lodash._basecreatecallback'),
-    baseIsEqual = require('lodash._baseisequal'),
-    isObject = require('lodash.isobject'),
-    keys = require('lodash.keys');
+module.exports = function (headers) {
+  if (!headers)
+    return {}
 
-/**
- * Produces a callback bound to an optional `thisArg`. If `func` is a property
- * name the created callback will return the property value for a given element.
- * If `func` is an object the created callback will return `true` for elements
- * that contain the equivalent object properties, otherwise it will return `false`.
- *
- * @static
- * @memberOf _
- * @category Functions
- * @param {*} [func=identity] The value to convert to a callback.
- * @param {*} [thisArg] The `this` binding of the created callback.
- * @param {number} [argCount] The number of arguments the callback accepts.
- * @returns {Function} Returns a callback function.
- * @example
- *
- * var stooges = [
- *   { 'name': 'moe', 'age': 40 },
- *   { 'name': 'larry', 'age': 50 }
- * ];
- *
- * // wrap to create custom callback shorthands
- * _.createCallback = _.wrap(_.createCallback, function(func, callback, thisArg) {
- *   var match = /^(.+?)__([gl]t)(.+)$/.exec(callback);
- *   return !match ? func(callback, thisArg) : function(object) {
- *     return match[2] == 'gt' ? object[match[1]] > match[3] : object[match[1]] < match[3];
- *   };
- * });
- *
- * _.filter(stooges, 'age__gt45');
- * // => [{ 'name': 'larry', 'age': 50 }]
- */
-function createCallback(func, thisArg, argCount) {
-  var type = typeof func;
-  if (func == null || type == 'function') {
-    return baseCreateCallback(func, thisArg, argCount);
-  }
-  // handle "_.pluck" style callback shorthands
-  if (type != 'object') {
-    return function(object) {
-      return object[func];
-    };
-  }
-  var props = keys(func),
-      key = props[0],
-      a = func[key];
+  var result = {}
 
-  // handle "_.where" style callback shorthands
-  if (props.length == 1 && a === a && !isObject(a)) {
-    // fast path the common case of providing an object with a single
-    // property containing a primitive value
-    return function(object) {
-      var b = object[key];
-      return a === b && (a !== 0 || (1 / a == 1 / b));
-    };
-  }
-  return function(object) {
-    var length = props.length,
-        result = false;
+  forEach(
+      trim(headers).split('\n')
+    , function (row) {
+        var index = row.indexOf(':')
+          , key = trim(row.slice(0, index)).toLowerCase()
+          , value = trim(row.slice(index + 1))
 
-    while (length--) {
-      if (!(result = baseIsEqual(object[props[length]], func[props[length]], null, true))) {
-        break;
+        if (typeof(result[key]) === 'undefined') {
+          result[key] = value
+        } else if (isArray(result[key])) {
+          result[key].push(value)
+        } else {
+          result[key] = [ result[key], value ]
+        }
       }
-    }
-    return result;
-  };
+  )
+
+  return result
+}
+},{"for-each":4,"trim":13}],13:[function(require,module,exports){
+
+exports = module.exports = trim;
+
+function trim(str){
+  return str.replace(/^\s*|\s*$/g, '');
 }
 
-module.exports = createCallback;
-
-},{"lodash._basecreatecallback":10,"lodash._baseisequal":23,"lodash.isobject":32,"lodash.keys":34}],10:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var bind = require('lodash.bind'),
-    identity = require('lodash.identity'),
-    setBindData = require('lodash._setbinddata'),
-    support = require('lodash.support');
-
-/** Used to detected named functions */
-var reFuncName = /^function[ \n\r\t]+\w/;
-
-/** Used to detect functions containing a `this` reference */
-var reThis = /\bthis\b/;
-
-/** Native method shortcuts */
-var fnToString = Function.prototype.toString;
-
-/**
- * The base implementation of `_.createCallback` without support for creating
- * "_.pluck" or "_.where" style callbacks.
- *
- * @private
- * @param {*} [func=identity] The value to convert to a callback.
- * @param {*} [thisArg] The `this` binding of the created callback.
- * @param {number} [argCount] The number of arguments the callback accepts.
- * @returns {Function} Returns a callback function.
- */
-function baseCreateCallback(func, thisArg, argCount) {
-  if (typeof func != 'function') {
-    return identity;
-  }
-  // exit early if there is no `thisArg`
-  if (typeof thisArg == 'undefined') {
-    return func;
-  }
-  var bindData = func.__bindData__ || (support.funcNames && !func.name);
-  if (typeof bindData == 'undefined') {
-    var source = reThis && fnToString.call(func);
-    if (!support.funcNames && source && !reFuncName.test(source)) {
-      bindData = true;
-    }
-    if (support.funcNames || !bindData) {
-      // checks if `func` references the `this` keyword and stores the result
-      bindData = !support.funcDecomp || reThis.test(source);
-      setBindData(func, bindData);
-    }
-  }
-  // exit early if there are no `this` references or `func` is bound
-  if (bindData !== true && (bindData && bindData[1] & 1)) {
-    return func;
-  }
-  switch (argCount) {
-    case 1: return function(value) {
-      return func.call(thisArg, value);
-    };
-    case 2: return function(a, b) {
-      return func.call(thisArg, a, b);
-    };
-    case 3: return function(value, index, collection) {
-      return func.call(thisArg, value, index, collection);
-    };
-    case 4: return function(accumulator, value, index, collection) {
-      return func.call(thisArg, accumulator, value, index, collection);
-    };
-  }
-  return bind(func, thisArg);
-}
-
-module.exports = baseCreateCallback;
-
-},{"lodash._setbinddata":11,"lodash.bind":14,"lodash.identity":20,"lodash.support":21}],11:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var noop = require('lodash._noop'),
-    reNative = require('lodash._renative');
-
-/** Used as the property descriptor for `__bindData__` */
-var descriptor = {
-  'configurable': false,
-  'enumerable': false,
-  'value': null,
-  'writable': false
+exports.left = function(str){
+  return str.replace(/^\s*/, '');
 };
 
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-var defineProperty = (function() {
-  try {
-    var o = {},
-        func = reNative.test(func = Object.defineProperty) && func,
-        result = func(o, o, o) && func;
-  } catch(e) { }
-  return result;
-}());
-
-/**
- * Sets `this` binding data on a given function.
- *
- * @private
- * @param {Function} func The function to set data on.
- * @param {*} value The value to set.
- */
-var setBindData = !defineProperty ? noop : function(func, value) {
-  descriptor.value = value;
-  defineProperty(func, '__bindData__', descriptor);
+exports.right = function(str){
+  return str.replace(/\s*$/, '');
 };
-
-module.exports = setBindData;
-
-},{"lodash._noop":12,"lodash._renative":13}],12:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * A no-operation function.
- *
- * @private
- */
-function noop() {
-  // no operation performed
-}
-
-module.exports = noop;
-
-},{}],13:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Used to detect if a method is native */
-var reNative = RegExp('^' +
-  String(objectProto.valueOf)
-    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    .replace(/valueOf|for [^\]]+/g, '.+?') + '$'
-);
-
-module.exports = reNative;
 
 },{}],14:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createBound = require('lodash._createbound'),
-    reNative = require('lodash._renative');
+var window = require("global/window")
+var once = require("once")
+var parseHeaders = require('parse-headers')
 
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeSlice = arrayRef.slice;
-
-/**
- * Creates a function that, when called, invokes `func` with the `this`
- * binding of `thisArg` and prepends any additional `bind` arguments to those
- * provided to the bound function.
- *
- * @static
- * @memberOf _
- * @category Functions
- * @param {Function} func The function to bind.
- * @param {*} [thisArg] The `this` binding of `func`.
- * @param {...*} [arg] Arguments to be partially applied.
- * @returns {Function} Returns the new bound function.
- * @example
- *
- * var func = function(greeting) {
- *   return greeting + ' ' + this.name;
- * };
- *
- * func = _.bind(func, { 'name': 'moe' }, 'hi');
- * func();
- * // => 'hi moe'
- */
-function bind(func, thisArg) {
-  return arguments.length > 2
-    ? createBound(func, 17, nativeSlice.call(arguments, 2), null, thisArg)
-    : createBound(func, 1, null, null, thisArg);
+var messages = {
+    "0": "Internal XMLHttpRequest Error",
+    "4": "4xx Client Error",
+    "5": "5xx Server Error"
 }
 
-module.exports = bind;
+var XHR = window.XMLHttpRequest || noop
+var XDR = "withCredentials" in (new XHR()) ? XHR : window.XDomainRequest
 
-},{"lodash._createbound":15,"lodash._renative":19}],15:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var createObject = require('lodash._createobject'),
-    isFunction = require('lodash.isfunction'),
-    isObject = require('lodash.isobject'),
-    reNative = require('lodash._renative'),
-    setBindData = require('lodash._setbinddata'),
-    support = require('lodash.support');
+module.exports = createXHR
 
-/**
- * Used for `Array` method references.
- *
- * Normally `Array.prototype` would suffice, however, using an array literal
- * avoids issues in Narwhal.
- */
-var arrayRef = [];
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Native method shortcuts */
-var push = arrayRef.push,
-    toString = objectProto.toString,
-    unshift = arrayRef.unshift;
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeBind = reNative.test(nativeBind = toString.bind) && nativeBind,
-    nativeSlice = arrayRef.slice;
-
-/**
- * Creates a function that, when called, either curries or invokes `func`
- * with an optional `this` binding and partially applied arguments.
- *
- * @private
- * @param {Function|string} func The function or method name to reference.
- * @param {number} bitmask The bitmask of method flags to compose.
- *  The bitmask may be composed of the following flags:
- *  1 - `_.bind`
- *  2 - `_.bindKey`
- *  4 - `_.curry`
- *  8 - `_.curry` (bound)
- *  16 - `_.partial`
- *  32 - `_.partialRight`
- * @param {Array} [partialArgs] An array of arguments to prepend to those
- *  provided to the new function.
- * @param {Array} [partialRightArgs] An array of arguments to append to those
- *  provided to the new function.
- * @param {*} [thisArg] The `this` binding of `func`.
- * @param {number} [arity] The arity of `func`.
- * @returns {Function} Returns the new bound function.
- */
-function createBound(func, bitmask, partialArgs, partialRightArgs, thisArg, arity) {
-  var isBind = bitmask & 1,
-      isBindKey = bitmask & 2,
-      isCurry = bitmask & 4,
-      isCurryBound = bitmask & 8,
-      isPartial = bitmask & 16,
-      isPartialRight = bitmask & 32,
-      key = func;
-
-  if (!isBindKey && !isFunction(func)) {
-    throw new TypeError;
-  }
-  if (isPartial && !partialArgs.length) {
-    bitmask &= ~16;
-    isPartial = partialArgs = false;
-  }
-  if (isPartialRight && !partialRightArgs.length) {
-    bitmask &= ~32;
-    isPartialRight = partialRightArgs = false;
-  }
-  var bindData = func && func.__bindData__;
-  if (bindData) {
-    if (isBind && !(bindData[1] & 1)) {
-      bindData[4] = thisArg;
+function createXHR(options, callback) {
+    if (typeof options === "string") {
+        options = { uri: options }
     }
-    if (!isBind && bindData[1] & 1) {
-      bitmask |= 8;
-    }
-    if (isCurry && !(bindData[1] & 4)) {
-      bindData[5] = arity;
-    }
-    if (isPartial) {
-      push.apply(bindData[2] || (bindData[2] = []), partialArgs);
-    }
-    if (isPartialRight) {
-      push.apply(bindData[3] || (bindData[3] = []), partialRightArgs);
-    }
-    bindData[1] |= bitmask;
-    return createBound.apply(null, bindData);
-  }
-  // use `Function#bind` if it exists and is fast
-  // (in V8 `Function#bind` is slower except when partially applied)
-  if (isBind && !(isBindKey || isCurry || isPartialRight) &&
-      (support.fastBind || (nativeBind && isPartial))) {
-    if (isPartial) {
-      var args = [thisArg];
-      push.apply(args, partialArgs);
-    }
-    var bound = isPartial
-      ? nativeBind.apply(func, args)
-      : nativeBind.call(func, thisArg);
-  }
-  else {
-    bound = function() {
-      // `Function#bind` spec
-      // http://es5.github.io/#x15.3.4.5
-      var args = arguments,
-          thisBinding = isBind ? thisArg : this;
 
-      if (isCurry || isPartial || isPartialRight) {
-        args = nativeSlice.call(args);
-        if (isPartial) {
-          unshift.apply(args, partialArgs);
+    options = options || {}
+    callback = once(callback)
+
+    var xhr = options.xhr || null
+
+    if (!xhr) {
+        if (options.cors || options.useXDR) {
+            xhr = new XDR()
+        }else{
+            xhr = new XHR()
         }
-        if (isPartialRight) {
-          push.apply(args, partialRightArgs);
+    }
+
+    var uri = xhr.url = options.uri || options.url
+    var method = xhr.method = options.method || "GET"
+    var body = options.body || options.data
+    var headers = xhr.headers = options.headers || {}
+    var sync = !!options.sync
+    var isJson = false
+    var key
+    var load = options.response ? loadResponse : loadXhr
+
+    if ("json" in options) {
+        isJson = true
+        headers["Accept"] = "application/json"
+        if (method !== "GET" && method !== "HEAD") {
+            headers["Content-Type"] = "application/json"
+            body = JSON.stringify(options.json)
         }
-        if (isCurry && args.length < arity) {
-          bitmask |= 16 & ~32;
-          return createBound(func, (isCurryBound ? bitmask : bitmask & ~3), args, null, thisArg, arity);
+    }
+
+    xhr.onreadystatechange = readystatechange
+    xhr.onload = load
+    xhr.onerror = error
+    // IE9 must have onprogress be set to a unique function.
+    xhr.onprogress = function () {
+        // IE must die
+    }
+    // hate IE
+    xhr.ontimeout = noop
+    xhr.open(method, uri, !sync)
+                                    //backward compatibility
+    if (options.withCredentials || (options.cors && options.withCredentials !== false)) {
+        xhr.withCredentials = true
+    }
+
+    // Cannot set timeout with sync request
+    if (!sync) {
+        xhr.timeout = "timeout" in options ? options.timeout : 5000
+    }
+
+    if (xhr.setRequestHeader) {
+        for(key in headers){
+            if(headers.hasOwnProperty(key)){
+                xhr.setRequestHeader(key, headers[key])
+            }
         }
-      }
-      if (isBindKey) {
-        func = thisBinding[key];
-      }
-      if (this instanceof bound) {
-        // ensure `new bound` is an instance of `func`
-        thisBinding = createObject(func.prototype);
-
-        // mimic the constructor's `return` behavior
-        // http://es5.github.io/#x13.2.2
-        var result = func.apply(thisBinding, args);
-        return isObject(result) ? result : thisBinding;
-      }
-      return func.apply(thisBinding, args);
-    };
-  }
-  setBindData(bound, nativeSlice.call(arguments));
-  return bound;
-}
-
-module.exports = createBound;
-
-},{"lodash._createobject":16,"lodash._renative":19,"lodash._setbinddata":11,"lodash.isfunction":18,"lodash.isobject":32,"lodash.support":21}],16:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isObject = require('lodash.isobject'),
-    noop = require('lodash._noop'),
-    reNative = require('lodash._renative');
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeCreate = reNative.test(nativeCreate = Object.create) && nativeCreate;
-
-/**
- * Creates a new object with the specified `prototype`.
- *
- * @private
- * @param {Object} prototype The prototype object.
- * @returns {Object} Returns the new object.
- */
-function createObject(prototype) {
-  return isObject(prototype) ? nativeCreate(prototype) : {};
-}
-// fallback for browsers without `Object.create`
-if (!nativeCreate) {
-  createObject = function(prototype) {
-    if (isObject(prototype)) {
-      noop.prototype = prototype;
-      var result = new noop;
-      noop.prototype = null;
+    } else if (options.headers) {
+        throw new Error("Headers cannot be set on an XDomainRequest object")
     }
-    return result || {};
-  };
-}
 
-module.exports = createObject;
-
-},{"lodash._noop":17,"lodash._renative":19,"lodash.isobject":32}],17:[function(require,module,exports){
-module.exports=require(12)
-},{}],18:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * Checks if `value` is a function.
- *
- * @static
- * @memberOf _
- * @category Objects
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is a function, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- */
-function isFunction(value) {
-  return typeof value == 'function';
-}
-
-module.exports = isFunction;
-
-},{}],19:[function(require,module,exports){
-module.exports=require(13)
-},{}],20:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/**
- * This method returns the first argument provided to it.
- *
- * @static
- * @memberOf _
- * @category Utilities
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var moe = { 'name': 'moe' };
- * moe === _.identity(moe);
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
-
-},{}],21:[function(require,module,exports){
-var global=typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {};/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var reNative = require('lodash._renative');
-
-/** Used to detect functions containing a `this` reference */
-var reThis = /\bthis\b/;
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Native method shortcuts */
-var toString = objectProto.toString;
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeBind = reNative.test(nativeBind = toString.bind) && nativeBind;
-
-/** Detect various environments */
-var isIeOpera = reNative.test(global.attachEvent),
-    isV8 = nativeBind && !/\n|true/.test(nativeBind + isIeOpera);
-
-/**
- * An object used to flag environments features.
- *
- * @static
- * @memberOf _
- * @type Object
- */
-var support = {};
-
-/**
- * Detect if `Function#bind` exists and is inferred to be fast (all but V8).
- *
- * @memberOf _.support
- * @type boolean
- */
-support.fastBind = nativeBind && !isV8;
-
-/**
- * Detect if functions can be decompiled by `Function#toString`
- * (all but PS3 and older Opera mobile browsers & avoided in Windows 8 apps).
- *
- * @memberOf _.support
- * @type boolean
- */
-support.funcDecomp = !reNative.test(global.WinRTError) && reThis.test(function() { return this; });
-
-/**
- * Detect if `Function#name` is supported (all but IE).
- *
- * @memberOf _.support
- * @type boolean
- */
-support.funcNames = typeof Function.name == 'string';
-
-module.exports = support;
-
-},{"lodash._renative":22}],22:[function(require,module,exports){
-module.exports=require(13)
-},{}],23:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var forIn = require('lodash.forin'),
-    getArray = require('lodash._getarray'),
-    isFunction = require('lodash.isfunction'),
-    objectTypes = require('lodash._objecttypes'),
-    releaseArray = require('lodash._releasearray');
-
-/** `Object#toString` result shortcuts */
-var argsClass = '[object Arguments]',
-    arrayClass = '[object Array]',
-    boolClass = '[object Boolean]',
-    dateClass = '[object Date]',
-    numberClass = '[object Number]',
-    objectClass = '[object Object]',
-    regexpClass = '[object RegExp]',
-    stringClass = '[object String]';
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Native method shortcuts */
-var hasOwnProperty = objectProto.hasOwnProperty,
-    toString = objectProto.toString;
-
-/**
- * The base implementation of `_.isEqual`, without support for `thisArg` binding,
- * that allows partial "_.where" style comparisons.
- *
- * @private
- * @param {*} a The value to compare.
- * @param {*} b The other value to compare.
- * @param {Function} [callback] The function to customize comparing values.
- * @param {Function} [isWhere=false] A flag to indicate performing partial comparisons.
- * @param {Array} [stackA=[]] Tracks traversed `a` objects.
- * @param {Array} [stackB=[]] Tracks traversed `b` objects.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- */
-function baseIsEqual(a, b, callback, isWhere, stackA, stackB) {
-  // used to indicate that when comparing objects, `a` has at least the properties of `b`
-  if (callback) {
-    var result = callback(a, b);
-    if (typeof result != 'undefined') {
-      return !!result;
+    if ("responseType" in options) {
+        xhr.responseType = options.responseType
     }
-  }
-  // exit early for identical values
-  if (a === b) {
-    // treat `+0` vs. `-0` as not equal
-    return a !== 0 || (1 / a == 1 / b);
-  }
-  var type = typeof a,
-      otherType = typeof b;
-
-  // exit early for unlike primitive values
-  if (a === a &&
-      !(a && objectTypes[type]) &&
-      !(b && objectTypes[otherType])) {
-    return false;
-  }
-  // exit early for `null` and `undefined` avoiding ES3's Function#call behavior
-  // http://es5.github.io/#x15.3.4.4
-  if (a == null || b == null) {
-    return a === b;
-  }
-  // compare [[Class]] names
-  var className = toString.call(a),
-      otherClass = toString.call(b);
-
-  if (className == argsClass) {
-    className = objectClass;
-  }
-  if (otherClass == argsClass) {
-    otherClass = objectClass;
-  }
-  if (className != otherClass) {
-    return false;
-  }
-  switch (className) {
-    case boolClass:
-    case dateClass:
-      // coerce dates and booleans to numbers, dates to milliseconds and booleans
-      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal
-      return +a == +b;
-
-    case numberClass:
-      // treat `NaN` vs. `NaN` as equal
-      return (a != +a)
-        ? b != +b
-        // but treat `+0` vs. `-0` as not equal
-        : (a == 0 ? (1 / a == 1 / b) : a == +b);
-
-    case regexpClass:
-    case stringClass:
-      // coerce regexes to strings (http://es5.github.io/#x15.10.6.4)
-      // treat string primitives and their corresponding object instances as equal
-      return a == String(b);
-  }
-  var isArr = className == arrayClass;
-  if (!isArr) {
-    // unwrap any `lodash` wrapped values
-    if (hasOwnProperty.call(a, '__wrapped__ ') || hasOwnProperty.call(b, '__wrapped__')) {
-      return baseIsEqual(a.__wrapped__ || a, b.__wrapped__ || b, callback, isWhere, stackA, stackB);
+    
+    if ("beforeSend" in options && 
+        typeof options.beforeSend === "function"
+    ) {
+        options.beforeSend(xhr)
     }
-    // exit for functions and DOM nodes
-    if (className != objectClass) {
-      return false;
-    }
-    // in older versions of Opera, `arguments` objects have `Array` constructors
-    var ctorA = a.constructor,
-        ctorB = b.constructor;
 
-    // non `Object` object instances with different constructors are not equal
-    if (ctorA != ctorB && !(
-          isFunction(ctorA) && ctorA instanceof ctorA &&
-          isFunction(ctorB) && ctorB instanceof ctorB
-        )) {
-      return false;
-    }
-  }
-  // assume cyclic structures are equal
-  // the algorithm for detecting cyclic structures is adapted from ES 5.1
-  // section 15.12.3, abstract operation `JO` (http://es5.github.io/#x15.12.3)
-  var initedStack = !stackA;
-  stackA || (stackA = getArray());
-  stackB || (stackB = getArray());
+    xhr.send(body)
 
-  var length = stackA.length;
-  while (length--) {
-    if (stackA[length] == a) {
-      return stackB[length] == b;
-    }
-  }
-  var size = 0;
-  result = true;
+    return xhr
 
-  // add `a` and `b` to the stack of traversed objects
-  stackA.push(a);
-  stackB.push(b);
-
-  // recursively compare objects and arrays (susceptible to call stack limits)
-  if (isArr) {
-    length = a.length;
-    size = b.length;
-
-    // compare lengths to determine if a deep comparison is necessary
-    result = size == a.length;
-    if (!result && !isWhere) {
-      return result;
-    }
-    // deep compare the contents, ignoring non-numeric properties
-    while (size--) {
-      var index = length,
-          value = b[size];
-
-      if (isWhere) {
-        while (index--) {
-          if ((result = baseIsEqual(a[index], value, callback, isWhere, stackA, stackB))) {
-            break;
-          }
+    function readystatechange() {
+        if (xhr.readyState === 4) {
+            load()
         }
-      } else if (!(result = baseIsEqual(a[size], value, callback, isWhere, stackA, stackB))) {
-        break;
-      }
     }
-    return result;
-  }
-  // deep compare objects using `forIn`, instead of `forOwn`, to avoid `Object.keys`
-  // which, in this case, is more costly
-  forIn(b, function(value, key, b) {
-    if (hasOwnProperty.call(b, key)) {
-      // count the number of properties.
-      size++;
-      // deep compare each property value.
-      return (result = hasOwnProperty.call(a, key) && baseIsEqual(a[key], value, callback, isWhere, stackA, stackB));
-    }
-  });
 
-  if (result && !isWhere) {
-    // ensure both objects have the same number of properties
-    forIn(a, function(value, key, a) {
-      if (hasOwnProperty.call(a, key)) {
-        // `size` will be `-1` if `a` has more properties than `b`
-        return (result = --size > -1);
-      }
-    });
-  }
-  if (initedStack) {
-    releaseArray(stackA);
-    releaseArray(stackB);
-  }
-  return result;
+    function getBody() {
+        // Chrome with requestType=blob throws errors arround when even testing access to responseText
+        var body = null
+
+        if (xhr.response) {
+            body = xhr.response
+        } else if (xhr.responseType === 'text' || !xhr.responseType) {
+            body = xhr.responseText || xhr.responseXML
+        }
+
+        if (isJson) {
+            try {
+                body = JSON.parse(body)
+            } catch (e) {}
+        }
+
+        return body
+    }
+
+    function getStatusCode() {
+        return xhr.status === 1223 ? 204 : xhr.status
+    }
+
+    // if we're getting a none-ok statusCode, build & return an error
+    function errorFromStatusCode(status, body) {
+        var error = null
+        if (status === 0 || (status >= 400 && status < 600)) {
+            var message = (typeof body === "string" ? body : false) ||
+                messages[String(status).charAt(0)]
+            error = new Error(message)
+            error.statusCode = status
+        }
+
+        return error
+    }
+
+    // will load the data & process the response in a special response object
+    function loadResponse() {
+        var status = getStatusCode()
+        var body = getBody()
+        var error = errorFromStatusCode(status, body)
+        var response = {
+            body: body,
+            statusCode: status,
+            statusText: xhr.statusText,
+            raw: xhr
+        }
+        if(xhr.getAllResponseHeaders){ //remember xhr can in fact be XDR for CORS in IE
+            response.headers = parseHeaders(xhr.getAllResponseHeaders())
+        } else {
+            response.headers = {}
+        }
+
+        callback(error, response, response.body)
+    }
+
+    // will load the data and add some response properties to the source xhr
+    // and then respond with that
+    function loadXhr() {
+        var status = getStatusCode()
+        var error = errorFromStatusCode(status)
+
+        xhr.status = xhr.statusCode = status
+        xhr.body = getBody()
+        xhr.headers = parseHeaders(xhr.getAllResponseHeaders())
+
+        callback(error, xhr, xhr.body)
+    }
+
+    function error(evt) {
+        callback(evt, xhr)
+    }
 }
 
-module.exports = baseIsEqual;
 
-},{"lodash._getarray":24,"lodash._objecttypes":26,"lodash._releasearray":27,"lodash.forin":30,"lodash.isfunction":31}],24:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var arrayPool = require('lodash._arraypool');
+function noop() {}
 
-/**
- * Gets an array from the array pool or creates a new one if the pool is empty.
- *
- * @private
- * @returns {Array} The array from the pool.
- */
-function getArray() {
-  return arrayPool.pop() || [];
-}
-
-module.exports = getArray;
-
-},{"lodash._arraypool":25}],25:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to pool arrays and objects used internally */
-var arrayPool = [];
-
-module.exports = arrayPool;
-
-},{}],26:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used to determine if values are of the language type Object */
-var objectTypes = {
-  'boolean': false,
-  'function': true,
-  'object': true,
-  'number': false,
-  'string': false,
-  'undefined': false
-};
-
-module.exports = objectTypes;
-
-},{}],27:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var arrayPool = require('lodash._arraypool'),
-    maxPoolSize = require('lodash._maxpoolsize');
-
-/**
- * Releases the given array back to the array pool.
- *
- * @private
- * @param {Array} [array] The array to release.
- */
-function releaseArray(array) {
-  array.length = 0;
-  if (arrayPool.length < maxPoolSize) {
-    arrayPool.push(array);
-  }
-}
-
-module.exports = releaseArray;
-
-},{"lodash._arraypool":28,"lodash._maxpoolsize":29}],28:[function(require,module,exports){
-module.exports=require(25)
-},{}],29:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-
-/** Used as the max size of the `arrayPool` and `objectPool` */
-var maxPoolSize = 40;
-
-module.exports = maxPoolSize;
-
-},{}],30:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var baseCreateCallback = require('lodash._basecreatecallback'),
-    objectTypes = require('lodash._objecttypes');
-
-/**
- * Iterates over own and inherited enumerable properties of an object,
- * executing the callback for each property. The callback is bound to `thisArg`
- * and invoked with three arguments; (value, key, object). Callbacks may exit
- * iteration early by explicitly returning `false`.
- *
- * @static
- * @memberOf _
- * @type Function
- * @category Objects
- * @param {Object} object The object to iterate over.
- * @param {Function} [callback=identity] The function called per iteration.
- * @param {*} [thisArg] The `this` binding of `callback`.
- * @returns {Object} Returns `object`.
- * @example
- *
- * function Dog(name) {
- *   this.name = name;
- * }
- *
- * Dog.prototype.bark = function() {
- *   console.log('Woof, woof!');
- * };
- *
- * _.forIn(new Dog('Dagny'), function(value, key) {
- *   console.log(key);
- * });
- * // => logs 'bark' and 'name' (property order is not guaranteed across environments)
- */
-var forIn = function(collection, callback, thisArg) {
-  var index, iterable = collection, result = iterable;
-  if (!iterable) return result;
-  if (!objectTypes[typeof iterable]) return result;
-  callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
-    for (index in iterable) {
-      if (callback(iterable[index], index, collection) === false) return result;
-    }
-  return result
-};
-
-module.exports = forIn;
-
-},{"lodash._basecreatecallback":10,"lodash._objecttypes":26}],31:[function(require,module,exports){
-module.exports=require(18)
-},{}],32:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var objectTypes = require('lodash._objecttypes');
-
-/**
- * Checks if `value` is the language type of Object.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @category Objects
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if the `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(1);
- * // => false
- */
-function isObject(value) {
-  // check if the value is the ECMAScript language type of Object
-  // http://es5.github.io/#x8
-  // and avoid a V8 bug
-  // http://code.google.com/p/v8/issues/detail?id=2291
-  return !!(value && objectTypes[typeof value]);
-}
-
-module.exports = isObject;
-
-},{"lodash._objecttypes":33}],33:[function(require,module,exports){
-module.exports=require(26)
-},{}],34:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var isObject = require('lodash.isobject'),
-    reNative = require('lodash._renative'),
-    shimKeys = require('lodash._shimkeys');
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/* Native method shortcuts for methods with the same name as other `lodash` methods */
-var nativeKeys = reNative.test(nativeKeys = Object.keys) && nativeKeys;
-
-/**
- * Creates an array composed of the own enumerable property names of an object.
- *
- * @static
- * @memberOf _
- * @category Objects
- * @param {Object} object The object to inspect.
- * @returns {Array} Returns an array of property names.
- * @example
- *
- * _.keys({ 'one': 1, 'two': 2, 'three': 3 });
- * // => ['one', 'two', 'three'] (property order is not guaranteed across environments)
- */
-var keys = !nativeKeys ? shimKeys : function(object) {
-  if (!isObject(object)) {
-    return [];
-  }
-  return nativeKeys(object);
-};
-
-module.exports = keys;
-
-},{"lodash._renative":35,"lodash._shimkeys":36,"lodash.isobject":32}],35:[function(require,module,exports){
-module.exports=require(13)
-},{}],36:[function(require,module,exports){
-/**
- * Lo-Dash 2.2.1 (Custom Build) <http://lodash.com/>
- * Build: `lodash modularize modern exports="npm" -o ./npm/`
- * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
- * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
- * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- * Available under MIT license <http://lodash.com/license>
- */
-var objectTypes = require('lodash._objecttypes');
-
-/** Used for native method references */
-var objectProto = Object.prototype;
-
-/** Native method shortcuts */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * A fallback implementation of `Object.keys` which produces an array of the
- * given object's own enumerable property names.
- *
- * @private
- * @type Function
- * @param {Object} object The object to inspect.
- * @returns {Array} Returns an array of property names.
- */
-var shimKeys = function(object) {
-  var index, iterable = object, result = [];
-  if (!iterable) return result;
-  if (!(objectTypes[typeof object])) return result;
-    for (index in iterable) {
-      if (hasOwnProperty.call(iterable, index)) {
-        result.push(index);
-      }
-    }
-  return result
-};
-
-module.exports = shimKeys;
-
-},{"lodash._objecttypes":37}],37:[function(require,module,exports){
-module.exports=require(26)
-},{}]},{},[1])
-;
+},{"global/window":5,"once":11,"parse-headers":12}]},{},[1]);

@@ -1,0 +1,44 @@
+<html>
+
+  <head>
+        <title> such browser so html5 </title>
+        <style>
+            textarea {
+                width: 50%;
+                height: 600px;
+                font-family: monospace;
+                font-size: 16px;
+                -webkit-box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                         box-sizing: border-box;
+            }
+            .dogescript {
+                float: left;
+            }
+            .javascript {
+                float: right;
+            }
+        </style>
+    </head>
+    <body>
+    <h1>Deboogable</h1>
+    <p>Click the button to run the dogescript code through the parser and debug the bundled parser code.</p>
+    <button onclick="rundoge(document.getElementsByClassName('dogescript')[0].value)">Run code()</button>
+    
+    <div>
+      <p style="position:absolute; margin-left:25%">Dogescript</p>
+      <p style="position:absolute; margin-left:75%">Javascript</p>
+    </div>
+    
+    <br>
+    <br>
+    <br>
+    <div>
+      <textarea class="dogescript">
+      </textarea>
+
+      <textarea class="javascript"></textarea>
+    </div>
+    <script src="exerciser-bundle.js"></script>
+
+</html>
