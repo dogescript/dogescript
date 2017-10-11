@@ -43,29 +43,14 @@ Options:
 
 #### REPL Commands
 
-* `.load-doge [path_to_doge]`: loads dogescript code in the given file and adds it to the REPL environment. For this example, *iota* is a function that produces a series from 0 to n, ie: `iota 5 => [0,1,2,3,4]`, and is defined in `repl-test/iota.djs`.
+* `.plz-load [path_to_doge]`: loads dogescript code in the given file and adds it to the REPL environment. For this example, *iota* is a function that produces a series from 0 to n, ie: `iota 5 => [0,1,2,3,4]`, and is defined in `repl-test/iota.djs`.
 ```bash
-DOGE> .load-doge repl-test/iota.djs
+DOGE> .plz-doge repl-test/iota.djs
 DOGE> undefined
 DOGE> plz iota with 5
 [ 0, 1, 2, 3, 4 ]
 DOGE>
 ```
-
-### Developer versions
-
-If you wish to take your dogescript to the moon and leave at the edge of amaze, you can install the dogescript version as it exists in this repository:
-
-1. `npm install` the repository
-1. link the newer version with `npm link`
-1. Verify by running `dogescript`, something like the following should show up (version # might be different but the pre syntax will still be there):
-```bash
-$ dogescript
-[dogescript@2.4.0-pre]
-DOGE>
-```
-1. To restore, navigate out of the dogescript repository and reinstall an earlier version:
-`npm install dogescript@2.3.0 -g`
 
 ### Language documentation
 
