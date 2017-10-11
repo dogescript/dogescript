@@ -116,7 +116,7 @@ http.createServer(function(req, res) {
 
 Functions can be declared on their own, or as arguments to other expressions (very limitedly supported at the moment). 
 
-A top level function is declared with the `such` keyword, followed by the name (if desired) and arguments (if desired) denoted with the `much` keyword: `such [name] much [args]`.
+A top level function is declared with the `such` keyword, followed by the name and arguments (if desired) denoted with the `much` keyword: `such [name] much [args]`.
 
 A function with arguments, declares its arguments with the `much` keyword: `such funky much a b c` would create a function with arguments a,b,c.
 
@@ -124,22 +124,6 @@ A named function (`funky`) without arguments would be declared like this:
 ```dogescript
 such funky
   plz console.log with 'no args, so sad'
-wow
-```
-
-An anonmyous top-level function, currently requires the `such` keyword and can be defined with the following syntax: `such [much] [args]`. 
-
-An anonymous function without arguments can be declared like this:
-```dogescript
-such
-  plz console.log with 'wow'
-wow
-```
-
-An anonymous function with arguments would be declared with this:
-```dogescript
-such much a b c
-  plz console.log with a+b+c shh whitespace problems passing args must fix soon
 wow
 ```
 
