@@ -8,9 +8,11 @@ var repl     = require('repl');
 var argv     = require('optimist').usage('Usage: dogescript <file>').argv;
 var beautify = require('js-beautify').js_beautify;
 var parser   = require('../lib/parser');
+var pjson = require('../package.json');
 
-// display version message, keep pre for dev
-process.stdout.write("[dogescript@2.4.0-pre]\n");
+
+// display version message
+process.stdout.write("[dogescript@"+pjson.version+"]\n");
 
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
@@ -53,7 +55,7 @@ if (argv._[0]) {
         output : process.stdout
     });
     
-    replServer.defineCommand('load-doge', {
+    replServer.defineCommand('plz-load', {
       help: 'Loads a dogescript file into the repl',
       action(filename) {
          var file = fs.readFile(path.resolve(process.cwd(), filename), {encoding: 'utf-8'}, function (err, script) {
