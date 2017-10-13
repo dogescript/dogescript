@@ -9,34 +9,58 @@ var specDir = path.join(__dirname, 'spec');
 
 var skipped = [];
 
-var files = glob.sync('*/*/source.djs', {
-    cwd: specDir
-});
-
-files.sort();
-files.forEach(function (file) {
-    var target = path.join(specDir, file);
-    if (!fs.statSync(target).isFile()) {
-        return;
+// gotta go deeper
+var walkSync = function(dir, filelist)
+{
+  filez = fs.readdirSync(dir);
+  filelist = filelist || [];
+  filez.forEach(function(file) {
+    if (fs.statSync(dir + '/' + file).isDirectory()) {
+      walkSync(dir + '/' + file, filelist);
     }
+    if(path.basename(file) === 'source.djs')
+    {
+      filelist.push(dir);
+    }
+  });
+  return filelist;
+}
 
-    test(path.dirname(file), function (t) {
-        t.plan(1);
+// handle subdirectories
+var testdirectories = walkSync(specDir,[]);
+testdirectories.sort();
+testdirectories.forEach(function (directory)
+{
+  if(fs.existsSync(path.join(directory, 'source.djs')))
+  {
+    var relative = path.relative(specDir, directory);
+    var testName = relative.split(path.sep).join('/'); // convert \ to / jic
+    
+    test(testName, function(t) {
+      t.plan(1);
+      
+      var skip = fs.existsSync(path.join(directory, 'skip'));
+      if(skip)
+      {
+        t.skip('skipped');
+      }
+      else
+      {
+        if (fs.existsSync(path.join(directory, 'expect.js')))
+        {
+          var source = fs.readFileSync(path.join(directory, 'source.djs'), 'utf8');
+          var expected = fs.readFileSync(path.join(directory, 'expect.js'), 'utf8').trim().replace(/\r\n/, '\n');
 
-        var skip = fs.existsSync(path.join(path.dirname(target), 'skip'));
-        if (skip) {
-            t.skip('skipped');
+          var actual = dogescript(source, true);
+          // fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
+
+          t.equal(actual, expected);
         }
-        else {
-            var source = fs.readFileSync(target, 'utf8');
-            var expected = fs.readFileSync(path.join(path.dirname(target), 'expect.js'), 'utf8').trim().replace(/\r\n/, '\n');
-
-            var actual = dogescript(source, true);
-
-            // uncomment this line for debugging
-            // fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
-
-            t.equal(actual, expected);
+        else
+        {
+          t.fail('No expected js exists in ' + directory);
         }
+      }
     });
+  }
 });
