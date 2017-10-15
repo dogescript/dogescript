@@ -19,8 +19,10 @@
   },
   "bin": "./bin/dogescript.js",
   "scripts": {
+    "wowserify": "node ./node_modules/browserify/bin/cmd.js example/WOWserify/index.js > example/WOWserify/bundle.js",
     "clean": "node ./test/clean.js",
     "test": "node ./test/spec.test.js | tap-dot",
+    "test:verbose": "node ./test/spec.test.js",
     "build": "browserify index.js -s dogescript > dist/dogescript.js",
     "min": "uglifyjs dist/dogescript.js > dist/dogescript.min.js",
     "dist": "npm run build && npm run min"
