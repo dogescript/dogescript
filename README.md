@@ -43,6 +43,17 @@ Options:
 * `beauty` - A boolean, set to true if you want the output to be ran through a beautifier.
 * `trueDoge` - A boolean, set to true if you want to enable true-doge mode. *Deprecated in 2.4.0, to be removed in 3.0.0*
 
+#### REPL Commands
+
+* `.plz-load [path_to_doge]`: loads dogescript code in the given file and adds it to the REPL environment. For this example, *iota* is a function that produces a series from 0 to n, ie: `iota 5 => [0,1,2,3,4]`, and is defined in `repl-test/iota.djs`.
+```bash
+DOGE> .plz-doge repl-test/iota.djs
+DOGE> undefined
+DOGE> plz iota with 5
+[ 0, 1, 2, 3, 4 ]
+DOGE>
+```
+
 ### Language documentation
 
 * [`LANGUAGE.md`](/LANGUAGE.md)
