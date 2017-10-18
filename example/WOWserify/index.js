@@ -8,3 +8,8 @@ input.addEventListener('keyup', function () {
 });
 
 output.value = dogescript(input.value, true);
+
+rundoge = function(src)
+{
+  window.eval(dogescript(src));
+}

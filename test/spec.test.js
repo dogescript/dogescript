@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var test = require('tape');
 var walk = require('walk');
+
 var dogescript = require('../index');
 
 var specDir = path.join(__dirname, 'spec');
@@ -51,7 +52,6 @@ skywalker.on('names', function(fpath, children) {
   testDirs[fpath] = { missingExpectFile, missingSourceFile };
 });
 
-
 skywalker.on('end', function() {
   let fObj = {}
   var keys = Object.keys(testDirs);
@@ -100,8 +100,6 @@ skywalker.on('end', function() {
       {
         t.fail('No expected js exists in ' + dir);
       }
-      
-    });
-    
+    });    
   });
 });

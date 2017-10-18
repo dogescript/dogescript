@@ -13,10 +13,6 @@ node ./test/spec.test.js | tap-unfunk
 1. Create the appropriate folder(s)
 1. Create a `source.djs` with the dogescript to test.
 1. Create a `expect.js` with the expected output.
+1. Optionally, create a `scenario.desc` file describing the test, this will be displayed if the test fails.
 
 To keep the tests sane use foo/bar/baz/buzz as custom identifiers and strings (as they are not doge-like).
-
-## Todo
-
-- fix notrly / but notrly
-- make separate case for operators used in rly/much/many
