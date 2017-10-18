@@ -1,7 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var test = require('tape');
-var glob = require('glob');
 var walk = require('walk');
 var dogescript = require('../index');
 
@@ -92,9 +91,9 @@ skywalker.on('end', function() {
         var source   = readCleanCRLF(sourcePath);
     
         var actual = dogescript(source, true);
+        
         // uncomment for debug
         // fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
-
         t.equal(actual, testFile);
       }
       else
@@ -106,5 +105,3 @@ skywalker.on('end', function() {
     
   });
 });
-
-
