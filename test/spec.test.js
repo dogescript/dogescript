@@ -28,12 +28,14 @@ function dotdotSlash(filePath) {
 }
 
 function getFolderName(filePath) {
-  if (filePath.indexOf('/') == -1) { // windows
+  
+  // windows
+  if (filePath.indexOf('/') == -1) { 
     return filePath.substring(filePath.lastIndexOf('\\') + 1, filePath.length);
   }
-  else { // unix
-    return filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
-  }
+  
+  // unix
+  return filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
 }
 
 var testDirs = {};
@@ -48,7 +50,8 @@ skywalker.on('names', function(fpath, children) {
   var missingSourceFile = children.indexOf('source.djs') === -1;
 
   
-  if(missingExpectFile || missingSourceFile) return;  
+  if(missingExpectFile || missingSourceFile) return;
+  
   testDirs[fpath] = { missingExpectFile, missingSourceFile };
 });
 
