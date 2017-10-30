@@ -16,6 +16,16 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 # Language
 
+## Keywords
+
+The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
+
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
+
+Additionally, the following symbols should not be used as *Identifiers*:
+
+&nbsp;**_&nbsp; .plz &nbsp; wow& &nbsp; console.loge &nbsp; dogument &nbsp; windoge &nbsp;_**
+
 ## Comments
 
 Single line comments are started with `shh` and ended on a new line:
