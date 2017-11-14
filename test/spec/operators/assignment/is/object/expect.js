@@ -1,1 +1,1 @@
-foo = new Bar
+foo = new Bar();
