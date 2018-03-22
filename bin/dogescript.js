@@ -5,7 +5,7 @@ var path     = require('path');
 var util     = require('util');
 var stream   = require('stream');
 var repl     = require('repl');
-var argv     = require('optimist').usage('Usage: dogescript <file>').argv;
+var argv     = require('optimist').usage('Usage: dogescript <file> [options]').argv;
 var beautify = require('js-beautify').js_beautify;
 var parser   = require('../lib/parser');
 var pjson = require('../package.json');
@@ -16,12 +16,32 @@ process.stdout.write("[dogescript@"+pjson.version+"]\n");
 
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
-        if (argv['true-doge']) var lines = script.split(/ {3,}|\r?\n/);
-        else var lines = script.split(/\r?\n/);
+        if (argv['true-doge'])
+        {
+          process.stdout.write("!-- WARNING: true-doge mode is deprecated --!\n");
+          var lines = script.split(/ {3,}|\r?\n/);
+        }
+        else
+        {
+          var lines = script.split(/\r?\n/);
+        }
         var output = '';
 
         for (var i = 0; i < lines.length; i++) {
             output += parser(lines[i]);
+        }
+
+        // allow run mode
+        if(argv['run'])
+        {
+          const vm = require('vm');
+          vm.runInNewContext(output,
+            {
+              require: require,
+              console: console
+            }
+          );
+          process.exit();
         }
 
         if (argv.beautify) process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
@@ -54,7 +74,7 @@ if (argv._[0]) {
         input  : ds,
         output : process.stdout
     });
-    
+
     replServer.defineCommand('plz-load', {
       help: 'Loads a dogescript file into the repl',
       action(filename) {
@@ -68,7 +88,7 @@ if (argv._[0]) {
           replServer.editorMode = false;
           replServer.write('\n');
          });
-         
+
         this.displayPrompt();
       }
     });

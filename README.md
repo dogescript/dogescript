@@ -1,12 +1,12 @@
 ![dogescript](doge.gif)
 
-## dogescript 
+## dogescript
 
 [![NPM version](https://badge.fury.io/js/dogescript.svg)](http://badge.fury.io/js/dogescript) [![Build Status](https://secure.travis-ci.org/dogescript/dogescript.svg?branch=master)](http://travis-ci.org/dogescript/dogescript) [![Dependency Status](https://david-dm.org/dogescript/dogescript.svg)](https://david-dm.org/dogescript/dogescript) [![devDependency Status](https://david-dm.org/dogescript/dogescript/dev-status.svg)](https://david-dm.org/dogescript/dogescript#info=devDependencies)
 
 
 
-This is an implementation of the best new compile-to-JS language, dogescript. Wow. 
+This is an implementation of the best new compile-to-JS language, dogescript. Wow.
 
 And yes, I am very aware I went about a very, er, *non-conventional*, way of parsing a language, and is probably riddled with bugs and edge-cases. However, this is dogescript, so anything goes!
 
@@ -35,6 +35,7 @@ Options:
 
 * `--beautify` - Runs the code through a beautifier.
 * `--true-doge` - Implements "true doge" mode, which splits lines by 3 spaces, instead of by newlines. This stays behind a flag until the spacing it exports is identical to non-true-doge mode. *Deprecated in 2.4.0, to be removed in 3.0.0*
+* `--run` - Runs the dogescript code
 
 #### Javascript
 
@@ -46,8 +47,18 @@ Options:
 #### REPL Commands
 
 * `.plz-load [path_to_doge]`: loads dogescript code in the given file and adds it to the REPL environment. For this example, *iota* is a function that produces a series from 0 to n, ie: `iota 5 => [0,1,2,3,4]`, and is defined in `repl-test/iota.djs`.
+
+**iota.djs**
+```djs
+such iota much n
+  very series is Array dose apply with null {length:n}&
+  dose map with Number.call Number
+wow series
+```
+
+*Loaded and execute*
 ```bash
-DOGE> .plz-doge repl-test/iota.djs
+DOGE> .plz-load repl-test/iota.djs
 DOGE> undefined
 DOGE> plz iota with 5
 [ 0, 1, 2, 3, 4 ]
