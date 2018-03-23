@@ -16,15 +16,18 @@ process.stdout.write("[dogescript@"+pjson.version+"]\n");
 
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
+        var lines = '';
+
         if (argv['true-doge'])
         {
           process.stdout.write("!-- WARNING: true-doge mode is deprecated --!\n");
-          var lines = script.split(/ {3,}|\r?\n/);
+          lines = script.split(/ {3,}|\r?\n/);
         }
         else
         {
-          var lines = script.split(/\r?\n/);
+          lines = script.split(/\r?\n/);
         }
+
         var output = '';
 
         for (var i = 0; i < lines.length; i++) {
@@ -32,7 +35,7 @@ if (argv._[0]) {
         }
 
         // allow run mode
-        if(argv['run'])
+        if(argv.run)
         {
           const vm = require('vm');
           vm.runInNewContext(output,
@@ -44,8 +47,14 @@ if (argv._[0]) {
           process.exit();
         }
 
-        if (argv.beautify) process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
-        else process.stdout.write(output);
+        if (argv.beautify)
+        {
+          process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
+        }
+        else
+        {
+          process.stdout.write(output);
+        }
     });
 } else {
     // streamy inheritance stuff
