@@ -1,0 +1,1 @@
+smallify foo
