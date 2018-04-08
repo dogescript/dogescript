@@ -1,1 +1,1 @@
-botdeploy: node deploy-bot.js
+web: npm run deploy:bot
