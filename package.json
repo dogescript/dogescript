@@ -13,6 +13,8 @@
   "author": "Zach Bruggeman <zachb@diy.org>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^5.0.1",
+    "heroku-client": "^3.0.6",
     "js-beautify": "^1.6.14",
     "optimist": "^0.6.1",
     "walk": "^2.3.9",
