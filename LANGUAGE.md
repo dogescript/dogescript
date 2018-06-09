@@ -20,7 +20,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; but &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -31,7 +31,7 @@ Additionally, the following symbols should not be used as *Identifiers*:
 Single line comments are started with `shh` and ended on a new line:
 ```dogescript
 shh This is a single line comment
-shh more single line 
+shh more single line
 shh everything is ignored such clever much smart
 ```
 
@@ -124,7 +124,7 @@ http.createServer(function(req, res) {
 
 ### Declaration
 
-Functions can be declared on their own, or as arguments to other expressions (very limitedly supported at the moment). 
+Functions can be declared on their own, or as arguments to other expressions (very limitedly supported at the moment).
 
 A top level function is declared with the `such` keyword, followed by the name and arguments (if desired) denoted with the `much` keyword: `such [name] much [args]`.
 
@@ -142,7 +142,7 @@ An anonymous function passed in as an argument to a call, is simply declared wit
 ```dogescript
 plz test with 'such example' much t
   t dose plan with 2
-  
+
   t dose equal with 2+3 5
   t dose equal with 7*8+9 65
 wow&
@@ -299,7 +299,7 @@ The `trained` statement translates to `"use strict"`.
 
 ## Modules
 
-The `so` statement imports a module using nodejs' `require` function, having the syntax: `so [module] [as] [alias]`. 
+The `so` statement imports a module using nodejs' `require` function, having the syntax: `so [module] [as] [alias]`.
 
 To import a module without assigning it, simpy use `so [module]`:
 ```dogescript
@@ -312,6 +312,10 @@ To assign the module an alias, use `so [module] as [alias]`:
 so tape as test shh var test = require("tape")
 so "tape" as "test" shh var test = require("tape")
 ```
+
+## Debugger support
+
+The `pawse` keyword translates to `debugger`
 
 ## Built in objects
 
