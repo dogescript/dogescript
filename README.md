@@ -116,4 +116,4 @@ noformnocontent
 
 ## Community
 
-Join us at [dogescript.slack.com](dogescript.slack.com). Since it is slack, you'll need an invite to the channel. Visit [this site to get invited](https://doge-invite.herokuapp.com/). The invite site is built with [slack-invite-automation](https://github.com/outsideris/slack-invite-automation) and is deployed to heroku. Since we are on the free tier, dyno's take a bit to load so give it at least 30 seconds to load the first time.
+Join us at [dogescript.slack.com](http://dogescript.slack.com). Since it is slack, you'll need an invite to the channel. Visit [this site to get invited](https://doge-invite.herokuapp.com/). The invite site is built with [slack-invite-automation](https://github.com/outsideris/slack-invite-automation) and is deployed to heroku. Since we are on the free tier, dyno's take a bit to load so give it at least 30 seconds to load the first time.
