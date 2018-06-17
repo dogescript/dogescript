@@ -320,6 +320,10 @@ so tape as test shh var test = require("tape")
 so "tape" as "test" shh var test = require("tape")
 ```
 
+## Debugger support
+
+The `pawse` keyword translates to `debugger`
+
 ## Built in objects
 
 :warning: Identifiers may not use these as names:
