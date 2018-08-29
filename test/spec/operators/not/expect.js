@@ -1,3 +1,3 @@
-if (foo === bar) {
+if (foo !== bar) {
     // 1
 }

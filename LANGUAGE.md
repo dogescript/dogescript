@@ -20,7 +20,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; but &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -268,24 +268,31 @@ row: 4 col:8 val:4,8
 
 ## Operators
 
-Only currently useable within a `many`, `much`, `rly` and `notrly` clause.
+### Unary Operators
+
+* `bigify` - `++`
+  * pre increment: `bigify foo`
+  * post increment: `foo bigify`
+* `smallify` - `--`
+  * pre decrement: `smallify foo`
+  * post decrement: `foo smallify`
 
 ### Binary Operators
 
 #### Conditionals
 
-* `not` - `!==`
-* `is` - `===`
-* `and` - `&&`
-* `or` - `||`
-* `bigger` - `>`
-* `smaller` - `<`
-* `biggerish` - `>=`
-* `smallerish` - `<=`
+* `not` - `!==` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `is` - `===` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `and` - `&&` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `or` - `||` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `bigger` - `>` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `smaller` - `<` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `biggerish` - `>=` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `smallerish` - `<=` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
 
 #### Assignment
 
-* `as` - `=`
+* `as` - `=` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
 * `more` - `+=`
 * `less` - `-=`
 * `lots` - `*=`
