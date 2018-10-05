@@ -11,7 +11,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 * dogescript uses single quotes for strings. Double quotes are not supported.
 * dogescript uses 4 space characters for indentation. Tabs are not supported.
-* dogescript seperates statements by newlines by default. In true-doge mode, they are separated by 3 spaces.
+* dogescript separates statements by newlines by default. In true-doge mode, they are separated by 3 spaces.
 
 
 # Language
@@ -20,7 +20,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -306,9 +306,11 @@ The `trained` statement translates to `"use strict"`.
 
 ## Modules
 
+### Require
+
 The `so` statement imports a module using nodejs' `require` function, having the syntax: `so [module] [as] [alias]`.
 
-To import a module without assigning it, simpy use `so [module]`:
+To import a module without assigning it, simply use `so [module]`:
 ```dogescript
 so tape shh require("tape")
 so "tape" shh require("tape")
@@ -319,6 +321,71 @@ To assign the module an alias, use `so [module] as [alias]`:
 so tape as test shh var test = require("tape")
 so "tape" as "test" shh var test = require("tape")
 ```
+
+### Exports
+
+The `woof` keyword declares an exported module (effectively replacing `module.exports`), having the syntax: `woof [export]`.
+
+To export only a single value, use `woof [value]`. The following types of values are supported:
+
+* function declarations:
+```dogescript
+woof such foo
+wow
+
+woof much a b
+wow
+```
+
+Effectively becomes:
+```js
+module.exports = function foo() {}
+
+module.exports = function(a,b) {}
+```
+* any reference
+```dogescript
+such foo much bar
+wow
+woof foo
+```
+
+Effectively becomes:
+```js
+function foo(bar){}
+module.exports = foo
+```
+
+To add a property to the `exports` object use an assignment: `woof [name] is [export]`. The following types are supported:
+
+* function declarations:
+```dogescript
+woof baz is such foo
+wow
+
+woof car is much a b
+wow
+```
+
+Effectively becomes:
+```js
+module.exports.baz = function foo() {}
+
+module.exports.car = function(a,b) {}
+```
+* any reference
+```dogescript
+such foo much bar
+wow
+woof baz is foo
+```
+
+Effectively becomes:
+```js
+function foo(bar){}
+module.exports.baz = foo
+```
+
 
 ## Debugger support
 
