@@ -30,12 +30,12 @@
     "deploy:bot": "node deploy-bot.js"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
-    "dotenv": "^5.0.1",
+    "browserify": "^16.2.3",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "glob": "^7.1.2",
     "heroku-client": "^3.0.6",
-    "tap-dot": "^1.0.5",
+    "tap-dot": "^2.0.0",
     "tape": "^4.7.0",
     "uglify-js": "^3.1.3"
   }
