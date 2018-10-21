@@ -1,0 +1,3 @@
+var multiObj = {
+    test: ['wow']
+}
