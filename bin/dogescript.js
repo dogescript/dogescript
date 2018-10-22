@@ -10,10 +10,6 @@ var beautify = require('js-beautify').js_beautify;
 var parser   = require('../lib/parser');
 var pjson = require('../package.json');
 
-
-// display version message
-process.stdout.write("[dogescript@"+pjson.version+"]\n");
-
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
         var lines = '';
@@ -57,6 +53,9 @@ if (argv._[0]) {
         }
     });
 } else {
+    // display version message in repl
+    process.stdout.write("[dogescript@"+pjson.version+"]\n");
+
     // streamy inheritance stuff
     // boilerblate from the docs
     function Stream () {
