@@ -28,12 +28,12 @@ function dotdotSlash(filePath) {
 }
 
 function getFolderName(filePath) {
-
+  
   // windows
-  if (filePath.indexOf('/') == -1) {
+  if (filePath.indexOf('/') == -1) { 
     return filePath.substring(filePath.lastIndexOf('\\') + 1, filePath.length);
   }
-
+  
   // unix
   return filePath.substring(filePath.lastIndexOf('/') + 1, filePath.length);
 }
@@ -49,9 +49,9 @@ skywalker.on('names', function(fpath, children) {
   var missingExpectFile = children.indexOf('expect.js') === -1;
   var missingSourceFile = children.indexOf('source.djs') === -1;
 
-
+  
   if(missingExpectFile || missingSourceFile) return;
-
+  
   testDirs[fpath] = { missingExpectFile, missingSourceFile };
 });
 
@@ -65,28 +65,36 @@ skywalker.on('end', function() {
     var testFile = readCleanCRLF(testFilePath);
     var source   = readCleanCRLF(sourcePath);
     const actual = dogescript(source, true);
-
-
+    
     var testName = getFolderName(dir);
+    
     // separate by directory if it wasnt a directory with a name-like-this
     if(!testName.includes('-'))
     {
       var relative = path.relative(specDir, dir);
       testName = relative.split(path.sep).join('-');
     }
-
+    
     test(testName, function(t) {
       t.plan(1);
-
+        
       var skip = fs.existsSync(path.join(dir, 'skip'));
       if(skip)
       {
         t.skip('skipped');
         return;
       }
-
+      
       if (fs.existsSync(path.join(dir, 'expect.js')))
       {
+        var testFilePath   = path.join(dir, 'expect.js');
+        var sourcePath     = path.join(dir, 'source.djs');
+
+        var testFile = readCleanCRLF(testFilePath);
+        var source   = readCleanCRLF(sourcePath);
+    
+        var actual = dogescript(source, true);
+        
         // uncomment for debug
         // fs.writeFileSync(path.join(path.dirname(target), 'dump.js'), actual, 'utf8');
         t.equal(actual, testFile);
@@ -95,6 +103,6 @@ skywalker.on('end', function() {
       {
         t.fail('No expected js exists in ' + dir);
       }
-    });
+    });    
   });
 });
