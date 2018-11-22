@@ -1,1 +1,1 @@
-var foo = new Bar(a, b);
+var foo = new Bar(a, b, c);

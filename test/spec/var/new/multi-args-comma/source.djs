@@ -1,1 +1,1 @@
-very foo is new Bar with a, b
+very foo is new Bar with a, b, c
