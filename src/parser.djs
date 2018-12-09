@@ -21,6 +21,28 @@ such isWhitespace much chr
 	wow
 wow result
 
+such isInlineWhitespace much chr
+	very result is false
+	rly chr is ' '
+		result is true
+	wow
+wow result
+
+such ifSkippedInline much content 
+	content is plz unwrapContent with content
+	
+	very done is false
+
+	many content.length > 0 and !done
+		very result is plz isInlineWhitespace with content[0]
+		rly result
+			content is content dose substring with 1
+		but
+			done is true
+		wow
+	wow
+wow content
+
 such ifSkipped much content 
 	content is plz unwrapContent with content
 	
@@ -90,8 +112,33 @@ such parseExpression much content
 				'type': 'property',
 				'object': result,
 				'property': call
-			}
+			},
+			'args': []
 		}
+		
+		nextContent is plz ifSkipped with content
+		very withStart is nextContent dose startsWith with 'with'
+		rly withStart
+			content.content is nextContent dose substring with 4
+			content.content is plz ifSkipped with content
+			
+			very done is false
+			many !done
+				very expr is plz parseExpression with content
+				result.args dose push with expr
+				nextContent is plz ifSkippedInline with content
+				rly nextContent[0] is '&'
+					content.content is nextContent dose substring with 1
+					done is true
+				but rly nextContent[0] is '\n'
+					done is true
+				but rly nextContent.length is 0
+					done is true
+				but
+					content.content is nextContent
+				wow
+			wow
+		wow
 	wow
 wow result
 

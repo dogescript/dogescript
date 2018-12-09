@@ -9,7 +9,15 @@ such toJS much ast
 		result is object + '.' + ast.property
 	but rly ast.type is 'call'
 		very fn is plz toJS with ast.function
-		result is fn + '()'
+		result is fn + '('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			very argJS is plz toJS with arg
+			result += argJS
+		wow&
+		result += ')'
 	but
 		very err is new Error with 'Unrecognized node type'
 		throw err
