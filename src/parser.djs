@@ -192,6 +192,7 @@ such parseStatement much content
 
 	very veryStart is content.content dose startsWith with 'very'
 	very trainedStart is content.content dose startsWith with 'trained'
+	very soStart is content.content dose startsWith with 'so'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -214,6 +215,28 @@ such parseStatement much content
 		content.content is content.content dose substring with 7
 
 		result is {'type': 'trained'}
+	but rly soStart
+		content.content is content.content dose substring with 2
+		content.content is plz ifSkipped with content
+
+		very importPath is plz parseIdentifier with content
+
+		result is {
+			'type': 'import',
+			'path': importPath
+		}
+
+		very nextContent is plz ifSkippedInline with content
+
+		very asStart is nextContent dose startsWith with 'as'
+		rly asStart
+			content.content is nextContent dose substring with 2
+			content.content is plz ifSkipped with content
+
+			very ident is plz parseIdentifier with content
+
+			result.identifier is ident
+		wow
 	but
 		result is plz parseExpression with content
 	wow

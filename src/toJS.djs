@@ -37,6 +37,16 @@ such toJS much ast
 		wow
 	but rly ast.type is 'trained'
 		result is '"use strict"'
+	but rly ast.type is 'import'
+		result is 'const '
+		rly ast.identifier
+			result += ast.identifier
+		but
+			result += ast.path
+		wow
+		result += ' = require(\''
+		result += ast.path
+		result += '\')'
 	but rly ast.type is 'file'
 		result is ''
 		ast.statements dose forEach with much statement idx
