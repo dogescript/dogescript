@@ -18,6 +18,12 @@ such toJS much ast
 			result += argJS
 		wow&
 		result += ')'
+	but rly ast.type is 'declaration'
+		result is 'let ' + ast.ident
+		rly ast.value
+			very value is plz toJS with ast.value
+			result += ' = ' + value
+		wow
 	but rly ast.type is 'file'
 		result is ''
 		ast.statements dose forEach with much statement idx

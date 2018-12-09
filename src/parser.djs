@@ -145,7 +145,30 @@ wow result
 such parseStatement much content
 	content is plz wrapContent with content
 
-	very result is plz parseExpression with content
+	very result
+
+	very veryStart is content.content dose startsWith with 'very'
+	rly veryStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very ident is plz parseIdentifier with content
+
+		result is {'type': 'declaration','ident': ident}
+		
+		very nextContent is plz ifSkippedInline with content
+		very isStart is nextContent dose startsWith with 'is'
+		rly isStart
+			content.content is nextContent dose substring with 2
+			content.content is plz ifSkipped with content
+
+			very expr is plz parseExpression with content
+
+			result.value is expr
+		wow
+	but
+		result is plz parseExpression with content
+	wow
 wow result
 
 such parseFile much content
