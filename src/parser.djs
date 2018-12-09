@@ -175,6 +175,7 @@ such parseStatement much content
 	very result
 
 	very veryStart is content.content dose startsWith with 'very'
+	very trainedStart is content.content dose startsWith with 'trained'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -193,6 +194,10 @@ such parseStatement much content
 
 			result.value is expr
 		wow
+	but rly trainedStart
+		content.content is content.content dose substring with 7
+
+		result is {'type': 'trained'}
 	but
 		result is plz parseExpression with content
 	wow

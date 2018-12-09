@@ -24,6 +24,8 @@ such toJS much ast
 			very value is plz toJS with ast.value
 			result += ' = ' + value
 		wow
+	but rly ast.type is 'trained'
+		result is '"use strict"'
 	but rly ast.type is 'file'
 		result is ''
 		ast.statements dose forEach with much statement idx
