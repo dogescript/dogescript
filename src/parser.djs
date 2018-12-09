@@ -119,6 +119,7 @@ such parseExpression much content
 	very result
 
 	very plzStart is content.content dose startsWith with 'plz'
+	very newStart is content.content dose startsWith with 'new'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -131,6 +132,21 @@ such parseExpression much content
 		result is {
 			'type': 'call',
 			'function': callee,
+			'args': args
+		}
+	but rly newStart
+		content.content is content.content dose substring with 3
+		content.content is plz ifSkipped with content
+
+		very constructor is plz parseExpression with content
+
+		content.content is plz ifSkippedInline with content
+
+		very args is plz parsePossibleArgumentValues with content
+
+		result is {
+			'type': 'constructorCall',
+			'constructor': constructor,
 			'args': args
 		}
 	but

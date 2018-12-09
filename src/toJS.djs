@@ -18,6 +18,17 @@ such toJS much ast
 			result += argJS
 		wow&
 		result += ')'
+	but rly ast.type is 'constructorCall'
+		very constructor is plz toJS with ast.constructor
+		result is 'new ' + constructor + '('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			very argJS is plz toJS with arg
+			result += argJS
+		wow&
+		result += ')'
 	but rly ast.type is 'declaration'
 		result is 'let ' + ast.ident
 		rly ast.value
