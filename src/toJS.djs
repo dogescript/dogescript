@@ -18,6 +18,16 @@ such toJS much ast
 			result += argJS
 		wow&
 		result += ')'
+	but rly ast.type is 'file'
+		result is ''
+		ast.statements dose forEach with much statement idx
+			rly idx bigger 0
+				result += '\n';
+			wow
+			very statementJS is plz toJS with statement
+			result += statementJS
+			result += ';'
+		wow&
 	but
 		very err is new Error with 'Unrecognized node type'
 		throw err

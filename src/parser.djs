@@ -142,4 +142,27 @@ such parseExpression much content
 	wow
 wow result
 
+such parseStatement much content
+	content is plz wrapContent with content
+
+	very result is plz parseExpression with content
+wow result
+
+such parseFile much content
+	content is plz wrapContent with content
+	
+	very result is {'type': 'file','statements': []}
+
+	content.content is plz ifSkipped with content
+
+	many content.content.length > 0
+		very statement is plz parseStatement with content
+		result.statements dose push with statement
+
+		content.content is plz ifSkipped with content
+	wow
+wow result
+
 module.exports.parseExpression is parseExpression
+module.exports.parseStatement is parseStatement
+module.exports.parseFile is parseFile
