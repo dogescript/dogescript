@@ -1,0 +1,18 @@
+{
+	"name": "doge3",
+	"version": "3.0.0-pre",
+	"description": "wow so much future",
+	"main": "dist/index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://git.vpzom.click/vpzom/doge3"
+	},
+	"keywords": [
+		"wow"
+	],
+	"author": "Colin Reeder <vpzomtrrfrt@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"dogescript": "^2.3.0"
+	}
+}
