@@ -28,6 +28,34 @@ such isInlineWhitespace much chr
 	wow
 wow result
 
+such ifSkippedComment much content
+	content is plz unwrapContent with content
+
+	very shhStart is content dose startsWith with 'shh'
+	very quietStart is content dose startsWith with 'quiet'
+	rly shhStart
+		very done is false
+		many content.length > 0 and !done
+			rly content[0] is '\n'
+				done is true
+			but
+				content is content dose substring with 1
+			wow
+		wow
+	but rly quietStart
+		very done is false
+		many content.length > 0 and !done
+			very foundEnd is content dose startsWith with 'loud'
+			rly foundEnd
+				content is content dose substring with 4
+				done is true
+			but
+				content is content dose substring with 1
+			wow
+		wow
+	wow
+wow content
+
 such ifSkippedInline much content 
 	content is plz unwrapContent with content
 	
@@ -38,7 +66,12 @@ such ifSkippedInline much content
 		rly result
 			content is content dose substring with 1
 		but
-			done is true
+			very nextContent is plz ifSkippedComment with content
+			rly nextContent not content
+				content is nextContent
+			but
+				done is true
+			wow
 		wow
 	wow
 wow content
@@ -53,7 +86,12 @@ such ifSkipped much content
 		rly result
 			content is content dose substring with 1
 		but
-			done is true
+			very nextContent is plz ifSkippedComment with content
+			rly nextContent not content
+				content is nextContent
+			but
+				done is true
+			wow
 		wow
 	wow
 wow content
