@@ -82,17 +82,66 @@ such parseIdentifier much content
 	wow
 wow result
 
+such parsePossibleArgumentValues much content
+	content is plz wrapContent with content
+
+	very args is []
+
+	very nextContent is plz ifSkippedInline with content
+
+	very withStart is nextContent dose startsWith with 'with'
+	rly withStart
+		content.content is nextContent dose substring with 4
+		content.content is plz ifSkipped with content
+		
+		very done is false
+		many !done
+			very expr is plz parseExpression with content
+			args dose push with expr
+			nextContent is plz ifSkippedInline with content
+			rly nextContent[0] is '&'
+				content.content is nextContent dose substring with 1
+				done is true
+			but rly nextContent[0] is '\n'
+				done is true
+			but rly nextContent.length is 0
+				done is true
+			but
+				content.content is nextContent
+			wow
+		wow
+	wow
+wow args
+
 such parseExpression much content
 	very content is plz wrapContent with content
 
 	very result
-	very ident is plz parseIdentifier with content
-	rly ident is 'maybe'
-		result is {'type': 'maybe'}
-	but
+
+	very plzStart is content.content dose startsWith with 'plz'
+	rly plzStart
+		content.content is content.content dose substring with 3
+		content.content is plz ifSkipped with content
+
+		very callee is plz parseExpression with content
+	
+		content.content is plz ifSkippedInline with content
+		very args is plz parsePossibleArgumentValues with content
+
 		result is {
-			'type': 'ident',
-			'value': ident
+			'type': 'call',
+			'function': callee,
+			'args': args
+		}
+	but
+		very ident is plz parseIdentifier with content
+		rly ident is 'maybe'
+			result is {'type': 'maybe'}
+		but
+			result is {
+				'type': 'ident',
+				'value': ident
+			wow
 		wow
 	wow
 	very nextContent is plz ifSkipped with content
@@ -106,6 +155,8 @@ such parseExpression much content
 			call is 'log'
 		wow
 
+		very args is plz parsePossibleArgumentValues with content
+
 		result is {
 			'type': 'call',
 			'function': {
@@ -113,32 +164,8 @@ such parseExpression much content
 				'object': result,
 				'property': call
 			},
-			'args': []
+			'args': args
 		}
-		
-		nextContent is plz ifSkipped with content
-		very withStart is nextContent dose startsWith with 'with'
-		rly withStart
-			content.content is nextContent dose substring with 4
-			content.content is plz ifSkipped with content
-			
-			very done is false
-			many !done
-				very expr is plz parseExpression with content
-				result.args dose push with expr
-				nextContent is plz ifSkippedInline with content
-				rly nextContent[0] is '&'
-					content.content is nextContent dose substring with 1
-					done is true
-				but rly nextContent[0] is '\n'
-					done is true
-				but rly nextContent.length is 0
-					done is true
-				but
-					content.content is nextContent
-				wow
-			wow
-		wow
 	wow
 wow result
 
