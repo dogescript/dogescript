@@ -6,7 +6,7 @@ such statementsToJS much statements
 		wow
 		very statementJS is plz toJS with statement
 		result += statementJS
-		rly statement.type not 'functionDeclaration'
+		rly statement.type not 'functionDeclaration' and statement.type not 'if'
 			result += ';'
 		wow
 	wow&
@@ -62,6 +62,35 @@ such toJS much ast
 			result += arg
 		wow&
 		result += ') {';
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
+	but rly ast.type is 'if'
+		result is 'if('
+		very condition is plz toJS with ast.condition
+		result += condition + ') {'
+
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
+		ast.elses dose forEach with much statement
+			very elseJS is plz toJS with statement
+			result += ' ' + elseJS
+		wow&
+	but rly ast.type is 'else'
+		result is 'else {'
+
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
+	but rly ast.type is 'elseif'
+		result is 'else if('
+		very condition is plz toJS with ast.condition
+		result += condition + ') {'
+
 		very body is plz statementsToJS with ast.statements
 		body is '\n' + body
 		body is plz indent with body

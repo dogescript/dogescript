@@ -151,7 +151,7 @@ such parsePossibleArgumentValues much content
 	wow
 wow args
 
-such parseBlockBody much content
+such parseBlockBody much content endOnBut
 	content is plz wrapContent with content
 
 	very statements is []
@@ -164,8 +164,12 @@ such parseBlockBody much content
 		wow
 
 		very wowStart is content.content dose startsWith with 'wow'
+		very butStart is content.content dose startsWith with 'but'
 		rly wowStart
 			content.content is content.content dose substring with 3
+			done is true
+		but rly butStart and endOnBut
+			shh 'but' is not consumed at this point since it's part of the next statement
 			done is true
 		but
 			very statement is plz parseStatement with content
@@ -248,6 +252,51 @@ such parseExpression much content
 	wow
 wow result
 
+such parseElses much content
+	content is plz wrapContent with content
+
+	very elses is []
+
+	very done is false
+
+	many !done
+		very butStart is content.content dose startsWith with 'but'
+		rly butStart
+			content.content is content.content dose substring with 3
+			content.content is plz ifSkippedInline with content
+
+			very type is 'else'
+			very condition
+
+			very butRlyStart is content.content dose startsWith with 'rly'
+			rly butRlyStart
+				content.content is content.content dose substring with 3
+				type is 'elseif'
+
+				content.content is plz ifSkippedInline with content
+
+				condition is plz parseExpression with content
+			wow
+
+			content.content is plz ifSkipped with content
+			very statements is plz parseBlockBody with content true
+
+			shh 2.3's parsing requires me to do this
+			very result
+			result is {
+				'type': type,
+				'condition': condition,
+				'statements': statements
+			}
+
+			elses dose push with result
+		but
+			
+			done is true
+		wow
+	wow
+wow elses
+
 such parseStatement much content
 	content is plz wrapContent with content
 
@@ -257,6 +306,8 @@ such parseStatement much content
 	very trainedStart is content.content dose startsWith with 'trained'
 	very soStart is content.content dose startsWith with 'so'
 	very suchStart is content.content dose startsWith with 'such'
+	very rlyStart is content.content dose startsWith with 'rly'
+	very butStart is content.content dose startsWith with 'but'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -339,6 +390,23 @@ such parseStatement much content
 			'identifier': ident,
 			'args': args,
 			'statements': statements
+		}
+	but rly rlyStart
+		content.content is content.content dose substring with 3
+		content.content is plz ifSkipped with content
+
+		very condition is plz parseExpression with content
+
+		content.content is plz ifSkipped with content
+		very statements is plz parseBlockBody with content true
+
+		very elses is plz parseElses with content
+
+		result is {
+			'type': 'if',
+			'condition': condition,
+			'statements': statements,
+			'elses': elses
 		}
 	but
 		result is plz parseExpression with content
