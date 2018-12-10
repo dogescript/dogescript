@@ -67,7 +67,7 @@ such toJS much ast
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'if'
-		result is 'if('
+		result is 'if ('
 		very condition is plz toJS with ast.condition
 		result += condition + ') {'
 
@@ -87,7 +87,7 @@ such toJS much ast
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'elseif'
-		result is 'else if('
+		result is 'else if ('
 		very condition is plz toJS with ast.condition
 		result += condition + ') {'
 
