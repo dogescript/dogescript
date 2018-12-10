@@ -151,6 +151,31 @@ such parsePossibleArgumentValues much content
 	wow
 wow args
 
+such parseBlockBody much content
+	content is plz wrapContent with content
+
+	very statements is []
+
+	very done is false
+	many !done
+		rly content.content.length is 0
+			very err is new Error with 'Unterminated block'
+			throw err
+		wow
+
+		very wowStart is content.content dose startsWith with 'wow'
+		rly wowStart
+			content.content is content.content dose substring with 3
+			done is true
+		but
+			very statement is plz parseStatement with content
+			statements dose push with statement
+
+			content.content is plz ifSkipped with content
+		wow
+	wow
+wow statements
+
 such parseExpression much content
 	very content is plz wrapContent with content
 
@@ -231,6 +256,7 @@ such parseStatement much content
 	very veryStart is content.content dose startsWith with 'very'
 	very trainedStart is content.content dose startsWith with 'trained'
 	very soStart is content.content dose startsWith with 'so'
+	very suchStart is content.content dose startsWith with 'such'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -275,6 +301,45 @@ such parseStatement much content
 
 			result.identifier is ident
 		wow
+	but rly suchStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very ident is plz parseIdentifier with content
+		very args is []
+
+		very nextContent is plz ifSkippedInline with content
+		very muchStart is nextContent dose startsWith with 'much'
+		rly muchStart
+			content.content is nextContent dose substring with 4
+
+			very done is false
+			many !done
+				content.content is plz ifSkippedInline with content
+
+				rly content.content.length is 0
+					very err is new Error with 'Unterminated function declaration'
+					throw err
+				wow
+
+				rly content.content[0] is '\n'
+					done is true
+				but
+					very arg is plz parseIdentifier with content
+					args dose push with arg
+				wow
+			wow
+		wow
+		content.content is plz ifSkipped with content
+
+		very statements is plz parseBlockBody with content
+
+		result is {
+			'type': 'functionDeclaration',
+			'identifier': ident,
+			'args': args,
+			'statements': statements
+		}
 	but
 		result is plz parseExpression with content
 	wow

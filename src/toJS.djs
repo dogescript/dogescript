@@ -1,3 +1,21 @@
+such statementsToJS much statements
+	very result is ''
+	statements dose forEach with much statement idx
+		rly idx bigger 0
+			result += '\n';
+		wow
+		very statementJS is plz toJS with statement
+		result += statementJS
+		rly statement.type not 'functionDeclaration'
+			result += ';'
+		wow
+	wow&
+wow result
+
+such indent much content
+	very result is content dose replace with /\n/g '\n    '
+wow result
+
 such toJS much ast
 	very result
 	rly ast.type is 'ident'
@@ -35,6 +53,19 @@ such toJS much ast
 			very value is plz toJS with ast.value
 			result += ' = ' + value
 		wow
+	but rly ast.type is 'functionDeclaration'
+		result is 'function ' + ast.identifier + '('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			result += arg
+		wow&
+		result += ') {';
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
 	but rly ast.type is 'trained'
 		result is '"use strict"'
 	but rly ast.type is 'import'
@@ -48,15 +79,7 @@ such toJS much ast
 		result += ast.path
 		result += '\')'
 	but rly ast.type is 'file'
-		result is ''
-		ast.statements dose forEach with much statement idx
-			rly idx bigger 0
-				result += '\n';
-			wow
-			very statementJS is plz toJS with statement
-			result += statementJS
-			result += ';'
-		wow&
+		result is plz statementsToJS with ast.statements
 	but
 		very err is new Error with 'Unrecognized node type'
 		throw err
