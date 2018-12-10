@@ -3,6 +3,7 @@
 	"version": "3.0.0-pre",
 	"description": "wow so much future",
 	"main": "dist/index.js",
+	"bin": "bin.js",
 	"repository": {
 		"type": "git",
 		"url": "https://git.vpzom.click/vpzom/doge3"
@@ -14,5 +15,8 @@
 	"license": "MIT",
 	"devDependencies": {
 		"dogescript": "^2.3.0"
+	},
+	"scripts": {
+		"prepare": "node build.js"
 	}
 }
