@@ -16,14 +16,17 @@ such indent much content
 	very result is content dose replace with /\n/g '\n    '
 wow result
 
-such toJS much ast
+such toJS much ast wrapFlag
 	very result
 	rly ast.type is 'ident'
 		result is ast.value
 	but rly ast.type is 'maybe'
-		result is '(!Math.round(Math.random()))'
+		result is '!Math.round(Math.random())'
+		rly wrapFlag
+			result is '(' + result + ')'
+		wow
 	but rly ast.type is 'property'
-		very object is plz toJS with ast.object
+		very object is plz toJS with ast.object true
 		result is object + '.' + ast.property
 	but rly ast.type is 'call'
 		very fn is plz toJS with ast.function
@@ -47,6 +50,9 @@ such toJS much ast
 			result += argJS
 		wow&
 		result += ')'
+	but rly ast.type is 'not'
+		very value is plz toJS with ast.value true
+		result is '!' + value
 	but rly ast.type is 'declaration'
 		result is 'let ' + ast.ident
 		rly ast.value

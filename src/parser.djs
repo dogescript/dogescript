@@ -269,6 +269,7 @@ such parseElses much content
 			very condition
 
 			very butRlyStart is content.content dose startsWith with 'rly'
+			very butNotrlyStart is content.content dose startsWith with 'notrly'
 			rly butRlyStart
 				content.content is content.content dose substring with 3
 				type is 'elseif'
@@ -276,6 +277,17 @@ such parseElses much content
 				content.content is plz ifSkippedInline with content
 
 				condition is plz parseExpression with content
+			but rly butNotrlyStart
+				content.content is content.content dose substring with 6
+				type is 'elseif'
+
+				content.content is plz ifSkippedInline with content
+
+				condition is plz parseExpression with content
+				condition is {
+					'type': 'not',
+					'value': condition
+				}
 			wow
 
 			content.content is plz ifSkipped with content
@@ -307,6 +319,7 @@ such parseStatement much content
 	very soStart is content.content dose startsWith with 'so'
 	very suchStart is content.content dose startsWith with 'such'
 	very rlyStart is content.content dose startsWith with 'rly'
+	very notrlyStart is content.content dose startsWith with 'notrly'
 	very butStart is content.content dose startsWith with 'but'
 	rly veryStart
 		content.content is content.content dose substring with 4
@@ -391,11 +404,23 @@ such parseStatement much content
 			'args': args,
 			'statements': statements
 		}
-	but rly rlyStart
-		content.content is content.content dose substring with 3
+	but rly rlyStart or notrlyStart
+		rly notrlyStart
+			content.content is content.content dose substring with 6
+		but
+			content.content is content.content dose substring with 3
+		wow
+
 		content.content is plz ifSkipped with content
 
 		very condition is plz parseExpression with content
+
+		rly notrlyStart
+			condition is {
+				'type': 'not',
+				'value': condition
+			}
+		wow
 
 		content.content is plz ifSkipped with content
 		very statements is plz parseBlockBody with content true
