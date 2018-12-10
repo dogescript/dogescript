@@ -8,7 +8,7 @@ Currently supports:
  - Function calls (`plz`, `dose`)
  - Constructor calls (`new`)
  - Basic imports (`so`)
- - Basic conditionals (`rly`, `but`, `notrly`)
+ - Basic conditionals (`rly`, `but`, `notrly`, but no comparisons yet)
  - Some other stuff (`trained`, `maybe`)
 
 Limitations:
