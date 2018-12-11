@@ -356,14 +356,14 @@ function foo(bar){}
 module.exports = foo
 ```
 
-To add a property to the `exports` object use an assignment: `woof [name] is [export]`. The following types are supported:
+To add a property to the `exports` object use an assignment: `woof [name] be [export]`. The following types are supported:
 
 * function declarations:
 ```dogescript
-woof baz is such foo
+woof baz be such foo
 wow
 
-woof car is much a b
+woof car be much a b
 wow
 ```
 
@@ -377,7 +377,7 @@ module.exports.car = function(a,b) {}
 ```dogescript
 such foo much bar
 wow
-woof baz is foo
+woof baz be foo
 ```
 
 Effectively becomes:
