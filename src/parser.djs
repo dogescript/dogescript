@@ -187,6 +187,7 @@ such parseExpression much content
 
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
+	very muchStart is content.content dose startsWith with 'much'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -215,6 +216,37 @@ such parseExpression much content
 			'type': 'constructorCall',
 			'constructor': constructor,
 			'args': args
+		}
+	but rly muchStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very args is []
+
+		very done is false
+		many !done
+			content.content is plz ifSkippedInline with content
+
+			rly content.content.length is 0
+				very err is new Error with 'Unterminated function declaration'
+			wow
+
+			rly content.content[0] is '\n'
+				done is true
+			but
+				very arg is plz parseIdentifier with content
+				args dose push with arg
+			wow
+		wow
+
+		content.content is plz ifSkipped with content
+
+		very statements is plz parseBlockBody with content
+
+		result is {
+			'type': 'functionDeclarationInline',
+			'args': args,
+			'statements': statements
 		}
 	but
 		very ident is plz parseIdentifier with content

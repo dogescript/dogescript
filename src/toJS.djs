@@ -72,6 +72,20 @@ such toJS much ast wrapFlag
 		body is '\n' + body
 		body is plz indent with body
 		result += body + '\n}'
+	but rly ast.type is 'functionDeclarationInline'
+		result is 'function('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			result += arg
+		wow&
+		result += ') {'
+
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
 	but rly ast.type is 'if'
 		result is 'if ('
 		very condition is plz toJS with ast.condition
