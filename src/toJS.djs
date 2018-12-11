@@ -103,6 +103,8 @@ such toJS much ast wrapFlag
 		result += body + '\n}'
 	but rly ast.type is 'trained'
 		result is '"use strict"'
+	but rly ast.type is 'debugger'
+		result is 'debugger'
 	but rly ast.type is 'import'
 		result is 'const '
 		rly ast.identifier

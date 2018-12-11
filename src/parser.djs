@@ -321,6 +321,7 @@ such parseStatement much content
 	very rlyStart is content.content dose startsWith with 'rly'
 	very notrlyStart is content.content dose startsWith with 'notrly'
 	very butStart is content.content dose startsWith with 'but'
+	very pawseStart is content.content dose startsWith with 'pawse'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -343,6 +344,10 @@ such parseStatement much content
 		content.content is content.content dose substring with 7
 
 		result is {'type': 'trained'}
+	but rly pawseStart
+		content.content is content.content dose substring with 5
+
+		result is {'type': 'debugger'}
 	but rly soStart
 		content.content is content.content dose substring with 2
 		content.content is plz ifSkipped with content
