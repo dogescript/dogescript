@@ -28,6 +28,26 @@ such isInlineWhitespace much chr
 	wow
 wow result
 
+such takeArgumentEnd much content
+	content is plz wrapContent with content
+
+	very startAnd is content.content dose startsWith with '&'
+	very startThx is content.content dose startsWith with 'thx'
+	very startNewline is content.content dose startsWith with '\n'
+
+	very result is true
+
+	rly startAnd
+		content.content is content.content dose substring with 1
+	but rly startThx
+		content.content is content.content dose substring with 3
+	but rly startNewline
+		shh don't consume newlines here
+	but
+		result is false
+	wow
+wow result
+
 such ifSkippedComment much content
 	content is plz unwrapContent with content
 
@@ -103,7 +123,7 @@ such parseIdentifier much content
 	very done is false
 	many !done
 		very chr is content.content[0]
-		rly chr is ' ' or chr is '\n'
+		rly chr is ' ' or chr is '\n' or chr is '&'
 			done is true
 		but
 			result += chr
@@ -117,6 +137,9 @@ such parseIdentifier much content
 		result is 'document'
 	but rly result is 'win' + 'doge'
 		result is 'window'
+	but rly result is ''
+		very err is new Error with 'Expected identifier, found '+content.content[0]
+		throw err
 	wow
 wow result
 
@@ -137,16 +160,16 @@ such parsePossibleArgumentValues much content
 			very expr is plz parseExpression with content
 			args dose push with expr
 			nextContent is plz ifSkippedInline with content
-			rly nextContent[0] is '&'
-				content.content is nextContent dose substring with 1
+			nextContent is plz wrapContent with nextContent
+
+			very foundArgumentEnd is plz takeArgumentEnd with nextContent
+
+			rly foundArgumentEnd
 				done is true
-			but rly nextContent[0] is '\n'
+			but rly nextContent.content.length is 0
 				done is true
-			but rly nextContent.length is 0
-				done is true
-			but
-				content.content is nextContent
 			wow
+			content.content is nextContent.content
 		wow
 	wow
 wow args
