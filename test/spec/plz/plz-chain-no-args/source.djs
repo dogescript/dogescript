@@ -1,0 +1,2 @@
+plz foo&
+.plz bar
