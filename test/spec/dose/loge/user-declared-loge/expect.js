@@ -1,0 +1,1 @@
+mylogger.loge('msg');
