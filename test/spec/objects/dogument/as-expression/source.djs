@@ -1,0 +1,1 @@
+dogeument.findElementById('#foo')
