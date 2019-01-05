@@ -389,7 +389,7 @@ module.exports.baz = foo
 
 ## Debugger support
 
-The `debooger` and `pawse` keywords translates to `debugger`
+The `debooger` and `pawse` keywords translate to `debugger`
 
 ## Built in objects
 
