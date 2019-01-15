@@ -1,0 +1,3 @@
+quiet
+windoge
+loud
