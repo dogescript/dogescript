@@ -53,6 +53,10 @@ such toJS much ast wrapFlag
 	but rly ast.type is 'not'
 		very value is plz toJS with ast.value true
 		result is '!' + value
+	but rly ast.type is '==='
+		very a is plz toJS with ast.a true
+		very b is plz toJS with ast.b true
+		result is a + ' === ' + b
 	but rly ast.type is 'declaration'
 		result is 'let ' + ast.ident
 		rly ast.value

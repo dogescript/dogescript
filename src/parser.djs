@@ -304,6 +304,20 @@ such parseExpression much content
 			},
 			'args': args
 		}
+		nextContent is plz ifSkipped with content
+	wow
+	very isStart is nextContent dose startsWith with 'is'
+	rly isStart
+		content.content is nextContent dose substring with 2
+		content.content is plz ifSkipped with content
+		very rhs is plz parseExpression with content
+
+		result is {
+			'type': '===',
+			'a': result,
+			'b': rhs
+		}
+		nextContent is plz ifSkipped with content
 	wow
 wow result
 
