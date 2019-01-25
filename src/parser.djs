@@ -22,6 +22,7 @@ such genContextInfo much content
 	very columnNumber is previousLines[previousLines.length - 1].length + 1
 
 	very result is '[' + lineNumber + ':' + columnNumber + '] '
+	shh console dose loge with result content.content.substring(0, 5)
 wow result
 
 such isWhitespace much chr
