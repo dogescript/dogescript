@@ -4,7 +4,7 @@ quiet
 loud
 such wrapContent much content
 	rly typeof content is 'string'
-		content is {'content': content}
+		content is {'content': content, 'originalContent': content}
 	wow
 wow content
 
@@ -13,6 +13,16 @@ such unwrapContent much content
 		content is content.content
 	wow
 wow content
+
+such genContextInfo much content
+	very overallOffset is content.originalContent.length - content.content.length 
+	very previousContent is content.originalContent dose substring with 0 overallOffset
+	very previousLines is previousContent dose split with '\n'
+	very lineNumber is previousLines.length
+	very columnNumber is previousLines[previousLines.length - 1].length + 1
+
+	very result is '[' + lineNumber + ':' + columnNumber + '] '
+wow result
 
 such isWhitespace much chr
 	very result is false
@@ -29,8 +39,6 @@ such isInlineWhitespace much chr
 wow result
 
 such takeArgumentEnd much content
-	content is plz wrapContent with content
-
 	very startAnd is content.content dose startsWith with '&'
 	very startThx is content.content dose startsWith with 'thx'
 	very startNewline is content.content dose startsWith with '\n'
@@ -117,8 +125,6 @@ such ifSkipped much content
 wow content
 
 such parseIdentifier much content
-	very content is plz wrapContent with content
-
 	very result is ''
 	very done is false
 	many !done
@@ -138,14 +144,14 @@ such parseIdentifier much content
 	but rly result is 'win' + 'doge'
 		result is 'window'
 	but rly result is ''
-		very err is new Error with 'Expected identifier, found '+content.content[0]
+		very ctxInfo is plz genContextInfo with content
+		very msg is ctxInfo + 'Expected identifier, found ' + content.content[0]
+		very err is new Error with msg
 		throw err
 	wow
 wow result
 
 such parsePossibleArgumentValues much content
-	content is plz wrapContent with content
-
 	very args is []
 
 	very nextContent is plz ifSkippedInline with content
@@ -175,8 +181,6 @@ such parsePossibleArgumentValues much content
 wow args
 
 such parseBlockBody much content endOnBut
-	content is plz wrapContent with content
-
 	very statements is []
 
 	very done is false
@@ -322,8 +326,6 @@ such parseExpression much content
 wow result
 
 such parseElses much content
-	content is plz wrapContent with content
-
 	very elses is []
 
 	very done is false
