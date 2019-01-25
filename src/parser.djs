@@ -215,12 +215,15 @@ such parsePossibleArgumentValues much content
 wow args
 
 such parseBlockBody much content endOnBut
+	very ctxInfo is plz genContextInfo with content
+
 	very statements is []
 
 	very done is false
 	many !done
 		rly content.content.length is 0
-			very err is new Error with 'Unterminated block'
+			very msg is ctxInfo + 'Unterminated block'
+			very err is new Error with msg
 			throw err
 		wow
 
@@ -281,6 +284,8 @@ such parseExpression much content
 			'args': args
 		}
 	but rly muchStart
+		very ctxInfo is plz genContextInfo with content
+
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
 
@@ -291,7 +296,9 @@ such parseExpression much content
 			content.content is plz ifSkippedInline with content
 
 			rly content.content.length is 0
-				very err is new Error with 'Unterminated function declaration'
+				very msg is ctxInfo + 'Unterminated function declaration'
+				very err is new Error with msg
+				throw err
 			wow
 
 			rly content.content[0] is '\n'
@@ -484,6 +491,8 @@ such parseStatement much content
 			result.identifier is ident
 		wow
 	but rly suchStart
+		very ctxInfo is plz genContextInfo with content
+
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
 
@@ -500,7 +509,8 @@ such parseStatement much content
 				content.content is plz ifSkippedInline with content
 
 				rly content.content.length is 0
-					very err is new Error with 'Unterminated function declaration'
+					very msg is ctxInfo + 'Unterminated function declaration'
+					very err is new Error with msg
 					throw err
 				wow
 
