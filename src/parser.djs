@@ -151,6 +151,40 @@ such parseIdentifier much content
 	wow
 wow result
 
+such parseString much content
+	very ctxInfo is plz genContextInfo with content
+
+	rly content.content[0] not "'"
+		very msg is ctxInfo + 'Expected string, found ' + content.content[0]
+		very err is new Error with msg
+		throw err
+	wow
+
+	content.content is content.content dose substring with 1
+
+	very result is ''
+	very done is false
+	many !done
+		very chr is content.content[0]
+		rly chr is '\\'
+			shh TODO add more escape sequences
+			result += content.content[1]
+			content.content is content.content dose substring with 2
+		but rly chr is "'"
+			done is true
+			content.content is content.content dose substring with 1
+		but
+			result += chr
+			content.content is content.content dose substring with 1
+		wow
+		rly content.content.length is 0
+			very msg is ctxInfo + 'Unterminated string'
+			very err is new Error with msg
+			throw err
+		wow
+	wow
+wow result
+
 such parsePossibleArgumentValues much content
 	very args is []
 
@@ -215,6 +249,8 @@ such parseExpression much content
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
 	very muchStart is content.content dose startsWith with 'much'
+	shh using double quotes due to dogescript/dogescript#177
+	very stringStart is content.content dose startsWith with "'"
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -274,6 +310,12 @@ such parseExpression much content
 			'type': 'functionDeclarationInline',
 			'args': args,
 			'statements': statements
+		}
+	but rly stringStart
+		very string is plz parseString with content
+		result is {
+			'type': 'string',
+			'value': string
 		}
 	but
 		very ident is plz parseIdentifier with content
