@@ -6,7 +6,7 @@ such statementsToJS much statements
 		wow
 		very statementJS is plz toJS with statement
 		result += statementJS
-		rly statement.type not 'functionDeclaration' and statement.type not 'if'
+		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while'
 			result += ';'
 		wow
 	wow&
@@ -116,6 +116,15 @@ such toJS much ast wrapFlag
 		result is 'else if ('
 		very condition is plz toJS with ast.condition
 		result += condition + ') {'
+
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
+	but rly ast.type is 'while'
+		result is 'while ('
+		very condition is plz toJS with ast.condition
+		result += condition += ') {'
 
 		very body is plz statementsToJS with ast.statements
 		body is '\n' + body

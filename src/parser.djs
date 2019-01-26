@@ -443,6 +443,7 @@ such parseStatement much content
 	very notrlyStart is content.content dose startsWith with 'notrly'
 	very butStart is content.content dose startsWith with 'but'
 	very pawseStart is content.content dose startsWith with 'pawse'
+	very manyStart is content.content dose startsWith with 'many'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -561,6 +562,20 @@ such parseStatement much content
 			'condition': condition,
 			'statements': statements,
 			'elses': elses
+		}
+	but rly manyStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very condition is plz parseExpression with content
+
+		content.content is plz ifSkipped with content
+		very statements is plz parseBlockBody with content
+		
+		result is {
+			'type': 'while',
+			'condition': condition,
+			'statements': statements
 		}
 	but
 		result is plz parseExpression with content
