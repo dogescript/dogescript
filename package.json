@@ -22,8 +22,7 @@
   "scripts": {
     "wowserify": "node ./node_modules/browserify/bin/cmd.js example/WOWserify/index.js > example/WOWserify/bundle.js",
     "clean": "node ./test/clean.js",
-    "test": "npm run test:spec && npm run test:transpile",
-    "test:verbose": "npm run test:spec:verbose && npm run test:transpile:verbose",
+    "test": "./node_modules/.bin/multi-tape test/*.test.js",
     "test:spec": "node ./test/spec.test.js | tap-dot",
     "test:spec:verbose": "node ./test/spec.test.js",
     "test:transpile": "node ./test/transpile.test.js | tap-dot",
@@ -39,8 +38,9 @@
     "express": "^4.16.3",
     "glob": "^7.1.2",
     "heroku-client": "^3.0.6",
+    "multi-tape": "^1.2.1",
     "tap-dot": "^2.0.0",
-    "tape": "^4.7.0",
+    "tape": "^4.9.2",
     "uglify-js": "^3.1.3"
   }
 }
