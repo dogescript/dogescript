@@ -16,6 +16,33 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 # Language
 
+* [Keywords](#keywords)
+* [Comments](#comments)
+* [Declaration and Assignment](#declaration-and-assignment)
+  * [Variables](#variables)
+  * [Assignment Operators](#assignment-operators)
+* [Blocks](#blocks)
+* [Functions](#functions)
+  * [Declaration](#declaration)
+  * [Calling Functions](#calling-functions)
+* [Branching](#branching)
+  * [Conditional Statements](#conditional-statements)
+* [Loops](#loops)
+  * [While](#while-loops)
+  * [For](#for-loops)
+* [Operators](#operators)
+  * [Unary](#unary-operators)
+  * [Binary](#binary-operators)
+    * [Conditional](#conditional)
+    * [Assignment](#assignment)
+    * [Miscellaneous](#misc)
+* [Trained](#trained)
+* [Modules](#modules)
+  * [Requiring](#require)
+  * [Exporting](#exports)
+* [Debugger](#debugger-support)
+* [Built in Objects](#built-in-objects)
+
 ## Keywords
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
