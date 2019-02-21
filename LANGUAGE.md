@@ -16,11 +16,6 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 # Language
 
-* [Keywords](#keywords)
-* [Comments](#comments)
-* [Declaration and Assignment](#declaration-and-assignment)
-  * [Variables](#variables)
-
 ## Keywords
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
@@ -302,6 +297,10 @@ row: 4 col:8 val:4,8
 * `less` - `-=`
 * `lots` - `*=`
 * `few` - `/=`
+
+#### Property
+
+* `giv` - `.` - Used to access properties of an object: `document giv window` -> `document.window`
 
 #### Misc
 * `next` - `; `
