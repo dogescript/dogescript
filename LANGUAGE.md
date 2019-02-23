@@ -33,7 +33,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 * [Operators](#operators)
   * [Unary](#unary-operators)
   * [Binary](#binary-operators)
-    * [Conditional](#conditional)
+    * [Conditional](#conditionals)
     * [Assignment](#assignment)
     * [Miscellaneous](#misc)
 * [Trained](#trained)
