@@ -47,7 +47,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -324,6 +324,10 @@ row: 4 col:8 val:4,8
 * `less` - `-=`
 * `lots` - `*=`
 * `few` - `/=`
+
+#### Property
+
+* `giv` - `.` - Used to access properties of an object: `document giv window` -> `document.window`
 
 #### Misc
 * `next` - `; `
