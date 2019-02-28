@@ -3,7 +3,7 @@ var test = require('tape');
 
 function withInvalidSyntax(source) {
     try {
-        console.log(dogescript(source, true));
+        dogescript(source, true);
     } catch (error) {
         return error;
     }
