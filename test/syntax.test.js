@@ -3,7 +3,7 @@ var test = require('tape');
 
 function withInvalidSyntax(source) {
     try {
-        dogescript(source, true);
+        console.log(dogescript(source, true));
     } catch (error) {
         return error;
     }
@@ -32,4 +32,12 @@ test("'very foo is plz bar with' without arguments throws syntax error", functio
     const msg = err.message;
     t.ok(err instanceof SyntaxError, 'throws SyntaxError');
     t.ok(msg.includes("Expected arguments but got nothing. Allowed construct: with [args]."));
+});
+
+test("'levl' without argument throws syntax error", function (t) {
+  t.plan(2);
+  var err = withInvalidSyntax('array levl');
+  const msg = err.message;
+  t.ok(err instanceof SyntaxError, 'throws SyntaxError');
+  t.ok(msg.includes("Expected argument but got nothing. Allowed construct: obj levl [arg]."), 'Contains correct message');
 });
