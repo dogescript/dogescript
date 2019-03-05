@@ -35,6 +35,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
   * [Binary](#binary-operators)
     * [Conditional](#conditionals)
     * [Assignment](#assignment)
+    * [Property](#property)
     * [Miscellaneous](#misc)
 * [Trained](#trained)
 * [Modules](#modules)
@@ -328,6 +329,7 @@ row: 4 col:8 val:4,8
 #### Property
 
 * `giv` - `.` - Used to access properties of an object: `document giv window` -> `document.window`
+* `levl` - Equivalent to the bracket notation: `array levl 0` -> `array[0]`
 
 #### Misc
 * `next` - `; `
