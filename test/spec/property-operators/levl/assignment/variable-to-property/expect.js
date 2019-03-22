@@ -1,0 +1,1 @@
+foo = array[0]

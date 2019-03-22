@@ -16,11 +16,39 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 # Language
 
+* [Keywords](#keywords)
+* [Comments](#comments)
+* [Declaration and Assignment](#declaration-and-assignment)
+  * [Variables](#variables)
+  * [Assignment Operators](#assignment-operators)
+* [Blocks](#blocks)
+* [Functions](#functions)
+  * [Declaration](#declaration)
+  * [Calling Functions](#calling-functions)
+* [Branching](#branching)
+  * [Conditional Statements](#conditional-statements)
+* [Loops](#loops)
+  * [While](#while-loops)
+  * [For](#for-loops)
+* [Operators](#operators)
+  * [Unary](#unary-operators)
+  * [Binary](#binary-operators)
+    * [Conditional](#conditionals)
+    * [Assignment](#assignment)
+    * [Property](#property)
+    * [Miscellaneous](#misc)
+* [Trained](#trained)
+* [Modules](#modules)
+  * [Requiring](#require)
+  * [Exporting](#exports)
+* [Debugger](#debugger-support)
+* [Built in Objects](#built-in-objects)
+
 ## Keywords
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -297,6 +325,11 @@ row: 4 col:8 val:4,8
 * `less` - `-=`
 * `lots` - `*=`
 * `few` - `/=`
+
+#### Property
+
+* `giv` - `.` - Used to access properties of an object: `document giv window` -> `document.window`
+* `levl` - Equivalent to the bracket notation: `array levl 0` -> `array[0]`
 
 #### Misc
 * `next` - `; `
