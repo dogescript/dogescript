@@ -41,3 +41,24 @@ test("doens't break single quoted strings", function (t) {
   var tokens = tokenizer.tokenize(input);
   t.deepEqual(tokens, ["'hello world!'"]);
 });
+
+test("handles inline json", function(t){
+  t.plan(1);
+  var input = "{ some: \"json\" }"
+  var tokens = tokenizer.tokenize(input);
+  t.deepEqual(tokens, ["{", "some:", "\"json\"", "}"]);
+});
+
+test("handles array declarations", function(t) {
+  t.plan(1);
+  var input = "[1, 2, 3]"
+  var tokens = tokenizer.tokenize(input);
+  t.deepEqual(tokens, ["[1,", "2,", "3]"]);
+});
+
+test("handles escaped quotes", function(t){
+  t.plan(1);
+  var input = "very a is '\''";
+  var tokens = tokenizer.tokenize(input);
+  t.deepEqual(tokens, ["very", "a", "is", "'\''"]);
+});
