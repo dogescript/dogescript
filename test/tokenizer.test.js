@@ -1,13 +1,13 @@
 var tokenizer = require('../lib/tokenizer');
 var test = require('tape');
 
-test("single word tokenizes appropriately", function (t) {
+test("handles single word", function (t) {
     t.plan(1);
     var tokens = tokenizer.tokenize('foo');
     t.deepEqual(tokens, ['foo']);
 });
 
-test("multiple words tokenize appropriately", function (t){
+test("handles multiple words", function (t){
   t.plan(1);
   var input = "plz foo with a b c";
   var tokens = tokenizer.tokenize(input);
@@ -21,7 +21,7 @@ test("handles escaped single quotes", function (t){
   t.deepEqual(tokens, ["plz", "foo", "with", "'\''"]);
 });
 
-test("handles json ", function (t){
+test("handles json", function (t){
   t.plan(1);
   var input = "very x is { foo: bar }";
   var tokens = tokenizer.tokenize(input);
@@ -35,14 +35,14 @@ test("handles arrays", function (t){
   t.deepEqual(tokens, ["very", "x", "is", "[1,", "2,", "3]"]);
 });
 
-test("doens't break single quoted strings", function (t) {
+test("handles string with spaces without breaking it", function (t) {
   t.plan(1);
   var input = "'hello world!'";
   var tokens = tokenizer.tokenize(input);
   t.deepEqual(tokens, ["'hello world!'"]);
 });
 
-test("handles inline json", function(t){
+test("handles json with string value", function(t){
   t.plan(1);
   var input = "{ some: \"json\" }"
   var tokens = tokenizer.tokenize(input);
@@ -54,11 +54,4 @@ test("handles array declarations", function(t) {
   var input = "[1, 2, 3]"
   var tokens = tokenizer.tokenize(input);
   t.deepEqual(tokens, ["[1,", "2,", "3]"]);
-});
-
-test("handles escaped quotes", function(t){
-  t.plan(1);
-  var input = "very a is '\''";
-  var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["very", "a", "is", "'\''"]);
 });
