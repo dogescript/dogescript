@@ -27,6 +27,8 @@ such toJS much ast wrapFlag
 		wow
 	but rly ast.type is 'string'
 		result is JSON dose stringify with ast.value
+	but rly ast.type is 'number'
+		result is ast.value dose toString
 	but rly ast.type is 'property'
 		very object is plz toJS with ast.object true
 		result is object + '.' + ast.property

@@ -186,6 +186,39 @@ such parseString much content
 	wow
 wow result
 
+such parseOctalNumber much content
+	very ctxInfo is plz genContextInfo with content
+
+	rly content.content[0] not '0'
+		very msg is ctxInfo + 'Expected octal number, found ' + content.content[0]
+		very err is new Error with msg
+		throw err
+	wow
+
+	content.content is content.content dose substring with 1
+
+	very text is ''
+	very done is false
+	many !done
+		very chr is content.content[0]
+		very idx is '01234567' dose indexOf with chr
+		rly idx not -1
+			text += chr
+			content.content is content.content dose substring with 1
+		but
+			done is true
+		wow
+	wow
+
+	very result
+
+	rly text is ''
+		result is 0
+	but
+		result is plz parseInt with text 8
+	wow
+wow result
+
 such parsePossibleArgumentValues much content
 	very args is []
 
@@ -255,6 +288,7 @@ such parseExpression much content
 	very muchStart is content.content dose startsWith with 'much'
 	shh using double quotes due to dogescript/dogescript#177
 	very stringStart is content.content dose startsWith with "'"
+	very octalStart is content.content dose startsWith with '0'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -324,6 +358,12 @@ such parseExpression much content
 		result is {
 			'type': 'string',
 			'value': string
+		}
+	but rly octalStart
+		very value is plz parseOctalNumber with content
+		result is {
+			'type': 'number',
+			'value': value
 		}
 	but
 		very ident is plz parseIdentifier with content
