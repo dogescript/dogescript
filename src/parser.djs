@@ -1,3 +1,5 @@
+so ./binaryOperators as binaryOperators
+
 quiet
 	JavaScript's strings are immutable, so they can't be changed.
 	As a workaround, I wrap the string in an object, which can be changed.
@@ -400,18 +402,27 @@ such parseExpression much content
 		}
 		nextContent is plz ifSkipped with content
 	wow
-	very isStart is nextContent dose startsWith with 'is'
-	rly isStart
-		content.content is nextContent dose substring with 2
-		content.content is plz ifSkipped with content
-		very rhs is plz parseExpression with content
 
-		result is {
-			'type': '===',
-			'a': result,
-			'b': rhs
-		}
-		nextContent is plz ifSkipped with content
+	very binaryOperatorKeys is Object dose keys with binaryOperators
+
+	much very i as 0 next i smaller binaryOperatorKeys.length next i more 1
+		very key is binaryOperatorKeys[i]
+		very info is binaryOperators[key]
+
+		very opStart is nextContent dose startsWith with key
+		rly opStart
+			content.content is nextContent dose substring with key.length
+			content.content is plz ifSkipped with content
+			very rhs is plz parseExpression with content
+
+			result is {
+				'type': info.id,
+				'a': result,
+				'b': rhs
+			}
+
+			nextContent is plz ifSkipped with content
+		wow
 	wow
 wow result
 

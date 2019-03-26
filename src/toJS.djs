@@ -1,3 +1,5 @@
+so ./binaryOperators as binaryOperators
+
 such statementsToJS much statements
 	very result is ''
 	statements dose forEach with much statement idx
@@ -57,10 +59,6 @@ such toJS much ast wrapFlag
 	but rly ast.type is 'not'
 		very value is plz toJS with ast.value true
 		result is '!' + value
-	but rly ast.type is '==='
-		very a is plz toJS with ast.a true
-		very b is plz toJS with ast.b true
-		result is a + ' === ' + b
 	but rly ast.type is 'declaration'
 		result is 'let ' + ast.ident
 		rly ast.value
@@ -149,8 +147,26 @@ such toJS much ast wrapFlag
 	but rly ast.type is 'file'
 		result is plz statementsToJS with ast.statements
 	but
-		very err is new Error with 'Unrecognized node type'
-		throw err
+		very binaryOperatorValues is Object dose values with binaryOperators
+		very success is false
+		much very i as 0 next i smaller binaryOperatorValues.length next i more 1
+			very info is binaryOperatorValues[i]
+
+			rly info.id is ast.type
+				very a is plz toJS with ast.a true
+				very b is plz toJS with ast.b true
+				result is a + ' ' + info.output + ' ' + b
+
+				success is true
+				break
+			wow
+		wow
+
+		rly !success
+			very msg is 'Unrecognized node type: ' + ast.type
+			very err is new Error with msg
+			throw err
+		wow
 	wow
 wow result
 
