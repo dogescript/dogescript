@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var test = require('tape');
+const { exec } = require('child_process');
 
 // deal with CRLF from windows folks writing javascript :(
 function readCleanCRLF(fpath) {
@@ -13,36 +14,38 @@ function cleanCRLF(str) {
   return str.trim().replace(/\r\n/gm, '\n');
 }
 
+function fetchExpected(testDirName)
+{
+  var expectedPath   = path.join(transpileDir, testDirName, 'expected.js');
+  return readCleanCRLF(expectedPath);
+}
+
+function fetchSource(testDirName)
+{
+  return path.join(transpileDir, testDirName, 'source.djs');
+}
+
 var transpileDir = path.join(__dirname, 'transpile');
-var expectedFilePath = path.join(transpileDir, 'expected.js');
-var expected = readCleanCRLF(expectedFilePath);
 
-/**
- * Execute the binary and capture the stdout
- */
-const { exec } = require('child_process');
-const child = exec('node ./bin/dogescript.js ./test/transpile/source.djs',
-  (err, stdout, stderr) => {
-    if(err)
-    {
-      console.error(`exec error: ${err}`);
-      return;
-    }
-  }
-);
-
-// stream the output
-var readable = child.stdout;
-readable.setEncoding('utf8');
-
-// when the process sends us data, validate they look the same
-readable.on('data', function(chunk) {
-
-  var actual = cleanCRLF(chunk.toString());
-  test('transpilation should work', function (t) {
+function runTest(testDirName)
+{
+  test(`${testDirName} should transpile correctly`, function (t) {
     t.plan(1);
-
-    t.equal(actual,expected);
+    var expected = fetchExpected(testDirName);
+    var sourcePath = fetchSource(testDirName, 'source.djs');
+    /**
+     * Execute the binary and capture the stdout
+     */
+     exec(`node ./bin/dogescript.js ${sourcePath}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
+       if (error) {
+         t.fail(`exec error: ${error}`);
+         return;
+       }
+       var actual = cleanCRLF(stdout);
+       t.equal(expected, actual);
+     });
   });
+}
 
-});
+runTest('escaped-quotes');
+runTest('iota');
