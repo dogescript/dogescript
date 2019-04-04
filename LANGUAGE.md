@@ -48,7 +48,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -93,7 +93,11 @@ The following are the supported assignment operators:
 
 ## Blocks
 
-Blocks in dogescript behave the same as with javascript, however all blocks end with `wow`. Functions that return values can use `wow [val]` to return the value.
+Blocks in dogescript behave the same as with javascript, however all blocks end with `wow`. 
+
+Functions that return values can use `wow [val]` or `amaze [val]` to return the value.
+
+### wow
 
 A block without a return would have the following syntax:
 ```dogescript
@@ -127,7 +131,7 @@ var canvas = d3.select('body')
 ```
 
 The `wow&` operator is used to terminate a block that is passed in as an argument to a call, effectively taking the place of `})`:
-```
+```dogescript
 so http
 http dose createServer with much req res
    res dose writeHead with 200 {'Content-Type': 'text/plain'}
@@ -146,6 +150,23 @@ http.createServer(function(req, res) {
     res.end('so hello\nmuch world');
 })
     .listen(8080);
+```
+
+### amaze
+
+The `amaze` keyword can be used to return a value, without closing the block.
+
+```dogescript
+such foo
+amaze 'bar'
+wow
+```
+
+Becomes:
+```javascript
+function foo() {
+  return 'bar';
+}
 ```
 
 ## Functions
