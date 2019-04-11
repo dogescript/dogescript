@@ -191,7 +191,7 @@ test(function (t) {
 });
 ```
 
-### amaze
+#### amaze
 
 The `amaze` keyword can be used to return a value, without closing the block.
 
