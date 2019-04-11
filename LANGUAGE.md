@@ -152,23 +152,6 @@ http.createServer(function(req, res) {
     .listen(8080);
 ```
 
-### amaze
-
-The `amaze` keyword can be used to return a value, without closing the block.
-
-```dogescript
-such foo
-amaze 'bar'
-wow
-```
-
-Becomes:
-```javascript
-function foo() {
-  return 'bar';
-}
-```
-
 ## Functions
 
 ### Declaration
@@ -206,6 +189,23 @@ test(function (t) {
     t.equal(2 + 3, 5);
     t.equal(7 * 8 + 9, 65);
 });
+```
+
+### amaze
+
+The `amaze` keyword can be used to return a value, without closing the block.
+
+```dogescript
+such foo
+amaze 'bar'
+wow
+```
+
+Becomes:
+```javascript
+function foo() {
+  return 'bar';
+}
 ```
 
 ### Calling functions
