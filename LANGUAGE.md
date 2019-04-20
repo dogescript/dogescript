@@ -445,7 +445,7 @@ module.exports.baz = foo
 
 The `debooger` and `pawse` keywords translate to `debugger`
 
-## Built in objects
+## Built-in objects
 
 :warning: Identifiers may not use these as names:
 
