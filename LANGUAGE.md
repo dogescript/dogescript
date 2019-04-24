@@ -25,6 +25,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 * [Functions](#functions)
   * [Declaration](#declaration)
   * [Calling Functions](#calling-functions)
+* [Classes](#classes)
 * [Branching](#branching)
   * [Conditional Statements](#conditional-statements)
 * [Loops](#loops)
@@ -48,7 +49,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -230,6 +231,24 @@ Math dose sum with 1 2
 Alternatively, one could use the `plz` syntax as well:
 ```dogescript
 plz Math.sum with 1 2
+```
+
+## Classes
+
+A class declaration begins with the `classy` kewyord.
+
+A class can be declared as a declaration or as an expression. Just like other blocks, class declarations are closed with `wow`.
+
+*Declaration*
+```dogescript
+classy Rectangle
+wow
+```
+
+*Expression*
+```dogescript
+very Rectangle is classy
+wow
 ```
 
 ## Branching
