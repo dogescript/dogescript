@@ -254,7 +254,7 @@ wow
 
 ## Expressions
 
-Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use this either with the `giv` or the `levl` operator.
+Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use `dis` either with the `giv` or the `levl` operator.
 
 * `dis giv foo` => `this.foo`
 * `dis levl 'foo'` => `this['foo]`
