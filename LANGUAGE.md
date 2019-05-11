@@ -294,7 +294,7 @@ wow
 
 ### For loops
 
-Iterating for loops begin with the `much` keyword. The syntax for a for loop is `much [lex] next [condition] next [step]` where:
+Iterating for loops begin with the `much` keyword. The syntax for a for loop is `much [lex] next [condition] more [step]` where:
 * `[lex]` is a lexical expression, could be assignment `i as 0, j as 0`
 * `[condition]` is a boolean expression for terminating the loop, could be ` i smaller 100 and j smaller 50`
 * `[step]` an expression to execute on each step of the loop, could be `i more 1, j more 2`
