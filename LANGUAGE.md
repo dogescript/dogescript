@@ -26,6 +26,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
   * [Declaration](#declaration)
   * [Calling Functions](#calling-functions)
 * [Classes](#classes)
+* [Expressions](#expressions)
 * [Branching](#branching)
   * [Conditional Statements](#conditional-statements)
 * [Loops](#loops)
@@ -49,7 +50,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -250,6 +251,13 @@ wow
 very Rectangle is classy
 wow
 ```
+
+## Expressions
+
+Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use `dis` either with the `giv` or the `levl` operator.
+
+* `dis giv foo` => `this.foo`
+* `dis levl 'foo'` => `this['foo]`
 
 ## Branching
 
