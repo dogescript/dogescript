@@ -65,6 +65,10 @@ such toJS much ast wrapFlag
 			very value is plz toJS with ast.value
 			result += ' = ' + value
 		wow
+	but rly ast.type is 'assignment'
+		very target is plz toJS with ast.target
+		very value is plz toJS with ast.value
+		result is target + ' = ' + value
 	but rly ast.type is 'functionDeclaration'
 		result is 'function ' + ast.identifier + '('
 		ast.args dose forEach with much arg idx

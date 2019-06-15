@@ -630,6 +630,10 @@ such parseStatement much content
 		}
 	but
 		result is plz parseExpression with content
+		rly result.type is '==='
+			shh We have an ambiguity between equality checks and variable assignment, so we assume the latter if it's a statement
+			result is {'type': 'assignment', 'target': result.a, 'value': result.b}
+		wow
 	wow
 wow result
 
