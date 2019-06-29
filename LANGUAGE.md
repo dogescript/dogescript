@@ -263,6 +263,18 @@ classy Rectangle
 wow
 ```
 
+### Sub classing
+
+The `grows` keyword declares an extension within a class declaration or class expression to create a class as a child of another class.
+
+```dogescript
+classy Shape
+wow
+
+classy Rectangle grows Shape
+wow
+```
+
 ## Expressions
 
 Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use `dis` either with the `giv` or the `levl` operator.
