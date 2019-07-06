@@ -41,3 +41,19 @@ test("'levl' without argument throws syntax error", function (t) {
   t.ok(err instanceof SyntaxError, 'throws SyntaxError');
   t.ok(msg.includes("Expected argument but got nothing. Allowed construct: obj levl [arg]."), 'Contains correct message');
 });
+
+test("'git' without function name throws syntax error", function (t) {
+  t.plan(2);
+  var err = withInvalidSyntax('git');
+  const msg = err.message;
+  t.ok(err instanceof SyntaxError, 'throws SyntaxError');
+  t.ok(msg.includes("Expected getter name but got nothing. Allowed construct: git [name]."), 'Contains correct message');
+});
+
+test("'sit' without function name throws syntax error", function (t) {
+  t.plan(2);
+  var err = withInvalidSyntax('sit');
+  const msg = err.message;
+  t.ok(err instanceof SyntaxError, 'throws SyntaxError');
+  t.ok(msg.includes("Expected setter name but got nothing. Allowed construct: sit [name] with [arg]."), 'Contains correct message');
+});

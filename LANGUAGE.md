@@ -299,7 +299,7 @@ The `sit` keyword binds an object property to a function to be called when there
 ```dogescript
 classy Rectangle
   shh Setter
-  set length with length
+  sit length with length
     dis giv length is length
   wow
 wow
