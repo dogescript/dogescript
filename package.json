@@ -39,6 +39,7 @@
     "heroku-client": "^3.0.7",
     "multi-tape": "^1.2.1",
     "tap-dot": "^2.0.0",
+    "tap-yaml": "0.4.0",
     "tape": "^4.10.1",
     "uglify-js": "^3.4.9",
     "walk": "^2.3.14"
