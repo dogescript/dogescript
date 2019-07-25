@@ -275,6 +275,36 @@ classy Rectangle grows Shape
 wow
 ```
 
+### Methods
+
+#### Prototype Methods
+
+##### Getter
+
+The `git` keyword binds an object property to a function that will be called when that property is looked up.
+
+```dogescript
+classy Rectangle
+  shh Getter
+  git area
+    amaze dis dose calcArea
+  wow
+wow
+```
+
+##### Setter
+
+The `sit` keyword binds an object property to a function to be called when there is an attempt to set that property.
+
+```dogescript
+classy Rectangle
+  shh Setter
+  sit length with length
+    dis giv length is length
+  wow
+wow
+```
+
 ## Expressions
 
 Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use `dis` either with the `giv` or the `levl` operator.
