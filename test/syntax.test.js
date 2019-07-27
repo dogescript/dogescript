@@ -10,10 +10,7 @@ function expectInvalidSyntaxError(source, errorMessage) {
 
 
 describe("Syntax Errors", function() {
-
-
   describe("with", function() {
-
     it("'plz foo with' without arguments throws syntax error", function () {
       expectInvalidSyntaxError(
         'plz foo with',
@@ -34,7 +31,6 @@ describe("Syntax Errors", function() {
           "Expected arguments but got nothing. Allowed construct: with [args]. Parsed tokens [very,foo,is,plz,bar,with] from input \"very foo is plz bar with\""
         );
     });
-
   });
 
 
@@ -49,19 +45,16 @@ describe("Syntax Errors", function() {
 
 
   describe("git", function() {
-
     it("'git' without function name throws syntax error", function () {
       expectInvalidSyntaxError(
         'git',
         "Expected getter name but got nothing. Allowed construct: git [name]. Parsed tokens [git] from input \"git\""
       );
     });
-
   });
 
 
   describe("sit", function() {
-
     it("'sit' without function name throws syntax error", function () {
       expectInvalidSyntaxError(
         'sit',
@@ -82,7 +75,6 @@ describe("Syntax Errors", function() {
         "Expected setter argument but got nothing. Allowed construct: sit [name] with [arg]. Parsed tokens [sit,fnName,with] from input \"sit fnName with\"",
       );
     });
-
   });
 
 });
