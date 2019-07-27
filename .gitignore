@@ -6,3 +6,4 @@ node_modules/
 example/WOWserify/bundle.js
 .env
 /tmp
+coverage
