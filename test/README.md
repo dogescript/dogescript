@@ -1,14 +1,17 @@
 # Test notes
 
-Run the test via `npm test`
+We utilize [Jest](https://jestjs.io/) under the hood for testing. To start the testing suite you can run:
 
-We utilize [jest](https://jestjs.io/) for testing. you can set the tests to live-reload on changes by adding `--watch`:
+```
+$ npm test
+```
+
+Similarly, you may run any of [Jest's CLI options](https://jestjs.io/docs/en/cli#reference) as well. For example if you wanted to have the tests to live-reload on code change, you could do so by adding `--watch` like so:
 
 ````
 $ npm test -- --watch
 ````
 
-Similarly, you may run any of [jest's CLI options](https://jestjs.io/docs/en/cli#reference) in this manner.
 
 ## Creating compiler tests
 Transformative tests are automatically generated and run with `jest`. in order for your test to be ran you must
@@ -19,4 +22,4 @@ Transformative tests are automatically generated and run with `jest`. in order f
 
 After that the test runner should pick them up & display coverage.
 
-To keep the tests sane please use foo/bar/baz/buzz as custom identifiers and strings (as they are not doge-like and easier to visually grep).
+> ⚠️ To keep the tests sane please use foo/bar/baz/buzz as custom identifiers and strings (as they are not doge-like and easier to visually grep).
