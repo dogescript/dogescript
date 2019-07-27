@@ -1,57 +1,48 @@
 var tokenizer = require('../lib/tokenizer');
-var test = require('tape');
 
-test("handles single word", function (t) {
-    t.plan(1);
+it("handles single word", function () {
     var tokens = tokenizer.tokenize('foo');
-    t.deepEqual(tokens, ['foo']);
+    expect(tokens).toEqual(['foo']);
 });
 
-test("handles multiple words", function (t){
-  t.plan(1);
+it("handles multiple words", function () {
   var input = "plz foo with a b c";
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ['plz', 'foo', 'with', 'a', 'b', 'c']);
+  expect(tokens).toEqual(['plz', 'foo', 'with', 'a', 'b', 'c']);
 });
 
-test("handles escaped single quotes", function (t){
-  t.plan(1);
+it("handles escaped single quotes", function () {
   var input = "plz foo with '\''";
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["plz", "foo", "with", "'\''"]);
+  expect(tokens).toEqual(["plz", "foo", "with", "'\''"]);
 });
 
-test("handles json", function (t){
-  t.plan(1);
+it("handles json", function () {
   var input = "very x is { foo: bar }";
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["very", "x", "is", "{", "foo:", "bar", "}"]);
+  expect(tokens).toEqual(["very", "x", "is", "{", "foo:", "bar", "}"]);
 });
 
-test("handles arrays", function (t){
-  t.plan(1);
+it("handles arrays", function () {
   var input = "very x is [1, 2, 3]";
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["very", "x", "is", "[1,", "2,", "3]"]);
+  expect(tokens).toEqual(["very", "x", "is", "[1,", "2,", "3]"]);
 });
 
-test("handles string with spaces without breaking it", function (t) {
-  t.plan(1);
+it("handles string with spaces without breaking it", function ()  {
   var input = "'hello world!'";
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["'hello world!'"]);
+  expect(tokens).toEqual(["'hello world!'"]);
 });
 
-test("handles json with string value", function(t){
-  t.plan(1);
+it("handles json with string value", function(){
   var input = "{ some: \"json\" }"
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["{", "some:", "\"json\"", "}"]);
+  expect(tokens).toEqual(["{", "some:", "\"json\"", "}"]);
 });
 
-test("handles array declarations", function(t) {
-  t.plan(1);
+it("handles array declarations", function() {
   var input = "[1, 2, 3]"
   var tokens = tokenizer.tokenize(input);
-  t.deepEqual(tokens, ["[1,", "2,", "3]"]);
+  expect(tokens).toEqual(["[1,", "2,", "3]"]);
 });
