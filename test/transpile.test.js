@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
-var test = require('tape');
 const { exec } = require('child_process');
+var util = require('./util');
 
 // deal with CRLF from windows folks writing javascript :(
 function readCleanCRLF(fpath) {
@@ -16,36 +16,34 @@ function cleanCRLF(str) {
 
 function fetchExpected(testDirName)
 {
-  var expectedPath   = path.join(transpileDir, testDirName, 'expected.js');
+  var expectedPath   = path.join(__dirname, 'transpile', testDirName, 'expected.js');
   return readCleanCRLF(expectedPath);
 }
 
 function fetchSource(testDirName)
 {
-  return path.join(transpileDir, testDirName, 'source.djs');
+  return path.join(__dirname, 'transpile', testDirName, 'source.djs');
 }
-
-var transpileDir = path.join(__dirname, 'transpile');
 
 function runTest(testDirName)
 {
-  test(`${testDirName} should transpile correctly`, function (t) {
-    t.plan(1);
+  it(`${testDirName} should transpile correctly`, function (done) {
     var expected = fetchExpected(testDirName);
     var sourcePath = fetchSource(testDirName, 'source.djs');
     /**
      * Execute the binary and capture the stdout
      */
      exec(`node ./bin/dogescript.js ${sourcePath}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
-       if (error) {
-         t.fail(`exec error: ${error}`);
-         return;
-       }
+       expect(error).toEqual(null);
        var actual = cleanCRLF(stdout);
-       t.equal(expected, actual);
+
+       expect(expected).toEqual(actual);
+       done();
      });
   });
 }
 
-runTest('escaped-quotes');
-runTest('iota');
+describe("Transpiling tests", function () {
+  runTest('escaped-quotes');
+  runTest('iota')
+});
