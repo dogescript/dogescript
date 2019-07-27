@@ -56,7 +56,7 @@ function formatSpecMetadata(testDirMapping) {
     .map(function(dir) {
       var testName = getFolderName(dir);
 
-      // separate by directory if it wasnt a directory with a name-like-this
+      // Separate by directory if it wasnt a directory with a name-like-this
       if(!testName.includes('-'))
       {
         var relative = path.relative(specDir, dir);

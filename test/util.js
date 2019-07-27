@@ -33,7 +33,7 @@ function deleteTmpFolder() {
     var isDirectory = fs.lstatSync(curPath).isDirectory();
 
     if (isDirectory) { // recurse
-      deleteFolderSync(curPath);
+      deleteTmpFolder(curPath);
     } else { // Single file, delete it
       fs.unlinkSync(curPath);
     }
