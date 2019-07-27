@@ -5,3 +5,4 @@ node_modules/
 /test/spec/*/*/dump.js
 example/WOWserify/bundle.js
 .env
+/tmp
