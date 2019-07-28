@@ -17,8 +17,9 @@
     "optimist": "^0.6.1",
     "xhr": "^2.5.0"
   },
-  "bin": "./bin/dogescript.js",
+  "bin": "./dist/dogescript.min.js",
   "scripts": {
+    "run": "node ./bin/dogescript.js",
     "wowserify": "node ./node_modules/browserify/bin/cmd.js example/WOWserify/index.js > example/WOWserify/bundle.js",
     "clean": "node ./test/clean.js",
     "test": "./node_modules/.bin/jest --coverage",

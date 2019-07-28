@@ -5,6 +5,16 @@ var TMP_FOLDER_LOCATION = path.join(__dirname, '..', 'test', 'tmp');
 
 !fs.existsSync(TMP_FOLDER_LOCATION) && fs.mkdirSync(TMP_FOLDER_LOCATION);
 
+function cleanCRLF(str) {
+  return str.trim().replace(/\r\n/gm, '\n');
+}
+
+function readCleanCRLF(fpath) {
+  return fs.readFileSync(fpath, 'utf8')
+    .trim()
+    .replace(/\r\n/gm, '\n');
+}
+
 function getTmpfilePath(name) {
   return path.join(TMP_FOLDER_LOCATION, name)
 }
@@ -46,9 +56,11 @@ function deleteTmpFolder() {
 };
 
 module.exports = {
-  writeTmpFile,
-  readTmpFile,
+  cleanCRLF,
   deleteTmpFolder,
   getTmpfilePath,
+  readCleanCRLF,
+  readTmpFile,
   TMP_FOLDER_LOCATION,
+  writeTmpFile,
 }

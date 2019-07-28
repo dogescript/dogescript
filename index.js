@@ -12,9 +12,9 @@
 var beautify = require('js-beautify').js_beautify;
 var xhr      = require('xhr');
 
-var parser = require('./lib/parser');
-
-function parse (file, beauty, dogeMode) {
+// Named exports interop cleanly between commonjs / js modules
+export var parser = require('./lib/parser');
+export function parse (file, beauty, dogeMode) {
     if (dogeMode) var lines = file.split(/ {3,}|\r?\n/);
     else var lines = file.split(/\r?\n/);
     var script = '';
@@ -27,7 +27,12 @@ function parse (file, beauty, dogeMode) {
     else return script;
 }
 
-export default parse;
+// When creating a named export, add a line down here for it too for module interop.
+// This allows for`import dogescript from "dogescript"`
+export default {
+    parser,
+    parse
+}
 
 // TODO: Investigate
 if (typeof window !== 'undefined' && window !== null) {

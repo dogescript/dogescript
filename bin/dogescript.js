@@ -7,7 +7,7 @@ var stream   = require('stream');
 var repl     = require('repl');
 var argv     = require('optimist').usage('Usage: dogescript <file> [options]').argv;
 var beautify = require('js-beautify').js_beautify;
-var parser   = require('../lib/parser');
+var dogescript   = require('../dist/dogescript');
 var pjson = require('../package.json');
 
 if (argv._[0]) {
@@ -27,7 +27,7 @@ if (argv._[0]) {
         var output = '';
 
         for (var i = 0; i < lines.length; i++) {
-            output += parser(lines[i]);
+            output += dogescript.parser(lines[i]);
         }
 
         // allow run mode
@@ -65,7 +65,7 @@ if (argv._[0]) {
 
     // see streams documentation
     Stream.prototype._transform = function (chunk, encoding, callback) {
-        var script = parser(chunk.toString());
+        var script = dogescript.parser(chunk.toString());
         var lines  = script.split(/\n+/);
         for (var i = 0; i < lines.length; i++) {
             // ignore empty lines
@@ -91,7 +91,7 @@ if (argv._[0]) {
           else var lines = script.split(/\r?\n/);
           replServer.editorMode = true;
           for (var i = 0; i < lines.length; i++) {
-              replServer.write(parser(lines[i]));
+              replServer.write(dogescript.parser(lines[i]));
           }
           replServer.editorMode = false;
           replServer.write('\n');

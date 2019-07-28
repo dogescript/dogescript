@@ -2,7 +2,7 @@ import dogescript from '../index';
 
 function expectInvalidSyntaxError(source, errorMessage) {
   var test = function() {
-    return dogescript(source, true);
+    return dogescript.parse(source, true);
   };
 
   expect(test).toThrow(new SyntaxError(errorMessage));
