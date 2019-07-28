@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 var util = require('./util');
 
 const TRANSPILE_PATH = path.join(__dirname, 'transpile');
-const BINARY_PATH = path.join(__dirname, '..', 'bin', 'dogescript.js');
+const BINARY_PATH = path.join(__dirname, '..', 'dist', 'dogescript.bin.js');
 
 function generateFilePath(folderName, fileName) {
   return path.join(TRANSPILE_PATH, folderName, fileName);

@@ -1,14 +1,15 @@
-#!/usr/bin/env node
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
+import stream from 'stream';
+import repl from 'repl';
+import optimist from 'optimist';
+import { js_beautify as beautify } from 'js-beautify'
+import parser from '../lib/parser';
+import pjson from '../package.json';
+import vm from 'vm';
 
-var fs       = require('fs');
-var path     = require('path');
-var util     = require('util');
-var stream   = require('stream');
-var repl     = require('repl');
-var argv     = require('optimist').usage('Usage: dogescript <file> [options]').argv;
-var beautify = require('js-beautify').js_beautify;
-var dogescript   = require('../dist/dogescript');
-var pjson = require('../package.json');
+var argv = optimist.usage('Usage: dogescript <file> [options]').argv;
 
 if (argv._[0]) {
     var file = fs.readFile(path.resolve(process.cwd(), argv._[0]), {encoding: 'utf-8'}, function (err, script) {
@@ -27,13 +28,12 @@ if (argv._[0]) {
         var output = '';
 
         for (var i = 0; i < lines.length; i++) {
-            output += dogescript.parser(lines[i]);
+            output += parser(lines[i]);
         }
 
         // allow run mode
         if(argv.run)
         {
-          const vm = require('vm');
           vm.runInNewContext(output,
             {
               require: require,
@@ -65,7 +65,7 @@ if (argv._[0]) {
 
     // see streams documentation
     Stream.prototype._transform = function (chunk, encoding, callback) {
-        var script = dogescript.parser(chunk.toString());
+        var script = parser(chunk.toString());
         var lines  = script.split(/\n+/);
         for (var i = 0; i < lines.length; i++) {
             // ignore empty lines
@@ -91,7 +91,7 @@ if (argv._[0]) {
           else var lines = script.split(/\r?\n/);
           replServer.editorMode = true;
           for (var i = 0; i < lines.length; i++) {
-              replServer.write(dogescript.parser(lines[i]));
+              replServer.write(parser(lines[i]));
           }
           replServer.editorMode = false;
           replServer.write('\n');

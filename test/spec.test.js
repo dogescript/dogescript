@@ -20,7 +20,7 @@ function runSpecTest(testName, folder)
 
   var expectedOutput = util.readCleanCRLF(expectedOutputPath);
   var source         = util.readCleanCRLF(sourcePath);
-  var compiled       = dogescript.parse(source, true);
+  var compiled       = dogescript(source, true);
 
   // The actual test, Generate our assertion that the generated code matches the output
   testFn(testName, function() {
