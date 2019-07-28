@@ -44,9 +44,10 @@ if (typeof window !== 'undefined' && window !== null) {
     var exec = function (source) {
         var js = ';\n' + parse(source);
         if (js) {
-            with (window) {
+            // TODO: Evaluate me and if i work
+            // with (window) {
                 eval(js);
-            }
+            // }
         }
     }
 
