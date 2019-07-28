@@ -1,7 +1,7 @@
-var dogescript = require('../index');
-var fs = require('fs');
-var path = require('path');
-var util = require("./util");
+import dogescript from '../index';
+import fs from 'fs';
+import path from 'path';
+import util from './util';
 
 // Generated via the globalSetup step
 var testMetadata = require(util.getTmpfilePath("specMetadata.json"))

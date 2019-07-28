@@ -3,7 +3,7 @@ var path = require('path');
 var walk = require('walk');
 var util = require('./util');
 
-var specDir = path.join(__dirname, 'spec');
+var specDir = path.join(__dirname, 'language-spec');
 
 // deal with CRLF from windows folks writing javascript :(
 function readCleanCRLF(fpath) {

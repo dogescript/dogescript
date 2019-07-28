@@ -1,6 +1,6 @@
-function expectInvalidSyntaxError(source, errorMessage) {
-  var dogescript = require('../index');
+import dogescript from '../index';
 
+function expectInvalidSyntaxError(source, errorMessage) {
   var test = function() {
     return dogescript(source, true);
   };
