@@ -2,7 +2,7 @@
   "name": "dogescript",
   "version": "2.4.0-pre",
   "description": "wow so syntax very doge much future",
-  "main": "dist/dogescript.min.js",
+  "main": "dist/dogescript.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/dogescript/dogescript.git"
@@ -17,7 +17,7 @@
     "optimist": "^0.6.1",
     "xhr": "^2.5.0"
   },
-  "bin": "./dist/dogescript.min.js",
+  "bin": "./bin/dogescript.js",
   "scripts": {
     "run": "node ./bin/dogescript.js",
     "wowserify": "node ./node_modules/browserify/bin/cmd.js example/WOWserify/index.js > example/WOWserify/bundle.js",
