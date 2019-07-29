@@ -20,7 +20,6 @@
   "bin": "./bin/dogescript.js",
   "scripts": {
     "make-exec": "chmod +x ./dist/dogescript.bin.js",
-    "wowserify": "node ./node_modules/browserify/bin/cmd.js example/WOWserify/index.js > example/WOWserify/bundle.js",
     "clean": "node ./test/clean.js",
     "start": "babel-node ./bin/dogescript.bin.js",
     "test": "./node_modules/.bin/jest --coverage",
