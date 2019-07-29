@@ -2,8 +2,8 @@ node_modules/
 .DS_Store
 /*.tgz
 /*.log
-/test/spec/*/*/dump.js
 example/WOWserify/bundle.js
 .env
 /tmp
+/dist
 coverage

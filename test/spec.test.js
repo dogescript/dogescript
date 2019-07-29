@@ -1,16 +1,10 @@
-var dogescript = require('../index');
-var fs = require('fs');
-var path = require('path');
-var util = require("./util");
+import dogescript from '../index';
+import fs from 'fs';
+import path from 'path';
+import util from './util';
 
 // Generated via the globalSetup step
 var testMetadata = require(util.getTmpfilePath("specMetadata.json"))
-
-function readCleanCRLF(fpath) {
-  return fs.readFileSync(fpath, 'utf8')
-    .trim()
-    .replace(/\r\n/gm, '\n');
-}
 
 function runSpecTest(testName, folder)
 {
@@ -24,8 +18,8 @@ function runSpecTest(testName, folder)
   var expectedOutputPath   = path.join(folder, 'expect.js');
   var sourcePath           = path.join(folder, 'source.djs');
 
-  var expectedOutput = readCleanCRLF(expectedOutputPath);
-  var source         = readCleanCRLF(sourcePath);
+  var expectedOutput = util.readCleanCRLF(expectedOutputPath);
+  var source         = util.readCleanCRLF(sourcePath);
   var compiled       = dogescript(source, true);
 
   // The actual test, Generate our assertion that the generated code matches the output

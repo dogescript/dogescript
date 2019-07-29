@@ -1,16 +1,11 @@
-var fs = require('fs');
 var path = require('path');
+var process = require('process');
 var walk = require('walk');
 var util = require('./util');
+const { exec } = require('child_process');
 
-var specDir = path.join(__dirname, 'spec');
 
-// deal with CRLF from windows folks writing javascript :(
-function readCleanCRLF(fpath) {
-  return fs.readFileSync(fpath, 'utf8')
-    .trim()
-    .replace(/\r\n/gm, '\n');
-}
+var specDir = path.join(__dirname, 'language-spec');
 
 // TODO: Replace me.
 function getFolderName(filePath) {
@@ -48,6 +43,37 @@ function getSpecFiles(specPath) {
   });
 }
 
+// Build our project for E2E testing
+function buildProject() {
+  const ROOT_DIR = path.join(__dirname, '..');
+  const buildCommand = "npm run build";
+
+  console.log("\n\n🛠  Building dogescript...\n")
+  return new Promise((resolve, reject) => {
+    /**
+     * Compile the binary for testing
+     */
+    exec(`cd ${ROOT_DIR} && ${buildCommand}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
+      const errorOutput = stderr.toString();
+      const stdOutput = stdout.toString();
+      const errMsg = "Failed to start testing suite, compiler build failed";
+
+      if (error || errorOutput) {
+        console.error(errorOutput);
+        console.error(stdOutput);
+        console.error(errMsg)
+        reject([
+          new Error(errMsg),
+          stdOutput,
+          errorOutput,
+        ]);
+      }
+
+      resolve();
+    });
+  });
+}
+
 // Takes a specFileMapping and transforms it into a serializable format
 // For the test suite to use (globals are not permitted)
 function formatSpecMetadata(testDirMapping) {
@@ -73,5 +99,6 @@ module.exports =  function() {
     .then(formatSpecMetadata)
     .then(function (specMetadata) {
       util.writeTmpFile('specMetadata.json', JSON.stringify(specMetadata));
-    });
+    })
+    .then(buildProject);
 };
