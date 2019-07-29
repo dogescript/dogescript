@@ -36,7 +36,8 @@ if (argv._[0]) {
         {
           vm.runInNewContext(output,
             {
-              require: require,
+              // HACK, kill the webpack warning
+              require: eval('require'),
               console: console
             }
           );
