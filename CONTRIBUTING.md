@@ -78,3 +78,6 @@ npm install
 npm run build # builds dogescript
 ```
 
+## Hacking on Windoges
+
+For optimal experience developing dogescript on windows, we recommend using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10). You can then refer to an already cloned repository by using the `/mnt/c/dogescript` path (or whichever drive you've downloaded dogescript on to). 
