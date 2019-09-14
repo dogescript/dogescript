@@ -39,17 +39,24 @@ if (typeof window !== 'undefined' && window !== null) {
         while (queue.length > 0 && queue[0].ready) {
             var script = queue.shift();
             exec(script.text);
+
+            // Let the script tag know it's been loaded
+            if (script.onload) {
+                script.onload();
+            }
         }
     }
 
     var exec = function (source) {
         var js = ';\n' + parse(source);
-        if (js) {
-            // TODO: Evaluate me and if i work
-            // with (window) {
-                eval(js);
-            // }
+
+        try {
+            eval(js);
+        } catch (e) {
+            console.error(`Error executing Dogescript. \n\nSource: \` ${source} \`\n\nTransformed:\` ${js} \`\n\nError: \`${e.message}\` `)
+            throw e;
         }
+
     }
 
     var getLoadEval = function (script) {

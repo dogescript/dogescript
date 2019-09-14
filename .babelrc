@@ -1,6 +1,6 @@
 {
     "presets": [
-        ["@babel/preset-env", { "modules": "commonjs" }]
+        ["@babel/preset-env", { "modules": "commonjs", "useBuiltIns": "usage", "corejs": 3 }]
     ],
     "plugins": ["add-module-exports"]
 }

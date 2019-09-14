@@ -1,3 +1,6 @@
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 var path = require('path');
 var process = require('process');
 var walk = require('walk');
@@ -69,6 +72,10 @@ function buildProject() {
         ]);
       }
 
+      if (stdOutput) {
+        console.error(stdOutput);
+      }
+
       resolve();
     });
   });
@@ -94,11 +101,13 @@ function formatSpecMetadata(testDirMapping) {
 }
 
 // setup.js, global setup for jest
-module.exports =  function() {
-  return getSpecFiles(specDir)
-    .then(formatSpecMetadata)
-    .then(function (specMetadata) {
-      util.writeTmpFile('specMetadata.json', JSON.stringify(specMetadata));
-    })
-    .then(buildProject);
-};
+async function main() {
+  const specFiles = await getSpecFiles(specDir);
+  const metaData = await formatSpecMetadata(specFiles);
+
+  util.writeTmpFile('specMetadata.json', JSON.stringify(metaData));
+
+  await buildProject();
+}
+
+module.exports = main;
