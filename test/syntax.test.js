@@ -77,4 +77,13 @@ describe("Syntax Errors", function() {
     });
   });
 
+  describe("stay", function() {
+    it("'stay' without function name throws syntax error", function () {
+      expectInvalidSyntaxError(
+        'stay',
+        'Expected function name but got nothing. Allowed construct: stay [name] <much [arg]>. Parsed tokens [stay] from input \"stay\"'
+      );
+    });
+  });
+
 });
