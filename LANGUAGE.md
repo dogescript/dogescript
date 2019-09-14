@@ -316,6 +316,10 @@ classy Rectangle
   shh static
   stay sides
   wow 4
+  
+  stay calculateArea much width height
+    amaze width * height
+  wow
 wow
 ```
 
