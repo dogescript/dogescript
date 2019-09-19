@@ -19,7 +19,7 @@ function runTest(testDirName)
     /**
      * Execute the binary and capture the stdout
      */
-     exec(`${BINARY_PATH} ${sourcePath}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
+     exec(`node ${BINARY_PATH} ${sourcePath}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
        expect(error).toEqual(null);
        expect(stderr).toEqual("");
 
