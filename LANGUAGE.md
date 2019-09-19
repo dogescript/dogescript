@@ -299,8 +299,26 @@ The `sit` keyword binds an object property to a function to be called when there
 ```dogescript
 classy Rectangle
   shh Setter
-  sit length with length
+  sit length much length
     dis giv length is length
+  wow
+wow
+```
+
+#### Static Methods
+
+##### Stay
+
+The `stay` keyword defines a static method for a class.
+
+```dogescript
+classy Rectangle
+  shh static
+  stay sides
+  wow 4
+  
+  stay calculateArea much width height
+    amaze width * height
   wow
 wow
 ```

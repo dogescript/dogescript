@@ -8,6 +8,13 @@ function expectInvalidSyntaxError(source, errorMessage) {
   expect(test).toThrow(new SyntaxError(errorMessage));
 }
 
+function expectError(source, errorMessage) {
+  var test = function() {
+    return dogescript(source, true);
+  };
+
+  expect(test).toThrow(new Error(errorMessage));
+}
 
 describe("Syntax Errors", function() {
   describe("with", function() {
@@ -58,21 +65,23 @@ describe("Syntax Errors", function() {
     it("'sit' without function name throws syntax error", function () {
       expectInvalidSyntaxError(
         'sit',
-        'Expected setter name but got nothing. Allowed construct: sit [name] with [arg]. Parsed tokens [sit] from input \"sit\"'
+        'Expected setter name but got nothing. Allowed construct: sit [name] much [arg]. Parsed tokens [sit] from input \"sit\"'
       );
     });
 
-    it("'sit' without 'with' throws syntax error", function () {
-      expectInvalidSyntaxError(
+    it("'sit' without 'much' throws syntax error", function () {
+      expectError(
         'sit fnName',
-        "Expected: 'with' but got: 'undefined' from chain: []. Allowed construct: sit [name] with [arg]. Parsed tokens [sit,fnName] from input \"sit fnName\""
+        "Invalid parse state! Expected: 'much' but got: 'undefined' from chain: []. Parsed tokens [sit,fnName] from input \"sit fnName\""
       );
     });
+  });
 
-    it("'sit' without an argument throws a syntax error", function () {
+  describe("stay", function() {
+    it("'stay' without function name throws syntax error", function () {
       expectInvalidSyntaxError(
-        'sit fnName with',
-        "Expected setter argument but got nothing. Allowed construct: sit [name] with [arg]. Parsed tokens [sit,fnName,with] from input \"sit fnName with\"",
+        'stay',
+        'Expected function name but got nothing. Allowed construct: stay [name] <much [arg]>. Parsed tokens [stay] from input \"stay\"'
       );
     });
   });
