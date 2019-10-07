@@ -24,7 +24,9 @@
     "start": "babel-node ./bin/dogescript.bin.js",
     "test": "./node_modules/.bin/jest --coverage",
     "build": "webpack && npm run make-exec",
-    "deploy:bot": "node deploy-bot.js"
+    "deploy:bot": "node deploy-bot.js",
+    "prettier": "./node_modules/.bin/prettier --write lib/**/*.js",
+    "prettier:check": "./node_modules/.bin/prettier --check lib/**/*.js"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -37,6 +39,7 @@
     "glob": "^7.1.3",
     "heroku-client": "^3.0.7",
     "jest": "^24.8.0",
+    "prettier": "1.18.2",
     "uglify-js": "^3.4.9",
     "uglifyjs-webpack-plugin": "^2.1.3",
     "walk": "^2.3.14",
