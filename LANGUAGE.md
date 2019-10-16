@@ -50,7 +50,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -272,6 +272,18 @@ classy Shape
 wow
 
 classy Rectangle grows Shape
+wow
+```
+
+### Parent Access
+
+The `sooper` keyword is used to access and call functions on an object's parent
+
+```dogescript
+classy Rectangle grows Shape
+  maker
+    sooper 4
+  wow
 wow
 ```
 
