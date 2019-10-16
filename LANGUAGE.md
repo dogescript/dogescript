@@ -282,7 +282,7 @@ The `sooper` keyword is used to access and call functions on an object's parent
 ```dogescript
 classy Rectangle grows Shape
   maker
-    sooper 4
+    plz sooper with 4
   wow
 wow
 ```
