@@ -50,6 +50,15 @@ describe("Syntax Errors", function() {
     });
   });
 
+  describe("giv", function() {
+    it("'giv' without argument throws syntax error", function () {
+      expectInvalidSyntaxError(
+        'array giv',
+        "Expected argument but got nothing. Allowed construct: obj giv [arg]. Parsed tokens [array,giv] from input \"array giv\""
+      );
+    });
+  });
+
 
   describe("git", function() {
     it("'git' without function name throws syntax error", function () {
