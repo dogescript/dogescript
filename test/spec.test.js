@@ -22,9 +22,16 @@ function runSpecTest(testName, folder)
   var source         = util.readCleanCRLF(sourcePath);
   var compiled       = dogescript(source, true);
 
+  console.log('testName:' + testName);
   // The actual test, Generate our assertion that the generated code matches the output
   testFn(testName, function() {
-    expect(expectedOutput).toEqual(compiled);
+    try {
+      expect(expectedOutput).toEqual(compiled);
+    }catch(e)
+    {
+      console.log('Test Failed:' + testName);
+      throw e;
+    }
   });
 }
 
