@@ -95,4 +95,22 @@ describe("Syntax Errors", function() {
     });
   });
 
+  describe("bigify", function() {
+    it("'bigify' without argument name throws syntax error", function () {
+      expectInvalidSyntaxError(
+        'bigify',
+        'Expected argument name but got nothing. Allowed construct: bigify [arg]. Parsed tokens [bigify] from input \"bigify\"'
+      );
+    });
+  });
+
+  describe("smallify", function() {
+    it("'smallify' without argument name throws syntax error", function () {
+      expectInvalidSyntaxError(
+        'smallify',
+        'Expected argument name but got nothing. Allowed construct: smallify [arg]. Parsed tokens [smallify] from input \"smallify\"'
+      );
+    });
+  });
+
 });

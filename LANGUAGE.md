@@ -429,12 +429,10 @@ row: 4 col:8 val:4,8
 
 ### Unary Operators
 
-* `bigify` - `++`
-  * pre increment: `bigify foo`
-  * post increment: `foo bigify`
-* `smallify` - `--`
-  * pre decrement: `smallify foo`
-  * post decrement: `foo smallify`
+* `bigify` - `++` -> pre increment: `bigify foo`
+* `bigified` - `++` -> post increment: `foo bigified`
+* `smallify` - `--` -> pre decrement: `smallify foo`
+* `smallified` - `--` -> pre decrement: `smallified foo`
 
 ### Binary Operators
 
