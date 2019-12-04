@@ -17,7 +17,7 @@
     "optimist": "^0.6.1",
     "xhr": "^2.5.0"
   },
-  "bin": "./bin/dogescript.js",
+  "bin": "./bin/dogescript.bin.js",
   "scripts": {
     "make-exec": "chmod +x ./dist/dogescript.bin.js",
     "clean": "node ./test/clean.js",
