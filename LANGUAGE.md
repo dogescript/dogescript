@@ -50,7 +50,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; bork &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; levl &nbsp; less &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -95,7 +95,7 @@ The following are the supported assignment operators:
 
 ## Blocks
 
-Blocks in dogescript behave the same as with javascript, however all blocks end with `wow`. 
+Blocks in dogescript behave the same as with javascript, however all blocks end with `wow`.
 
 Functions that return values can use `wow [val]` or `amaze [val]` to return the value.
 
@@ -236,7 +236,7 @@ plz Math.sum with 1 2
 
 ## Classes
 
-A class declaration begins with the `classy` kewyord.
+A class declaration begins with the `classy` keyword.
 
 A class can be declared as a declaration or as an expression. Just like other blocks, class declarations are closed with `wow`.
 
@@ -254,7 +254,7 @@ wow
 
 ### Constructor
 
-The `maker` keyword declares a `constructor`. 
+The `maker` keyword declares a `constructor`.
 
 ```dogescript
 classy Rectangle
@@ -328,7 +328,7 @@ classy Rectangle
   shh static
   stay sides
   wow 4
-  
+
   stay calculateArea much width height
     amaze width * height
   wow
@@ -423,6 +423,21 @@ row: 1 col:2 val:1,2
 row: 2 col:4 val:2,4
 row: 3 col:6 val:3,6
 row: 4 col:8 val:4,8
+```
+
+### Breaking
+
+The `bork` keyword breaks out of a loop.
+
+```dogescript
+very i is 0
+many 1
+  plz console.loge with i
+  rly i bigger 50
+    bork
+  wow
+  bigify i
+wow
 ```
 
 ## Operators
