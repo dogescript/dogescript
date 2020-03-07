@@ -448,19 +448,21 @@ wow
 * `bigified` - `++` -> post increment: `foo bigified`
 * `smallify` - `--` -> pre decrement: `smallify foo`
 * `smallified` - `--` -> pre decrement: `smallified foo`
+* `kindof` - `typeof`
 
 ### Binary Operators
 
 #### Conditionals
 
-* `not` - `!==` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `not` - `!==` 
 * `is` - `===` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `and` - `&&` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `or` - `||` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `bigger` - `>` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `smaller` - `<` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `biggerish` - `>=` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
-* `smallerish` - `<=` - Only currently usable within a `many`, `much`, `rly` and `notrly` clause.
+* `and` - `&&`
+* `or` - `||` 
+* `bigger` - `>` 
+* `smaller` - `<` 
+* `biggerish` - `>=` 
+* `smallerish` - `<=` 
+* `isa` - `instanceof`
 
 #### Assignment
 
