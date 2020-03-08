@@ -25,7 +25,7 @@ function runSpecTest(testName, folder)
   // The actual test, Generate our assertion that the generated code matches the output
   testFn(testName, function() {
     try {
-      expect(expectedOutput).toEqual(compiled);
+      expect(compiled).toEqual(expectedOutput);
     }catch(e)
     {
       console.log('Test Failed:' + testName);

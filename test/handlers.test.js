@@ -10,7 +10,7 @@ describe("operatorHandlers", function() {
         input: "wow"
       };
       var expectedMsg =
-        'Expected one of [bigger,biggerish,smaller,smallerish,and,or,not] but got wow. Parsed tokens [wow] from input "wow"';
+        'Expected one of [bigger,biggerish,smaller,smallerish,and,or,not,isa] but got wow. Parsed tokens [wow] from input "wow"';
       var test = function() {
         return operatorHandlers.handleBinaryOperator(parseContext);
       };
@@ -45,6 +45,35 @@ describe("operatorHandlers", function() {
         "Invalid parse state! Expected: 'maybe' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
       var test = function() {
         return operatorHandlers.handleMaybe(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+
+  describe("handleKindOf", function() {
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'kindof' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return operatorHandlers.handleKindOf(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+    it("throws an error when called without an argument", function() {
+      var parseContext = {
+        tokens: ["kindof"],
+        inputTokens: ["kindof"],
+        input: "kindof"
+      };
+      var expectedMsg =
+        "Expected argument but got nothing. Allowed construct: kindof [arg]. Parsed tokens [kindof] from input \"kindof\"";
+      var test = function() {
+        return operatorHandlers.handleKindOf(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });

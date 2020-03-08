@@ -1,0 +1,1 @@
+foo isa Bar
