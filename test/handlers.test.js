@@ -1,5 +1,6 @@
 import operatorHandlers from "../lib/handlers/operatorHandlers";
 import statementHandlers from "../lib/handlers/statementHandlers";
+import propertyHandlers from "../lib/handlers/propertyAccessorHandlers";
 
 describe("operatorHandlers", function() {
   describe("handleBinaryOperator", function() {
@@ -108,6 +109,39 @@ describe("statementHandlers", function() {
         "Invalid parse state! Expected: 'obj' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
       var test = function() {
         return statementHandlers.handleObj(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+});
+
+describe("propertyHandlers", function () {
+
+  describe("handleProto", function() {
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'proto' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return propertyHandlers.handleProto(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+
+    it("throws an error when called without an argument", function() {
+      var parseContext = {
+        tokens: ["proto"],
+        inputTokens: ["proto"],
+        input: "proto"
+      };
+      var expectedMsg =
+        "Expected argument but got nothing. Allowed construct: obj proto [arg]. Parsed tokens [proto] from input \"proto\"";
+      var test = function() {
+        return propertyHandlers.handleProto(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
