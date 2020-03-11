@@ -50,7 +50,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; bork &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; isa &nbsp; kindof &nbsp; levl &nbsp; less &nbsp; like &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; quiet &nbsp; rly &nbsp; same &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; bork &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; isa &nbsp; kindof &nbsp; levl &nbsp; less &nbsp; like &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; proto &nbsp; quiet &nbsp; rly &nbsp; same &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -478,6 +478,7 @@ wow
 
 * `giv` - `.` - Used to access properties of an object: `document giv window` -> `document.window`
 * `levl` - Equivalent to the bracket notation: `array levl 0` -> `array[0]`
+* `proto` - Used to add properties to an object's prototype: `Object proto foo` -> `Object.prototype.foo`
 
 #### Misc
 * `next` - `; `
