@@ -47,6 +47,7 @@ Options:
 #### REPL Commands
 
 * `.plz-load [path_to_doge]`: loads dogescript code in the given file and adds it to the REPL environment. For this example, *iota* is a function that produces a series from 0 to n, ie: `iota 5 => [0,1,2,3,4]`, and is defined in `repl-test/iota.djs`.
+* `.plz-exit`: exits the REPL environment and terminates the process. An alternative to `.exit`.
 
 **iota.djs**
 ```djs
@@ -97,7 +98,6 @@ Dogescript was originally created by [Zach Bruggeman](https://twitter.com/zachbr
 ```
 $ git log --format='%aN' | sort -u
 Alistair Mersereau
-AnEmortalKid
 Bart van der Schoor
 Bartvds
 Ben Atkin
@@ -109,6 +109,7 @@ Daniel Lockhart
 Elan Shanker
 Erik Erwitt
 Jacob Groundwater
+Jan Monterrubio (AnEmortalKid)
 Joe Dailey
 Johann Philipp Strathausen
 Joseph Dailey

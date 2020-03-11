@@ -11,7 +11,7 @@ describe("operatorHandlers", function() {
         input: "wow"
       };
       var expectedMsg =
-        'Expected one of [bigger,biggerish,smaller,smallerish,and,or,not,isa] but got wow. Parsed tokens [wow] from input "wow"';
+        'Expected one of [bigger,biggerish,smaller,smallerish,and,or,not,isa,like,same] but got wow. Parsed tokens [wow] from input "wow"';
       var test = function() {
         return operatorHandlers.handleBinaryOperator(parseContext);
       };
