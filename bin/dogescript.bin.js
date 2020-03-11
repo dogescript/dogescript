@@ -102,6 +102,15 @@ if (argv._[0]) {
       }
     });
 
+    replServer.defineCommand('plz-exit', {
+      help: 'Exits the repl',
+      action()
+      {
+        process.exit();
+      }
+    }
+    );
+
     // begin streaming stdin to the dg translator and repl
     process.stdin.pipe(ds);
 }
