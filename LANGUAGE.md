@@ -193,6 +193,21 @@ test(function (t) {
 });
 ```
 
+#### Asynchronous
+
+A function can be made asynchronous by prefixing it with a `nosync` token.
+
+```dogescript
+nosync such foo
+wow
+```
+
+Translates to:
+```javascript
+async function foo() {
+}
+```
+
 #### amaze
 
 The `amaze` keyword can be used to return a value, without closing the block.
