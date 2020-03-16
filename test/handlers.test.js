@@ -152,7 +152,7 @@ describe("propertyHandlers", function () {
 
 describe("functionHandlers", function(){
 
-  describe("handleNoSync", function(){
+  describe("handleAsink", function(){
     it("throws an error when called with an unsupported token", function() {
       var parseContext = {
         tokens: ["wow"],
@@ -160,22 +160,22 @@ describe("functionHandlers", function(){
         input: "wow"
       };
       var expectedMsg =
-        "Invalid parse state! Expected: 'nosync' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+        "Invalid parse state! Expected: 'asink' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
       var test = function() {
-        return functionHandlers.handleNoSync(parseContext);
+        return functionHandlers.handleAsink(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
-    it("throws an error when neither such or much follow nosync", function() {
+    it("throws an error when neither such or much follow asink", function() {
       var parseContext = {
-        tokens: ["nosync","blah"],
-        inputTokens: ["nosync","blah"],
-        input: "nosync blah"
+        tokens: ["asink","blah"],
+        inputTokens: ["asink","blah"],
+        input: "asink blah"
       };
       var expectedMsg =
-        "Invalid parse state! Expected: 'such' or 'much' but got: 'blah' from chain: [blah]. Allowed construct 'nosync such <function_name> [much <args>]' or 'nosync much <args>'. Parsed tokens [nosync,blah] from input \"nosync blah\"";
+        "Invalid parse state! Expected: 'such' or 'much' but got: 'blah' from chain: [blah]. Allowed construct 'asink such <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
       var test = function() {
-        return functionHandlers.handleNoSync(parseContext);
+        return functionHandlers.handleAsink(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
