@@ -50,7 +50,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 The following tokens are dogescript keywords and may not be used as *Identifiers* in dogescript programs:
 
-&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; bork &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; isa &nbsp; kindof &nbsp; levl &nbsp; less &nbsp; like &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; proto &nbsp; quiet &nbsp; rly &nbsp; same &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
+&nbsp;**_&nbsp; amaze &nbsp; and &nbsp; as &nbsp; asink &nbsp; bigger &nbsp; biggerish &nbsp; bigify &nbsp; bork &nbsp; but &nbsp; classy &nbsp; debooger &nbsp; dis &nbsp; dose &nbsp; few &nbsp; giv &nbsp; is &nbsp; isa &nbsp; kindof &nbsp; levl &nbsp; less &nbsp; like &nbsp; lots &nbsp; loud &nbsp; maker &nbsp; many &nbsp; maybe &nbsp; more &nbsp; much &nbsp; next &nbsp; &nbsp; not &nbsp; notrly &nbsp; or &nbsp; pawse &nbsp; plz &nbsp; proto &nbsp; quiet &nbsp; rly &nbsp; same &nbsp; shh &nbsp; smaller &nbsp; smallerish &nbsp; smallify &nbsp; so &nbsp; sooper &nbsp; such &nbsp; trained &nbsp; very &nbsp; woof &nbsp; wow &nbsp;_**
 
 Additionally, the following symbols should not be used as *Identifiers*:
 
@@ -191,6 +191,21 @@ test(function (t) {
     t.equal(2 + 3, 5);
     t.equal(7 * 8 + 9, 65);
 });
+```
+
+#### Asynchronous
+
+A function can be made asynchronous by prefixing it with a `asink` token.
+
+```dogescript
+asink such foo
+wow
+```
+
+Translates to:
+```javascript
+async function foo() {
+}
 ```
 
 #### amaze
