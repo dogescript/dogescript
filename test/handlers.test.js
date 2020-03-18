@@ -80,6 +80,7 @@ describe("operatorHandlers", function() {
       expect(test).toThrow(new Error(expectedMsg));
     });
   });
+
 });
 
 describe("statementHandlers", function() {
@@ -110,6 +111,22 @@ describe("statementHandlers", function() {
         "Invalid parse state! Expected: 'obj' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
       var test = function() {
         return statementHandlers.handleObj(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+
+  describe("handleWaite", function() {
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+      "Invalid parse state! Expected: 'waite' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return statementHandlers.handleWaite(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
