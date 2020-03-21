@@ -190,7 +190,7 @@ describe("functionHandlers", function(){
         input: "asink blah"
       };
       var expectedMsg =
-        "Invalid parse state! Expected: ['such' | 'such*' | 'much'] but got: 'blah' from chain: [blah]. Allowed construct: 'asink such|such* <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
+        "Invalid parse state! Expected: ['such' | 'much'] but got: 'blah' from chain: [blah]. Allowed construct: 'asink such [lazy] <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
       var test = function() {
         return functionHandlers.handleAsink(parseContext);
       };
