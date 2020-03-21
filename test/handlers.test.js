@@ -190,11 +190,70 @@ describe("functionHandlers", function(){
         input: "asink blah"
       };
       var expectedMsg =
-        "Invalid parse state! Expected: 'such' or 'much' but got: 'blah' from chain: [blah]. Allowed construct 'asink such <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
+        "Invalid parse state! Expected: ['such' | 'such*' | 'much'] but got: 'blah' from chain: [blah]. Allowed construct 'asink such|such* <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
       var test = function() {
         return functionHandlers.handleAsink(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
   });
+
+  describe("handleSuch", function(){
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'such' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+    it("throws an error when called without a function name", function() {
+      var parseContext = {
+        tokens: ["such"],
+        inputTokens: ["such"],
+        input: "such"
+      };
+      var expectedMsg =
+        "Expected function name but got nothing. Allowed construct: such [name]. Parsed tokens [such] from input \"such\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+
+  describe("handleSuchStar", function(){
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'such*' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return functionHandlers.handleSuchStar(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+    it("throws an error when called without a function name", function() {
+      var parseContext = {
+        tokens: ["such*"],
+        inputTokens: ["such*"],
+        input: "such*"
+      };
+      var expectedMsg =
+        "Expected function name but got nothing. Allowed construct: such* [name]. Parsed tokens [such*] from input \"such*\"";
+      var test = function() {
+        return functionHandlers.handleSuchStar(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+
 });
