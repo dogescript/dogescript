@@ -73,11 +73,40 @@ describe("operatorHandlers", function() {
         input: "kindof"
       };
       var expectedMsg =
-        "Expected argument but got nothing. Allowed construct: kindof [arg]. Parsed tokens [kindof] from input \"kindof\"";
+        "Invalid parse state! Expected argument but got nothing. Allowed construct: kindof <arg>. Parsed tokens [kindof] from input \"kindof\"";
       var test = function() {
         return operatorHandlers.handleKindOf(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
+    });
+  });
+
+  describe("handleYelde", function() {
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'yelde' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return operatorHandlers.handleYelde(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+    it("throws an error when called without an argument", function() {
+      var parseContext = {
+        tokens: ["yelde"],
+        inputTokens: ["yelde"],
+        input: "yelde"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected argument but got nothing. Allowed construct: yelde <arg>. Parsed tokens [yelde] from input \"yelde\"";
+      var test = function() {
+        return operatorHandlers.handleYelde(parseContext);
+      };
+      expect(test).toThrow(new SyntaxError(expectedMsg));
     });
   });
 
