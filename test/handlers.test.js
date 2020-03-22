@@ -190,11 +190,66 @@ describe("functionHandlers", function(){
         input: "asink blah"
       };
       var expectedMsg =
-        "Invalid parse state! Expected: 'such' or 'much' but got: 'blah' from chain: [blah]. Allowed construct 'asink such <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
+        "Invalid parse state! Expected: ['such' | 'much'] but got: 'blah' from chain: [blah]. Allowed construct: 'asink such [lazy] <function_name> [much <args>]' or 'asink much <args>'. Parsed tokens [asink,blah] from input \"asink blah\"";
       var test = function() {
         return functionHandlers.handleAsink(parseContext);
       };
       expect(test).toThrow(new Error(expectedMsg));
     });
   });
+
+  describe("handleSuch", function(){
+    it("throws an error when called with an unsupported token", function() {
+      var parseContext = {
+        tokens: ["wow"],
+        inputTokens: ["wow"],
+        input: "wow"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'such' but got: 'wow' from chain: [wow]. Parsed tokens [wow] from input \"wow\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new Error(expectedMsg));
+    });
+    it("throws an error when called without a function name", function() {
+      var parseContext = {
+        tokens: ["such"],
+        inputTokens: ["such"],
+        input: "such"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected function name but got nothing. Allowed construct: 'such [lazy] <function_name>'. Parsed tokens [such] from input \"such\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new SyntaxError(expectedMsg));
+    });
+    it("throws an error when called with arguments without a much", function() {
+      var parseContext = {
+        tokens: ["such", "foo", "bar"],
+        inputTokens: ["such", "foo", "bar"],
+        input: "such foo bar"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected: 'much' but got: 'bar' from chain: [bar]. Allowed construct: 'such [lazy] <function_name> [much <args>]'. Parsed tokens [such,foo,bar] from input \"such foo bar\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new SyntaxError(expectedMsg));
+    });
+    it("throws an error when called with much witout parameters", function() {
+      var parseContext = {
+        tokens: ["such", "foo", "much"],
+        inputTokens: ["such", "foo", "much"],
+        input: "such foo much"
+      };
+      var expectedMsg =
+        "Invalid parse state! Expected parameters but got nothing. Allowed construct: 'much <params>'. Parsed tokens [such,foo,much] from input \"such foo much\"";
+      var test = function() {
+        return functionHandlers.handleSuch(parseContext);
+      };
+      expect(test).toThrow(new SyntaxError(expectedMsg));
+    });
+    });
 });
