@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+- '10.21.0'
 - '8.8.1'
 - '6.11.5'
 before_script: npm run prettier:check
