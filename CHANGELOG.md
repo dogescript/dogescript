@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix inlined `json` [#188](https://github.com/dogescript/dogescript/pull/188)
 - Fix `maybe` [#223](https://github.com/dogescript/dogescript/pull/223)
 - Remove ambiguity for post/pre increment/decrement [#242](https://github.com/dogescript/dogescript/pull/242)
-- Fix npm bin creation [#246](https://github.com/dogescript/dogescript/pull/246)0
+- Fix npm bin creation [#246](https://github.com/dogescript/dogescript/pull/246)
 
 
 [Inreleased]: https://github.com/dogescript/dogescript/compare/6fb5d4dfc93c507b83474119d9e869350e7e11a1...HEAD
