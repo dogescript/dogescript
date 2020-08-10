@@ -1,6 +1,6 @@
 {
   "name": "dogescript",
-  "version": "2.4.0-pre",
+  "version": "2.4.0-rc1",
   "description": "wow so syntax very doge much future",
   "main": "dist/dogescript.js",
   "repository": {
