@@ -36,7 +36,7 @@ module.exports = {
     new webpack.BannerPlugin({
       banner: '#!/usr/bin/env node',
       raw: true,
-      include: /^dogescript.bin/
+      include: /^dogescript.bin.js/
     })
   ],
 
