@@ -31,26 +31,27 @@ if (argv._[0]) {
             output += parser(lines[i]);
         }
 
-        // allow run mode
+        // run code if desired
         if(argv.run)
         {
-          vm.runInNewContext(output,
-            {
-              // HACK, kill the webpack warning
-              require: eval('require'),
-              console: console
-            }
-          );
-          process.exit();
+          const contextObject = {
+            // HACK, kill the webpack warning
+            require: eval('require'),
+            console: console
+          };
+          vm.runInNewContext(output, contextObject, {
+            breakOnSigint: true
+          });
         }
-
-        if (argv.beautify)
-        {
-          process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
-        }
-        else
-        {
-          process.stdout.write(output);
+        else {
+          if (argv.beautify)
+          {
+            process.stdout.write(beautify(output, {break_chained_methods: false}) + '\n');
+          }
+          else
+          {
+            process.stdout.write(output);
+          }
         }
     });
 } else {
