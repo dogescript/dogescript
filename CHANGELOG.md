@@ -4,9 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.4.0]
 
 ### Added
+
 - Loading of dogescript files in REPL [#111](https://github.com/dogescript/dogescript/pull/111)
 - Add `pawse` as an alias to `debooger` [#121](https://github.com/dogescript/dogescript/pull/121)
 - Add `--run` option to repl [#122](https://github.com/dogescript/dogescript/pull/122)
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add generator functions [#261](https://github.com/dogescript/dogescript/pull/261)
 
 ### Changed
+
 - Enable usage of assignment operators as expressions [#118](https://github.com/dogescript/dogescript/pull/118)
 - Deprecate `true-doge` mode [#122](https://github.com/dogescript/dogescript/pull/122)
 - Fix an edge case with `plz` and json [#147](https://github.com/dogescript/dogescript/pull/147)
@@ -37,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix `maybe` [#223](https://github.com/dogescript/dogescript/pull/223)
 - Remove ambiguity for post/pre increment/decrement [#242](https://github.com/dogescript/dogescript/pull/242)
 - Fix npm bin creation [#246](https://github.com/dogescript/dogescript/pull/246)
+- Fix REPL run cannot run express or long lived processes[#271](https://github.com/dogescript/dogescript/pull/271)
 
 
 [Inreleased]: https://github.com/dogescript/dogescript/compare/6fb5d4dfc93c507b83474119d9e869350e7e11a1...HEAD
