@@ -7,3 +7,4 @@ example/WOWserify/bundle.js
 /tmp
 /dist
 coverage
+.vscode/
