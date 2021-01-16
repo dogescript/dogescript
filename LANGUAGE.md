@@ -1,4 +1,4 @@
-# dogescript spec (2.3.0)
+# dogescript spec (2.4.0)
 
 DogeScript, more officially and prefered `dogescript` is a programming language that enhances javascript and takes it to the moon. It was created in a moment of insanity by the visionary and founder, remixz. Now, in a more mature state of insanity, dogescript's rocket is driven by the crazy community.
 
