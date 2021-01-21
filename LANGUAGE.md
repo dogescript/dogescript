@@ -1,4 +1,4 @@
-# dogescript spec (2.4.0)
+# dogescript spec (2.4.1)
 
 DogeScript, more officially and prefered `dogescript` is a programming language that enhances javascript and takes it to the moon. It was created in a moment of insanity by the visionary and founder, remixz. Now, in a more mature state of insanity, dogescript's rocket is driven by the crazy community.
 
@@ -322,6 +322,19 @@ wow
 ```
 
 ### Methods
+
+Methods can be added to a class with the same syntax as a function
+
+```
+classy Rectangle
+
+  such calcArea
+  wow
+
+  such resize much width height
+  wow
+wow
+```
 
 #### Prototype Methods
 
