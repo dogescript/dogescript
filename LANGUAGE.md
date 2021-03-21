@@ -9,7 +9,7 @@ Should dogescript be ported to other languages, the `js` portion may be changed 
 
 # Whitespace Caveats
 
-* dogescript uses single quotes for strings. Double quotes are not supported.
+* dogescript can handle single and double quoted strings.
 * dogescript uses 4 space characters for indentation. Tabs are not supported.
 * dogescript separates statements by newlines by default. In true-doge mode, they are separated by 3 spaces.
 
