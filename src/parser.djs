@@ -6,7 +6,10 @@ quiet
 loud
 such wrapContent much content
 	rly typeof content is 'string'
-		content is {'content': content, 'originalContent': content}
+		content is obj
+			'content': content,
+			'originalContent': content
+		wow
 	wow
 wow content
 
@@ -288,8 +291,7 @@ such parseExpression much content
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
 	very muchStart is content.content dose startsWith with 'much'
-	shh using double quotes due to dogescript/dogescript#177
-	very stringStart is content.content dose startsWith with "'"
+	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
 	rly plzStart
 		content.content is content.content dose substring with 3
@@ -300,11 +302,11 @@ such parseExpression much content
 		content.content is plz ifSkippedInline with content
 		very args is plz parsePossibleArgumentValues with content
 
-		result is {
+		result is obj
 			'type': 'call',
 			'function': callee,
 			'args': args
-		}
+		wow
 	but rly newStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -315,11 +317,11 @@ such parseExpression much content
 
 		very args is plz parsePossibleArgumentValues with content
 
-		result is {
+		result is obj
 			'type': 'constructorCall',
 			'constructor': constructor,
 			'args': args
-		}
+		wow
 	but rly muchStart
 		very ctxInfo is plz genContextInfo with content
 
@@ -350,29 +352,31 @@ such parseExpression much content
 
 		very statements is plz parseBlockBody with content
 
-		result is {
+		result is obj
 			'type': 'functionDeclarationInline',
 			'args': args,
 			'statements': statements
-		}
+		wow
 	but rly stringStart
 		very string is plz parseString with content
-		result is {
+		result is obj
 			'type': 'string',
 			'value': string
-		}
+		wow
 	but rly octalStart
 		very value is plz parseOctalNumber with content
-		result is {
+		result is obj
 			'type': 'number',
 			'value': value
-		}
+		wow
 	but
 		very ident is plz parseIdentifier with content
 		rly ident is 'maybe'
-			result is {'type': 'maybe'}
+			result is obj
+				'type': 'maybe'
+			wow
 		but
-			result is {
+			result is obj
 				'type': 'ident',
 				'value': ident
 			wow
@@ -391,7 +395,7 @@ such parseExpression much content
 
 		very args is plz parsePossibleArgumentValues with content
 
-		result is {
+		result is obj
 			'type': 'call',
 			'function': {
 				'type': 'property',
@@ -399,7 +403,7 @@ such parseExpression much content
 				'property': call
 			},
 			'args': args
-		}
+		wow
 		nextContent is plz ifSkipped with content
 	wow
 
@@ -415,11 +419,11 @@ such parseExpression much content
 			content.content is plz ifSkipped with content
 			very rhs is plz parseExpression with content
 
-			result is {
+			result is obj
 				'type': info.id,
 				'a': result,
 				'b': rhs
-			}
+			wow
 
 			nextContent is plz ifSkipped with content
 		wow
@@ -456,22 +460,20 @@ such parseElses much content
 				content.content is plz ifSkippedInline with content
 
 				condition is plz parseExpression with content
-				condition is {
+				condition is obj
 					'type': 'not',
 					'value': condition
-				}
+				wow
 			wow
 
 			content.content is plz ifSkipped with content
 			very statements is plz parseBlockBody with content true
 
-			shh 2.3's parsing requires me to do this
-			very result
-			result is {
+			very result is obj
 				'type': type,
 				'condition': condition,
 				'statements': statements
-			}
+			wow
 
 			elses dose push with result
 		but
@@ -501,7 +503,10 @@ such parseStatement much content
 
 		very ident is plz parseIdentifier with content
 
-		result is {'type': 'declaration','ident': ident}
+		result is obj
+			'type': 'declaration',
+			'ident': ident
+		wow
 		
 		very nextContent is plz ifSkippedInline with content
 		very isStart is nextContent dose startsWith with 'is'
@@ -516,21 +521,25 @@ such parseStatement much content
 	but rly trainedStart
 		content.content is content.content dose substring with 7
 
-		result is {'type': 'trained'}
+		result is obj
+			'type': 'trained'
+		wow
 	but rly pawseStart
 		content.content is content.content dose substring with 5
 
-		result is {'type': 'debugger'}
+		result is obj
+			'type': 'debugger'
+		wow
 	but rly soStart
 		content.content is content.content dose substring with 2
 		content.content is plz ifSkipped with content
 
 		very importPath is plz parseIdentifier with content
 
-		result is {
+		result is obj
 			'type': 'import',
 			'path': importPath
-		}
+		wow
 
 		very nextContent is plz ifSkippedInline with content
 
@@ -579,12 +588,12 @@ such parseStatement much content
 
 		very statements is plz parseBlockBody with content
 
-		result is {
+		result is obj
 			'type': 'functionDeclaration',
 			'identifier': ident,
 			'args': args,
 			'statements': statements
-		}
+		wow
 	but rly rlyStart or notrlyStart
 		rly notrlyStart
 			content.content is content.content dose substring with 6
@@ -597,10 +606,10 @@ such parseStatement much content
 		very condition is plz parseExpression with content
 
 		rly notrlyStart
-			condition is {
+			condition is obj
 				'type': 'not',
 				'value': condition
-			}
+			wow
 		wow
 
 		content.content is plz ifSkipped with content
@@ -608,12 +617,12 @@ such parseStatement much content
 
 		very elses is plz parseElses with content
 
-		result is {
+		result is obj
 			'type': 'if',
 			'condition': condition,
 			'statements': statements,
 			'elses': elses
-		}
+		wow
 	but rly manyStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -623,16 +632,20 @@ such parseStatement much content
 		content.content is plz ifSkipped with content
 		very statements is plz parseBlockBody with content
 		
-		result is {
+		result is obj
 			'type': 'while',
 			'condition': condition,
 			'statements': statements
-		}
+		wow
 	but
 		result is plz parseExpression with content
 		rly result.type is '==='
 			shh We have an ambiguity between equality checks and variable assignment, so we assume the latter if it's a statement
-			result is {'type': 'assignment', 'target': result.a, 'value': result.b}
+			result is obj
+				'type': 'assignment',
+				'target': result.a,
+				'value': result.b
+			wow
 		wow
 	wow
 wow result
@@ -640,7 +653,10 @@ wow result
 such parseFile much content
 	content is plz wrapContent with content
 	
-	very result is {'type': 'file','statements': []}
+	very result is obj
+		'type': 'file',
+		'statements': []
+	wow
 
 	content.content is plz ifSkipped with content
 
