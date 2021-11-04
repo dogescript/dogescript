@@ -1,5 +1,7 @@
 so ./binaryOperators as binaryOperators
 
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
+
 quiet
 	JavaScript's strings are immutable, so they can't be changed.
 	As a workaround, I wrap the string in an object, which can be changed.
@@ -131,6 +133,8 @@ such ifSkipped much content
 wow content
 
 such parseIdentifier much content
+	very startCtxInfo is plz genContextInfo with content
+
 	very result is ''
 	very done is false
 	many !done
@@ -145,7 +149,14 @@ such parseIdentifier much content
 			done is true
 		wow
 	wow
-	rly result is 'doge' + 'ument'
+
+	very reservedIdx is RESERVED_IDENTS dose indexOf with result
+
+	rly reservedIdx biggerish 0
+		very msg is startCtxInfo + 'Expected identifier, found ' + result
+		very err is new Error with msg
+		throw err
+	but rly result is 'doge' + 'ument'
 		result is 'document'
 	but rly result is 'win' + 'doge'
 		result is 'window'
