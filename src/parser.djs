@@ -508,6 +508,7 @@ such parseStatement much content
 	very butStart is content.content dose startsWith with 'but'
 	very pawseStart is content.content dose startsWith with 'pawse'
 	very manyStart is content.content dose startsWith with 'many'
+	very amazeStart is content.content dose startsWith with 'amaze'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -647,6 +648,15 @@ such parseStatement much content
 			'type': 'while',
 			'condition': condition,
 			'statements': statements
+		wow
+	but rly amazeStart
+		content.content is content.content dose substring with 5
+		content.content is plz ifSkippedInline with content
+		very value is plz parseExpression with content
+
+		result is obj
+			'type': 'return',
+			'value': value
 		wow
 	but
 		result is plz parseExpression with content

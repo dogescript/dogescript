@@ -38,7 +38,7 @@ DebuggerStatement = "debooger" / "pawse"
 ManyStatement = "many" 1*WS Expression 1*WS BlockBody
 ReassignmentStatement = Identifier 1*InlineWS ("is" / "more" / "less" / "lots" / "few") 1*WS Expression
 WoofStatement = "woof" 1*WS [Identifier 1*InlineWS "be" 1*WS] Expression
-AmazeStatement = "amaze" 1*WS Expression
+AmazeStatement = "amaze" [1*InlineWS Expression]
 MuchStatement = "much" 1*WS InlineStatement *("," InlineStatement) 1*WS "next" 1*WS Expression 1*WS "next" 1*WS InlineStatement 1*WS BlockBody
 
 ClassConstructorDeclaration = "maker" ArgumentDeclarations 1*WS BlockBody
