@@ -1,0 +1,1 @@
+shh console dose loge

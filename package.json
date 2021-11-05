@@ -14,9 +14,12 @@
 	"author": "Colin Reeder <vpzomtrrfrt@gmail.com>",
 	"license": "MIT",
 	"devDependencies": {
-		"dogescript": "^2.4.1"
+		"dogescript": "^2.4.1",
+		"jest": "^27.3.1",
+		"walk": "^2.3.15"
 	},
 	"scripts": {
-		"prepare": "node build.js"
+		"prepare": "npm run build",
+		"build": "node build.js"
 	}
 }
