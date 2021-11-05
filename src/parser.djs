@@ -182,6 +182,11 @@ such parseString much content
 	very result is ''
 	very done is false
 	many !done
+		rly content.content.length is 0
+			very msg is ctxInfo + 'Unterminated string'
+			very err is new Error with msg
+			throw err
+		wow
 		very chr is content.content[0]
 		rly chr is '\\'
 			shh TODO add more escape sequences
@@ -193,11 +198,6 @@ such parseString much content
 		but
 			result += chr
 			content.content is content.content dose substring with 1
-		wow
-		rly content.content.length is 0
-			very msg is ctxInfo + 'Unterminated string'
-			very err is new Error with msg
-			throw err
 		wow
 	wow
 wow result
