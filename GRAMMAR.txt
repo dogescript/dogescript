@@ -1,0 +1,57 @@
+InlineWS = SP
+WS = InlineWS / CR / LF
+
+Identifier = ALPHA *(ALPHA / DIGIT)
+
+ArgumentValues = Expression *(1*InlineWS Expression) ("&" / "thx")
+ArgumentDeclarations = *(1*InlineWS Identifier)
+
+BlockBody = *(Statement 1*WS) "wow"
+
+PlzExpression = "plz" 1*WS Expression [1*InlineWS "with" 1*WS ArgumentValues]
+NewExpression = "new" 1*WS Expression [1*InlineWS "with" 1*WS ArgumentValues]
+InlineFunction = "much" 1*WS ArgumentDeclarations 1*WS BlockBody
+
+OctalDigit = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7"
+NumberLiteral = ("0" *OctalDigit) / (("1" / "2" / "3" / "4" / "5" / "6" / "7" / "8" / "9") *DIGIT)
+
+StringEscape = "\" ("'" / DQUOTE / "\" / "/" / "b" / "f" / "n" / "r" / "t" / ("u" 6OctalDigit))
+StringLiteral = "'" *(%x21-26 / %x28-5B / %x5D-7E / StringEscape) "'"
+
+Expression0 = PlzExpression / NewExpression / InlineFunction / StringLiteral / NumberLiteral / "maybe" / "windoge" / "dogeument" / "breed" / "sooper" / "dis" / Identifier / ("(" Expression ")")
+Expression1 = Expression0 *(1*InlineWS (("giv" 1*WS Identifier) / ("levl" 1*WS Expression0) / ("proto" 1*WS Identifier))) *(1*InlineWS "dose" 1*WS Identifier 1*WS "with" ArgumentValues) [1*InlineWS ("bigified" / "smallified")]
+Expression2 = *(("kindof" / "waite") 1*InlineWS) [("bigify" / "smallify") 1*InlineWS] Expression1
+Expression3 = Expression2 *(1*InlineWS ("bigger" / "smaller" / "biggerish" / "smallerish" / "isa") 1*WS Expression2)
+Expression4 = Expression3 *(1*InlineWS ("is" / "like" / "same" / "not") 1*WS Expression3)
+Expression5 = Expression4 *(1*InlineWS "and" 1*WS Expression4)
+Expression6 = *("yelde" 1*InlineWS) Expression5 *(1*InlineWS "or" 1*WS Expression5)
+
+Expression = Expression6
+
+RlyBody = *(Statement 1*WS) (("but" (1*InlineWS RlyStatement) / BlockBody) / "wow")
+RlyStatement = ("rly" / "notrly") 1*WS Expression 1*WS RlyBody
+
+VeryStatement = "very" 1*WS Identifier [1*InlineWS "is" 1*WS Expression]
+SoStatement = "so" 1*WS Identifier [1*InlineWS "as" 1*WS Identifier]
+SuchStatement = ["asink" 1*InlineWS] "such" [1*InlineWS "lazy"] 1*WS Identifier [1*InlineWS "much" ArgumentDeclarations] 1*WS BlockBody [1*InlineWS Expression]
+DebuggerStatement = "debooger" / "pawse"
+ManyStatement = "many" 1*WS Expression 1*WS BlockBody
+ReassignmentStatement = Identifier 1*InlineWS ("is" / "more" / "less" / "lots" / "few") 1*WS Expression
+WoofStatement = "woof" 1*WS [Identifier 1*InlineWS "be" 1*WS] Expression
+AmazeStatement = "amaze" 1*WS Expression
+MuchStatement = "much" 1*WS InlineStatement *("," InlineStatement) 1*WS "next" 1*WS Expression 1*WS "next" 1*WS InlineStatement 1*WS BlockBody
+
+ClassConstructorDeclaration = "maker" ArgumentDeclarations 1*WS BlockBody
+GitElement = "git" 1*WS Identifier 1*WS BlockBody [1*InlineWS Expression]
+SitElement = "sit" 1*WS Identifier 1*WS BlockBody
+StayElement = ["asink" 1*InlineWS] "stay" [1*InlineWS "lazy"] 1*WS Identifier [1*InlineWS "much" ArgumentDeclarations] 1*WS BlockBody [1*InlineWS Expression]
+
+ClassElement = ClassConstructorDeclaration / SuchStatement / GitElement / SitElement / StayElement
+
+ClassDeclaration = "classy" 1*WS Identifier [1*InlineWS "grows" 1*WS Identifier] 1*WS *(ClassElement 1*WS) "wow"
+
+InlineStatement = VeryStatement / ReassignmentStatement / Expression
+
+Statement = "trained" / SoStatement / SuchStatement / RlyStatement / DebuggerStatement / ManyStatement / WoofStatement / AmazeStatement / "bork" / ClassDeclaration / MuchStatement / InlineStatement
+
+File = *WS *(Statement 1*WS)
