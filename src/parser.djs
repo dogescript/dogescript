@@ -658,6 +658,7 @@ such parseStatement much content
 	very pawseStart is content.content dose startsWith with 'pawse'
 	very manyStart is content.content dose startsWith with 'many'
 	very amazeStart is content.content dose startsWith with 'amaze'
+	very borkStart is content.content dose startsWith with 'bork'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -684,6 +685,12 @@ such parseStatement much content
 
 		result is obj
 			'type': 'trained'
+		wow
+	but rly borkStart
+		content.content is content.content dose substring with 4
+
+		result is obj
+			'type': 'bork'
 		wow
 	but rly pawseStart
 		content.content is content.content dose substring with 5

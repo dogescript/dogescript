@@ -1,1 +1,1 @@
-var is_bork = false;
+let is_bork = false;
