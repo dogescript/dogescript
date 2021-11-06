@@ -2,6 +2,8 @@ so ./binaryOperators as binaryOperators
 
 very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
 
+very OCTAL_REGEX is new RegExp with '^[0-7]*$'
+
 quiet
 	JavaScript's strings are immutable, so they can't be changed.
 	As a workaround, I wrap the string in an object, which can be changed.
@@ -205,10 +207,10 @@ such parseIdentifier much content
 wow result
 
 such parseString much content
-	very ctxInfo is plz genContextInfo with content
+	very startCtxInfo is plz genContextInfo with content
 
 	rly content.content[0] not "'"
-		very msg is ctxInfo + 'Expected string, found ' + content.content[0]
+		very msg is startCtxInfo + 'Expected string, found ' + content.content[0]
 		very err is new Error with msg
 		throw err
 	wow
@@ -219,15 +221,47 @@ such parseString much content
 	very done is false
 	many !done
 		rly content.content.length is 0
-			very msg is ctxInfo + 'Unterminated string'
+			very msg is startCtxInfo + 'Unterminated string'
 			very err is new Error with msg
 			throw err
 		wow
 		very chr is content.content[0]
 		rly chr is '\\'
-			shh TODO add more escape sequences
-			result += content.content[1]
-			content.content is content.content dose substring with 2
+			very nextChr is content.content[1]
+
+			rly nextChr is 'u'
+				very numStr is content.content dose substr with 2 6
+				very match is OCTAL_REGEX dose exec with numStr
+				rly match
+					result more String dose fromCodePoint with num
+					content.content is content.content dose substring with 8
+				but
+					very ctxInfo is plz genContextInfo with content
+					very msg is ctxInfo + 'Invalid string escape sequence'
+					very err is new Error with msg
+					throw err
+				wow
+			but
+				rly nextChr === '\\' || nextChr === '/' || nextChr === '\'' || nextChr === '"'
+					result += nextChr
+				but rly nextChr is 'b'
+					result += '\b'
+				but rly nextChr is 'f'
+					result += '\f'
+				but rly nextChr is 'n'
+					result += '\n'
+				but rly nextChr is 'r'
+					result += '\r'
+				but rly nextChr is 't'
+					result += '\t'
+				but
+					very ctxInfo is plz genContextInfo with content
+					very msg is ctxInfo + 'Invalid string escape sequence'
+					very err is new Error with msg
+					throw err
+				wow
+				content.content is content.content dose substring with 2
+			wow
 		but rly chr is "'"
 			done is true
 			content.content is content.content dose substring with 1

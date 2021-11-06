@@ -1,7 +1,7 @@
 const http = require('http');
 http.createServer(function(req, res) {
     req.writeHead(200, {
-        "Content-Type": "text/plain"
+        "Content-Type": "text/plain",
     });
     req.end("so hello\nmuch world");
 }).listen(8080);
