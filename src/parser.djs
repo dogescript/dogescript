@@ -621,10 +621,12 @@ such tryParseExpression1 much content
 	rly innerResult giv ok
 		result is innerResult.expression
 
-		very nextContent is plz ifSkipped with content
-
 		many true
+			very nextContent is plz ifSkipped with content
+
 			very doseStart is nextContent dose startsWith with 'dose'
+			very givStart is nextContent dose startsWith with 'giv'
+
 			rly doseStart
 				content.content is nextContent dose substring with 4
 				content.content is plz ifSkipped with content
@@ -646,10 +648,22 @@ such tryParseExpression1 much content
 					'args': args
 				wow
 				nextContent is plz ifSkipped with content
+			but rly givStart
+				content.content is nextContent dose substring with 3
+				content.content is plz ifSkipped with content
+				very child is plz parseIdentifier with content
+
+				result is obj
+					'type': 'property',
+					'object': result,
+					'property': child
+				wow
 			but
 				bork
 			wow
 		wow
+
+		very nextContent is plz ifSkipped with content
 
 		very binaryOperatorKeys is Object dose keys with binaryOperators
 

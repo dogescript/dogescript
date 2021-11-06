@@ -23,7 +23,7 @@ StringLiteral = "'" *(%x21-26 / %x28-5B / %x5D-7E / StringEscape) "'"
 ObjExpression = "obj" 1*WS *((StringLiteral / Identifier) *WS ":" *WS Expression *WS (("," *WS) / 1*WS)) "wow"
 
 Expression0 = PlzExpression / NewExpression / InlineFunction / StringLiteral / NumberLiteral / "maybe" / "windoge" / "dogeument" / "breed" / "sooper" / "dis" / ClassExpression / Identifier / SuchStatement / ("(" Expression ")") / ObjExpression
-Expression1 = Expression0 *(1*InlineWS (("giv" 1*WS Identifier) / ("levl" 1*WS Expression0) / ("proto" 1*WS Identifier))) *(1*InlineWS "dose" 1*WS Identifier 1*WS "with" ArgumentValues) [1*InlineWS ("bigified" / "smallified")]
+Expression1 = Expression0 *(1*InlineWS (("giv" 1*WS Identifier) / ("levl" 1*WS Expression0) / ("proto" 1*WS Identifier)) / ("dose" 1*WS Identifier 1*WS "with" ArgumentValues) / "bigified" / "smallified")
 Expression2 = *(("kindof" / "waite" / "bigify" / "smallify") 1*InlineWS] Expression1
 Expression3 = Expression2 *(1*InlineWS ("bigger" / "smaller" / "biggerish" / "smallerish" / "isa") 1*WS Expression2)
 Expression4 = Expression3 *(1*InlineWS ("is" / "like" / "same" / "not") 1*WS Expression3)
