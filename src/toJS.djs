@@ -223,7 +223,18 @@ such toJS much ast wrapFlag
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'classExpression'
-		result is 'class {'
+		result is 'class'
+
+		rly ast.identifier
+			result more ' ' + ast.identifier
+		wow
+
+		rly ast.superclass
+			result more ' extends '
+			result more ast.superclass
+		wow
+
+		result more ' {'
 		very innerResult is ''
 		much very i as 0 next i smaller ast.elements.length next i more 1
 			innerResult more '\n'
@@ -234,7 +245,14 @@ such toJS much ast wrapFlag
 		result more innerResult
 		result more '\n}'
 	but rly ast.type is 'classDeclaration'
-		result is 'class ' + ast.identifier + ' {'
+		result is 'class ' + ast.identifier
+
+		rly ast.superclass
+			result more ' extends '
+			result more ast.superclass
+		wow
+
+		result more ' {'
 		very innerResult is ''
 		much very i as 0 next i smaller ast.elements.length next i more 1
 			innerResult more '\n'

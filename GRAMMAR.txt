@@ -53,7 +53,7 @@ StayElement = ["asink" 1*InlineWS] "stay" [1*InlineWS "lazy"] 1*WS Identifier [1
 ClassElement = ClassConstructorDeclaration / SuchStatement / GitElement / SitElement / StayElement
 
 ClassDeclaration = "classy" 1*WS Identifier [1*InlineWS "grows" 1*WS Identifier] 1*WS *(ClassElement 1*WS) "wow"
-ClassExpression = "classy" [1*InlineWS "grows" 1*WS Identifier] 1*WS *(ClassElement 1*WS) "wow"
+ClassExpression = "classy" [1*InlineWS Identifier] [1*InlineWS "grows" 1*WS Identifier] 1*WS *(ClassElement 1*WS) "wow"
 
 InlineStatement = VeryStatement / ReassignmentStatement / Expression
 

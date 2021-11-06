@@ -500,13 +500,36 @@ such tryParseExpression0 much content
 		wow
 	but rly classyStart
 		content.content is content.content dose substring with 6
+		content.content is plz ifSkippedInline with content.content
+
+		very identifier
+
+		very identRes is plz tryParseIdentifier with content
+		rly identRes giv ok
+			identifier is identRes giv found
+
+			content.content is plz ifSkippedInline with content.content
+		wow
+
+		very growsStart is content.content dose startsWith with 'grows'
+		very superclass
+
+		rly growsStart
+			content.content is content.content dose substring with 5
+			content.content is plz ifSkipped with content.content
+
+			superclass is plz parseIdentifier with content
+		wow
+
 		content.content is plz ifSkipped with content.content
 
 		very elements is plz parseClassBody with content
 
 		result is obj
 			'type': 'classExpression',
-			'elements': elements
+			'elements': elements,
+			'superclass': superclass,
+			'identifier': identifier
 		wow
 	but rly disStart
 		content.content is content.content dose substring with 3
@@ -1151,6 +1174,18 @@ such parseStatement much content
 
 		very ident is plz parseIdentifier with content
 
+		content.content is plz ifSkippedInline with content.content
+
+		very growsStart is content.content dose startsWith with 'grows'
+		very superclass
+
+		rly growsStart
+			content.content is content.content dose substring with 5
+			content.content is plz ifSkipped with content.content
+
+			superclass is plz parseIdentifier with content
+		wow
+
 		content.content is plz ifSkipped with content.content
 
 		very elements is plz parseClassBody with content
@@ -1158,7 +1193,8 @@ such parseStatement much content
 		result is obj
 			'type': 'classDeclaration',
 			'elements': elements,
-			'identifier': ident
+			'identifier': ident,
+			'superclass': superclass
 		wow
 	but rly woofStart
 		content.content is content.content dose substring with 4

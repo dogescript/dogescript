@@ -1,3 +1,2 @@
-var MyRectangle = class Rectangle extends Shape {
-    // 1
-}
+let MyRectangle = class Rectangle extends Shape {
+};
