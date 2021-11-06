@@ -146,11 +146,16 @@ such tryParseIdentifier much content
 	very done is false
 	many !done
 		very chr is tmpContent[0]
-		rly chr is ' ' or chr is '\n' or chr is '&'
-			done is true
-		but
+
+		very isAlphabetic is (chr >= 'A' && chr <= 'Z') or (chr >= 'a' && chr <= 'z')
+		very isNumeric is chr >= '0' and chr <= '9'
+		very isOtherAllowed is chr == '_' or chr == '$'
+
+		rly isAlphabetic or isNumeric or isOtherAllowed
 			result += chr
 			tmpContent is tmpContent dose substring with 1
+		but
+			done is true
 		wow
 		rly tmpContent.length is 0
 			done is true
@@ -377,6 +382,7 @@ such tryParseExpression0 much content
 	very octalStart is content.content dose startsWith with '0'
 	very classyStart is content.content dose startsWith with 'classy'
 	very disStart is content.content dose startsWith with 'dis'
+	very objStart is content.content dose startsWith with 'obj'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -471,6 +477,82 @@ such tryParseExpression0 much content
 		result is obj
 			'type': 'ident',
 			'value': 'this'
+		wow
+	but rly objStart
+		very startCtxInfo is plz genContextInfo with content
+
+		content.content is content.content dose substring with 3
+		content.content is plz ifSkipped with content.content
+
+		very objContent is new Array
+
+		very done is false
+		many !done
+			rly content.content.length is 0
+				very msg is startCtxInfo + 'Unterminated object'
+				very err is new Error with msg
+				throw err
+			wow
+
+			very wowStart is content.content dose startsWith with 'wow'
+			rly wowStart
+				content.content is content.content dose substring with 3
+				done is true
+			but
+				very key
+
+				very stringStart is content.content dose startsWith with '\''
+				rly stringStart
+					key is plz parseString with content
+				but
+					very identRes is plz tryParseIdentifier with content
+					rly identRes.ok
+						key is identRes giv found
+					but
+						very ctxInfo is plz genContextInfo with content
+						very msg is ctxInfo + 'Expected string, identifier, or "wow", found ' + identRes.found
+						very err is new Error with msg
+						throw err
+					wow
+				wow
+
+				content.content is plz ifSkipped with content
+
+				very colonStart is content.content dose startsWith with ':'
+				notrly colonStart
+					very ctxInfo is plz genContextInfo with content
+					very msg is startCtxInfo + 'Expected ":", found ' + content.content[0]
+					very err is new Error with msg
+					throw err
+				wow
+
+				content.content is content.content dose substring with 1
+				content.content is plz ifSkipped with content
+
+				very value is plz parseExpression with content
+
+				content.content is plz ifSkipped with content
+
+				very commaStart is content.content dose startsWith with ','
+				rly commaStart
+					shh optional comma, skip
+
+					content.content is content.content dose substring with 1
+					content.content is plz ifSkipped with content
+				wow
+
+				very newEntry is obj
+					'key': key,
+					'value': value
+				wow
+
+				objContent dose push with newEntry
+			wow
+		wow
+
+		result is obj
+			'type': 'object',
+			'content': objContent
 		wow
 	but
 		very identRes is plz tryParseIdentifier with content

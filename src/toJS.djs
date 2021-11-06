@@ -230,6 +230,23 @@ such toJS much ast wrapFlag
 		result more ' = '
 		very value is plz toJS with ast.value
 		result more value
+	but rly ast.type is 'object'
+		result is '{'
+		very innerContent is ''
+		much very i as 0 next i smaller ast.content.length next i more 1
+			very entry is ast.content[i]
+			very value is plz toJS with entry.value
+
+			innerContent more '\n'
+			innerContent more JSON.stringify(entry.key)
+			innerContent more ': '
+			innerContent more value
+			innerContent more ','
+		wow
+
+		innerContent is plz indent with innerContent
+		result more innerContent
+		result more '\n}'
 	but
 		very success is false
 

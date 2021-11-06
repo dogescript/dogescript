@@ -1,1 +1,1 @@
-var is_dis = false;
+let is_dis = false;
