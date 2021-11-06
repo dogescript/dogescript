@@ -1,1 +1,1 @@
-mylogger.loge('msg');
+mylogger.loge("msg");

@@ -285,6 +285,12 @@ such parsePossibleArgumentValues much content
 			wow
 			content.content is nextContent.content
 		wow
+	but
+		nextContent is plz wrapContent with nextContent
+		very foundArgumentEnd is plz takeArgumentEnd with nextContent
+		rly foundArgumentEnd
+			content.content is nextContent.content
+		wow
 	wow
 wow args
 
@@ -436,28 +442,33 @@ such tryParseExpression1 much content
 		result is innerResult.expression
 
 		very nextContent is plz ifSkipped with content
-		very doseStart is nextContent dose startsWith with 'dose'
-		rly doseStart
-			content.content is nextContent dose substring with 4
-			content.content is plz ifSkipped with content
-			very call is plz parseIdentifier with content
 
-			rly result.type is 'ident' and result.value is 'console' and call is 'loge'
-				call is 'log'
+		many true
+			very doseStart is nextContent dose startsWith with 'dose'
+			rly doseStart
+				content.content is nextContent dose substring with 4
+				content.content is plz ifSkipped with content
+				very call is plz parseIdentifier with content
+
+				rly result.type is 'ident' and result.value is 'console' and call is 'loge'
+					call is 'log'
+				wow
+
+				very args is plz parsePossibleArgumentValues with content
+
+				result is obj
+					'type': 'call',
+					'function': {
+						'type': 'property',
+						'object': result,
+						'property': call
+					},
+					'args': args
+				wow
+				nextContent is plz ifSkipped with content
+			but
+				bork
 			wow
-
-			very args is plz parsePossibleArgumentValues with content
-
-			result is obj
-				'type': 'call',
-				'function': {
-					'type': 'property',
-					'object': result,
-					'property': call
-				},
-				'args': args
-			wow
-			nextContent is plz ifSkipped with content
 		wow
 
 		very binaryOperatorKeys is Object dose keys with binaryOperators

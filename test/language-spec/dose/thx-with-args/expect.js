@@ -1,1 +1,1 @@
-this.foo(5, 6) > 7
+this.foo(5, 6) > 7;
