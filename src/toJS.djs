@@ -159,6 +159,8 @@ such toJS much ast wrapFlag
 			result more ' '
 			result more value
 		wow
+	but rly ast.type is 'break'
+		result is 'break'
 	but rly ast.type is 'typeof'
 		result is '(typeof '
 		very value is plz toJS with ast.value

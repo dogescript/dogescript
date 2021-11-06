@@ -752,7 +752,7 @@ such parseStatement much content
 		content.content is content.content dose substring with 4
 
 		result is obj
-			'type': 'bork'
+			'type': 'break'
 		wow
 	but rly pawseStart
 		content.content is content.content dose substring with 5
