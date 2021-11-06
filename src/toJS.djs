@@ -10,7 +10,7 @@ such statementsToJS much statements
 		wow
 		very statementJS is plz toJS with statement
 		result += statementJS
-		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while'
+		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while' and statement.type not 'classDeclaration'
 			result += ';'
 		wow
 	wow&
@@ -181,6 +181,41 @@ such toJS much ast wrapFlag
 		very value is plz toJS with ast.value
 		result more value
 		result more ')'
+	but rly ast.type is 'methodDeclaration'
+		result is ast.identifier + '('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			result += arg
+		wow&
+		result += ') {';
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
+	but rly ast.type is 'classExpression'
+		result is 'class {'
+		very innerResult is ''
+		much very i as 0 next i smaller ast.elements.length next i more 1
+			innerResult more '\n'
+			very value is plz toJS with ast.elements[i]
+			innerResult more value
+		wow
+		innerResult is plz indent with innerResult
+		result more innerResult
+		result more '\n}'
+	but rly ast.type is 'classDeclaration'
+		result is 'class ' + ast.identifier + ' {'
+		very innerResult is ''
+		much very i as 0 next i smaller ast.elements.length next i more 1
+			innerResult more '\n'
+			very value is plz toJS with ast.elements[i]
+			innerResult more value
+		wow
+		innerResult is plz indent with innerResult
+		result more innerResult
+		result more '\n}'
 	but
 		very success is false
 

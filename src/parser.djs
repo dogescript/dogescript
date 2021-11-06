@@ -324,6 +324,41 @@ such parseBlockBody much content endOnBut
 	wow
 wow statements
 
+such parseClassElement much content
+	very ctxInfo is plz genContextInfo with content
+
+	very result
+
+	very suchStart is content.content dose startsWith with 'such'
+
+	rly suchStart
+		result is plz parseFunctionDeclaration with content
+		result.type is 'methodDeclaration'
+	but
+		very msg is ctxInfo + 'Expected class element, found ' + content.content[0]
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseClassBody much content
+	very elements is new Array
+	
+	very done is false
+	many !done
+		very wowStart is content.content dose startsWith with 'wow'
+		rly wowStart
+			content.content is content.content dose substring with 3
+			done is true
+		but
+			very element is plz parseClassElement with content
+			elements dose push with element
+
+			content.content is plz ifSkipped with content
+		wow
+	wow
+wow elements
+
 such tryParseExpression0 much content
 	very result
 
@@ -332,6 +367,7 @@ such tryParseExpression0 much content
 	very muchStart is content.content dose startsWith with 'much'
 	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
+	very classyStart is content.content dose startsWith with 'classy'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -407,6 +443,16 @@ such tryParseExpression0 much content
 		result is obj
 			'type': 'number',
 			'value': value
+		wow
+	but rly classyStart
+		content.content is content.content dose substring with 6
+		content.content is plz ifSkipped with content.content
+
+		very elements is plz parseClassBody with content
+
+		result is obj
+			'type': 'classExpression',
+			'elements': elements
 		wow
 	but
 		very identRes is plz tryParseIdentifier with content
@@ -716,6 +762,58 @@ such parseElses much content
 	wow
 wow elses
 
+such parseFunctionDeclaration much content
+	very suchStart is content.content dose startsWith with 'such'
+
+	notrly suchStart
+		very msg is ctxInfo + 'Expected function declaration, found ' + content.content[0]
+		very err is new Error with msg
+		throw err
+	wow
+
+	very ctxInfo is plz genContextInfo with content
+
+	content.content is content.content dose substring with 4
+	content.content is plz ifSkipped with content
+
+	very ident is plz parseIdentifier with content
+	very args is []
+
+	very nextContent is plz ifSkippedInline with content
+	very muchStart is nextContent dose startsWith with 'much'
+	rly muchStart
+		content.content is nextContent dose substring with 4
+
+		very done is false
+		many !done
+			content.content is plz ifSkippedInline with content
+
+			rly content.content.length is 0
+				very msg is ctxInfo + 'Unterminated function declaration'
+				very err is new Error with msg
+				throw err
+			wow
+
+			rly content.content[0] is '\n'
+				done is true
+			but
+				very arg is plz parseIdentifier with content
+				args dose push with arg
+			wow
+		wow
+	wow
+	content.content is plz ifSkipped with content
+
+	very statements is plz parseBlockBody with content
+
+	result is obj
+		'type': 'functionDeclaration',
+		'identifier': ident,
+		'args': args,
+		'statements': statements
+	wow
+wow result
+
 such parseStatement much content
 	content is plz wrapContent with content
 
@@ -732,6 +830,8 @@ such parseStatement much content
 	very manyStart is content.content dose startsWith with 'many'
 	very amazeStart is content.content dose startsWith with 'amaze'
 	very borkStart is content.content dose startsWith with 'bork'
+	very classyStart is content.content dose startsWith with 'classy'
+
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -794,47 +894,7 @@ such parseStatement much content
 			result.identifier is ident
 		wow
 	but rly suchStart
-		very ctxInfo is plz genContextInfo with content
-
-		content.content is content.content dose substring with 4
-		content.content is plz ifSkipped with content
-
-		very ident is plz parseIdentifier with content
-		very args is []
-
-		very nextContent is plz ifSkippedInline with content
-		very muchStart is nextContent dose startsWith with 'much'
-		rly muchStart
-			content.content is nextContent dose substring with 4
-
-			very done is false
-			many !done
-				content.content is plz ifSkippedInline with content
-
-				rly content.content.length is 0
-					very msg is ctxInfo + 'Unterminated function declaration'
-					very err is new Error with msg
-					throw err
-				wow
-
-				rly content.content[0] is '\n'
-					done is true
-				but
-					very arg is plz parseIdentifier with content
-					args dose push with arg
-				wow
-			wow
-		wow
-		content.content is plz ifSkipped with content
-
-		very statements is plz parseBlockBody with content
-
-		result is obj
-			'type': 'functionDeclaration',
-			'identifier': ident,
-			'args': args,
-			'statements': statements
-		wow
+		result is plz parseFunctionDeclaration with content
 	but rly rlyStart or notrlyStart
 		rly notrlyStart
 			content.content is content.content dose substring with 6
@@ -892,6 +952,21 @@ such parseStatement much content
 				'type': 'return'
 			wow
 		wow
+	but rly classyStart
+		content.content is content.content dose substring with 6
+		content.content is plz ifSkipped with content.content
+
+		very ident is plz parseIdentifier with content
+
+		content.content is plz ifSkipped with content.content
+
+		very elements is plz parseClassBody with content
+
+		result is obj
+			'type': 'classDeclaration',
+			'elements': elements,
+			'identifier': ident
+		wow
 	but
 		result is plz parseExpression with content
 		rly result.type is '==='
@@ -903,6 +978,8 @@ such parseStatement much content
 			wow
 		wow
 	wow
+
+	shh console dose loge with 'parseStatement:' result
 wow result
 
 such parseFile much content

@@ -1,3 +1,2 @@
-var Rectangle = class {
-    // 1
-}
+let Rectangle = class {
+};

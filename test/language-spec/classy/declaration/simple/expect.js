@@ -1,3 +1,2 @@
 class Rectangle {
-    // 1
 }
