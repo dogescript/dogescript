@@ -77,7 +77,13 @@ such toJS much ast wrapFlag
 		very value is plz toJS with ast.value
 		result is target + ' = ' + value
 	but rly ast.type is 'functionDeclaration'
-		result is 'function ' + ast.identifier + '('
+		result is ''
+
+		rly ast.async
+			result more 'async '
+		wow
+
+		result more 'function ' + ast.identifier + '('
 		ast.args dose forEach with much arg idx
 			rly idx bigger 0
 				result += ', '
@@ -90,7 +96,13 @@ such toJS much ast wrapFlag
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'functionDeclarationInline'
-		result is 'function'
+		result is ''
+
+		rly ast.async
+			result more 'async '
+		wow
+
+		result more 'function'
 		rly ast.identifier
 			result more ' ' + ast.identifier
 		wow

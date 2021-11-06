@@ -376,8 +376,9 @@ such parseClassElement much content
 	very result
 
 	very suchStart is content.content dose startsWith with 'such'
+	very asinkStart is content.content dose startsWith with 'asink'
 
-	rly suchStart
+	rly suchStart or asinkStart
 		result is plz parseFunctionDeclaration with content
 		result.type is 'methodDeclaration'
 	but
@@ -411,6 +412,7 @@ such tryParseExpression0 much content
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
 	very suchStart is content.content dose startsWith with 'such'
+	very asinkStart is content.content dose startsWith with 'asink'
 	very muchStart is content.content dose startsWith with 'much'
 	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
@@ -446,7 +448,7 @@ such tryParseExpression0 much content
 			'constructor': constructor,
 			'args': args
 		wow
-	but rly suchStart
+	but rly suchStart or asinkStart
 		result is plz parseFunctionDeclaration with content
 		result.type is 'functionDeclarationInline'
 	but rly muchStart
@@ -923,9 +925,26 @@ such parseElses much content
 wow elses
 
 such parseFunctionDeclaration much content
-	very suchStart is content.content dose startsWith with 'such'
+	very isAsync is false
 
-	notrly suchStart
+	very asinkStart is content.content dose startsWith with 'asink'
+	rly asinkStart
+		isAsync is true
+
+		content.content is content.content dose substring with 5
+		content.content is plz ifSkipped with content
+	wow
+
+	very suchStart is content.content dose startsWith with 'such'
+	very muchStart is content.content dose startsWith with 'much'
+
+	rly suchStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very ident is plz parseIdentifier with content
+	but rly muchStart
+	but
 		very msg is ctxInfo + 'Expected function declaration, found ' + content.content[0]
 		very err is new Error with msg
 		throw err
@@ -933,10 +952,6 @@ such parseFunctionDeclaration much content
 
 	very ctxInfo is plz genContextInfo with content
 
-	content.content is content.content dose substring with 4
-	content.content is plz ifSkipped with content
-
-	very ident is plz parseIdentifier with content
 	very args is []
 
 	very nextContent is plz ifSkippedInline with content
@@ -970,7 +985,12 @@ such parseFunctionDeclaration much content
 		'type': 'functionDeclaration',
 		'identifier': ident,
 		'args': args,
-		'statements': statements
+		'statements': statements,
+		'async': isAsync
+	wow
+
+	notrly result.identifier
+		result giv type is 'functionDeclarationInline'
 	wow
 wow result
 
@@ -983,6 +1003,7 @@ such parseStatement much content
 	very trainedStart is content.content dose startsWith with 'trained'
 	very soStart is content.content dose startsWith with 'so'
 	very suchStart is content.content dose startsWith with 'such'
+	very asinkStart is content.content dose startsWith with 'asink'
 	very rlyStart is content.content dose startsWith with 'rly'
 	very notrlyStart is content.content dose startsWith with 'notrly'
 	very butStart is content.content dose startsWith with 'but'
@@ -1054,7 +1075,7 @@ such parseStatement much content
 
 			result.identifier is ident
 		wow
-	but rly suchStart
+	but rly suchStart or asinkStart
 		result is plz parseFunctionDeclaration with content
 	but rly rlyStart or notrlyStart
 		rly notrlyStart

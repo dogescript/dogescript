@@ -1,3 +1,3 @@
-var foo = async function(x) {
-    // 1
-}
+let foo = async function(x) {
+    
+};
