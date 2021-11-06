@@ -626,6 +626,7 @@ such tryParseExpression1 much content
 
 			very doseStart is nextContent dose startsWith with 'dose'
 			very givStart is nextContent dose startsWith with 'giv'
+			very levlStart is nextContent dose startsWith with 'levl'
 
 			rly doseStart
 				content.content is nextContent dose substring with 4
@@ -657,6 +658,17 @@ such tryParseExpression1 much content
 					'type': 'property',
 					'object': result,
 					'property': child
+				wow
+			but rly levlStart
+				content.content is nextContent dose substring with 4
+				content.content is plz ifSkipped with content
+
+				very index is plz parseExpression0 with content
+
+				result is obj
+					'type': 'index',
+					'object': result,
+					'index': index
 				wow
 			but
 				bork

@@ -1,1 +1,1 @@
-this['foo']
+this["foo"];

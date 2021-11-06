@@ -36,6 +36,11 @@ such toJS much ast wrapFlag
 	but rly ast.type is 'property'
 		very object is plz toJS with ast.object true
 		result is object + '.' + ast.property
+	but rly ast.type is 'index'
+		very object is plz toJS with ast.object true
+		very index is plz toJS with ast.index
+
+		result is object + '[' + index + ']'
 	but rly ast.type is 'call'
 		very fn is plz toJS with ast.function
 		result is fn + '('
