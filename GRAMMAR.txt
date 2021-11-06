@@ -8,8 +8,8 @@ ArgumentDeclarations = *(1*InlineWS Identifier)
 
 BlockBody = *(Statement 1*WS) "wow"
 
-PlzExpression = "plz" 1*WS Expression [1*InlineWS "with" 1*WS ArgumentValues]
-NewExpression = "new" 1*WS Expression [1*InlineWS "with" 1*WS ArgumentValues]
+PlzExpression = "plz" 1*WS Expression0 [1*InlineWS "with" 1*WS ArgumentValues]
+NewExpression = "new" 1*WS Expression0 [1*InlineWS "with" 1*WS ArgumentValues]
 InlineFunction = "much" 1*WS ArgumentDeclarations 1*WS BlockBody
 
 OctalDigit = "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7"

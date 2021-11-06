@@ -318,7 +318,7 @@ such parseBlockBody much content endOnBut
 	wow
 wow statements
 
-such tryParseExpression much content
+such tryParseExpression0 much content
 	very content is plz wrapContent with content
 
 	very result
@@ -332,7 +332,7 @@ such tryParseExpression much content
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
 
-		very callee is plz parseExpression with content
+		very callee is plz parseExpression0 with content
 	
 		content.content is plz ifSkippedInline with content
 		very args is plz parsePossibleArgumentValues with content
@@ -346,7 +346,7 @@ such tryParseExpression much content
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
 
-		very constructor is plz parseExpression with content
+		very constructor is plz parseExpression0 with content
 
 		content.content is plz ifSkippedInline with content
 
@@ -424,6 +424,19 @@ such tryParseExpression much content
 	wow
 
 	rly result.ok same undefined
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	wow
+wow result
+
+such tryParseExpression1 much content
+	very result
+	very innerResult is plz tryParseExpression0 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
 		very nextContent is plz ifSkipped with content
 		very doseStart is nextContent dose startsWith with 'dose'
 		rly doseStart
@@ -459,7 +472,7 @@ such tryParseExpression much content
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
-				very rhs is plz parseExpression with content
+				very rhs is plz parseExpression0 with content
 
 				result is obj
 					'type': info.id,
@@ -475,7 +488,64 @@ such tryParseExpression much content
 			'ok': true,
 			'expression': result
 		wow
+	but
+		result is innerResult
 	wow
+wow result
+
+such tryParseExpression2 much content
+	very result is plz tryParseExpression1 with content
+wow result
+
+such tryParseExpression3 much content
+	very OPS is obj
+		'bigger': '>',
+		'smaller': '<',
+		'biggerish': '>=',
+		'smallerish': '<=',
+		'isa': 'instanceof'
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression2 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression2 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
+such tryParseExpression much content
+	very result is plz tryParseExpression3 with content
 wow result
 
 such parseExpression much content
@@ -487,6 +557,34 @@ such parseExpression much content
 		result is result.expression
 	but
 		very msg is startCtxInfo + 'Expected expression, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression0 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression0 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression0, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression2 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression2 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression2, found ' + result.found
 		very err is new Error with msg
 		throw err
 	wow

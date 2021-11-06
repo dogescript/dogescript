@@ -1,5 +1,7 @@
 so ./binaryOperators as binaryOperators
 
+very SIMPLE_BINARY_OPS is new Array with '<' '>' '<=' '>=' 'instanceof'
+
 such statementsToJS much statements
 	very result is ''
 	statements dose forEach with much statement idx
@@ -158,8 +160,22 @@ such toJS much ast wrapFlag
 			result more value
 		wow
 	but
-		very binaryOperatorValues is Object dose values with binaryOperators
 		very success is false
+
+		much very i as 0 next i smaller SIMPLE_BINARY_OPS.length next i more 1
+			very id = SIMPLE_BINARY_OPS[i]
+
+			rly id is ast.type
+				very a is plz toJS with ast.a true
+				very b is plz toJS with ast.b true
+				result is a + ' ' + id + ' ' + b
+
+				success is true
+				bork
+			wow
+		wow
+
+		very binaryOperatorValues is Object dose values with binaryOperators
 		much very i as 0 next i smaller binaryOperatorValues.length next i more 1
 			very info is binaryOperatorValues[i]
 
