@@ -151,9 +151,12 @@ such toJS much ast wrapFlag
 	but rly ast.type is 'file'
 		result is plz statementsToJS with ast.statements
 	but rly ast.type is 'return'
-		result is 'return '
-		very value is plz toJS with ast.value
-		result += value
+		result is 'return'
+		rly ast.value
+			very value is plz toJS with ast.value
+			result more ' '
+			result more value
+		wow
 	but
 		very binaryOperatorValues is Object dose values with binaryOperators
 		very success is false

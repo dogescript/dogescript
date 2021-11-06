@@ -1,8 +1,6 @@
 function foo() {
-
-    if (bar === '') {
+    if (bar === "") {
         return;
     }
-
     baz();
 }

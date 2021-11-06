@@ -132,20 +132,20 @@ such ifSkipped much content
 	wow
 wow content
 
-such parseIdentifier much content
-	very startCtxInfo is plz genContextInfo with content
+such tryParseIdentifier much content
+	very tmpContent is content.content
 
 	very result is ''
 	very done is false
 	many !done
-		very chr is content.content[0]
+		very chr is tmpContent[0]
 		rly chr is ' ' or chr is '\n' or chr is '&'
 			done is true
 		but
 			result += chr
-			content.content is content.content dose substring with 1
+			tmpContent is tmpContent dose substring with 1
 		wow
-		rly content.content.length is 0
+		rly tmpContent.length is 0
 			done is true
 		wow
 	wow
@@ -153,16 +153,40 @@ such parseIdentifier much content
 	very reservedIdx is RESERVED_IDENTS dose indexOf with result
 
 	rly reservedIdx biggerish 0
-		very msg is startCtxInfo + 'Expected identifier, found ' + result
-		very err is new Error with msg
-		throw err
-	but rly result is 'doge' + 'ument'
-		result is 'document'
-	but rly result is 'win' + 'doge'
-		result is 'window'
+		result is obj
+			'found': result,
+			'ok': false
+		wow
 	but rly result is ''
-		very ctxInfo is plz genContextInfo with content
-		very msg is ctxInfo + 'Expected identifier, found ' + content.content[0]
+		result is obj
+			'found': content.content[0],
+			'ok': false
+		wow
+	but
+		rly result is 'doge' + 'ument'
+			result is 'document'
+		but rly result is 'win' + 'doge'
+			result is 'window'
+		wow
+
+		content.content is tmpContent
+
+		result is obj
+			'found': result,
+			'ok': true
+		wow
+	wow
+wow result
+
+such parseIdentifier much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseIdentifier with content
+
+	rly result.ok
+		result is result.found
+	but
+		very msg is startCtxInfo + 'Expected identifier, found ' + result.found
 		very err is new Error with msg
 		throw err
 	wow
@@ -294,7 +318,7 @@ such parseBlockBody much content endOnBut
 	wow
 wow statements
 
-such parseExpression much content
+such tryParseExpression much content
 	very content is plz wrapContent with content
 
 	very result
@@ -381,63 +405,90 @@ such parseExpression much content
 			'value': value
 		wow
 	but
-		very ident is plz parseIdentifier with content
-		rly ident is 'maybe'
-			result is obj
-				'type': 'maybe'
-			wow
+		very identRes is plz tryParseIdentifier with content
+		notrly identRes.ok
+			result is identRes
 		but
-			result is obj
-				'type': 'ident',
-				'value': ident
+			very ident is identRes.found
+			rly ident is 'maybe'
+				result is obj
+					'type': 'maybe'
+				wow
+			but
+				result is obj
+					'type': 'ident',
+					'value': ident
+				wow
 			wow
 		wow
 	wow
-	very nextContent is plz ifSkipped with content
-	very doseStart is nextContent dose startsWith with 'dose'
-	rly doseStart
-		content.content is nextContent dose substring with 4
-		content.content is plz ifSkipped with content
-		very call is plz parseIdentifier with content
 
-		rly ident is 'console' and call is 'loge'
-			call is 'log'
-		wow
-
-		very args is plz parsePossibleArgumentValues with content
-
-		result is obj
-			'type': 'call',
-			'function': {
-				'type': 'property',
-				'object': result,
-				'property': call
-			},
-			'args': args
-		wow
-		nextContent is plz ifSkipped with content
-	wow
-
-	very binaryOperatorKeys is Object dose keys with binaryOperators
-
-	much very i as 0 next i smaller binaryOperatorKeys.length next i more 1
-		very key is binaryOperatorKeys[i]
-		very info is binaryOperators[key]
-
-		very opStart is nextContent dose startsWith with key
-		rly opStart
-			content.content is nextContent dose substring with key.length
+	rly result.ok same undefined
+		very nextContent is plz ifSkipped with content
+		very doseStart is nextContent dose startsWith with 'dose'
+		rly doseStart
+			content.content is nextContent dose substring with 4
 			content.content is plz ifSkipped with content
-			very rhs is plz parseExpression with content
+			very call is plz parseIdentifier with content
 
-			result is obj
-				'type': info.id,
-				'a': result,
-				'b': rhs
+			rly ident is 'console' and call is 'loge'
+				call is 'log'
 			wow
 
+			very args is plz parsePossibleArgumentValues with content
+
+			result is obj
+				'type': 'call',
+				'function': {
+					'type': 'property',
+					'object': result,
+					'property': call
+				},
+				'args': args
+			wow
 			nextContent is plz ifSkipped with content
 		wow
+
+		very binaryOperatorKeys is Object dose keys with binaryOperators
+
+		much very i as 0 next i smaller binaryOperatorKeys.length next i more 1
+			very key is binaryOperatorKeys[i]
+			very info is binaryOperators[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression with content
+
+				result is obj
+					'type': info.id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	wow
+wow result
+
+such parseExpression much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression, found ' + result.found
+		very err is new Error with msg
+		throw err
 	wow
 wow result
 
@@ -652,11 +703,16 @@ such parseStatement much content
 	but rly amazeStart
 		content.content is content.content dose substring with 5
 		content.content is plz ifSkippedInline with content
-		very value is plz parseExpression with content
-
-		result is obj
-			'type': 'return',
-			'value': value
+		very exprRes is plz tryParseExpression with content
+		rly exprRes.ok
+			result is obj
+				'type': 'return',
+				'value': exprRes.expression
+			wow
+		but
+			result is obj
+				'type': 'return'
+			wow
 		wow
 	but
 		result is plz parseExpression with content
