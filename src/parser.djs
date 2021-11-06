@@ -319,8 +319,6 @@ such parseBlockBody much content endOnBut
 wow statements
 
 such tryParseExpression0 much content
-	very content is plz wrapContent with content
-
 	very result
 
 	very plzStart is content.content dose startsWith with 'plz'
@@ -444,7 +442,7 @@ such tryParseExpression1 much content
 			content.content is plz ifSkipped with content
 			very call is plz parseIdentifier with content
 
-			rly ident is 'console' and call is 'loge'
+			rly result.type is 'ident' and result.value is 'console' and call is 'loge'
 				call is 'log'
 			wow
 
@@ -549,6 +547,8 @@ such tryParseExpression much content
 wow result
 
 such parseExpression much content
+	very content is plz wrapContent with content
+
 	very startCtxInfo is plz genContextInfo with content
 
 	very result is plz tryParseExpression with content
