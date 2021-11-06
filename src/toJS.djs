@@ -159,6 +159,26 @@ such toJS much ast wrapFlag
 			result more ' '
 			result more value
 		wow
+	but rly ast.type is 'typeof'
+		result is '(typeof '
+		very value is plz toJS with ast.value
+		result more value
+		result more ')'
+	but rly ast.type is 'await'
+		result is '(await '
+		very value is plz toJS with ast.value
+		result more value
+		result more ')'
+	but rly ast.type is 'prefixIncrement'
+		result is '(++'
+		very value is plz toJS with ast.value
+		result more value
+		result more ')'
+	but rly ast.type is 'prefixDecrement'
+		result is '(--'
+		very value is plz toJS with ast.value
+		result more value
+		result more ')'
 	but
 		very success is false
 

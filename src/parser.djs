@@ -492,7 +492,69 @@ such tryParseExpression1 much content
 wow result
 
 such tryParseExpression2 much content
-	very result is plz tryParseExpression1 with content
+	very result
+
+	very kindofStart is content.content dose startsWith with 'kindof'
+	very waiteStart is content.content dose startsWith with 'waite'
+	very bigifyStart is content.content dose startsWith with 'bigify'
+	very smallifyStart is content.content dose startsWith with 'smallify'
+
+	rly kindofStart
+		content.content is content.content dose substring with 6
+		content.content is plz ifSkipped with content.content
+
+		very inner is plz parseExpression2 with content
+
+		result is obj
+			'type': 'typeof',
+			'value': inner
+		wow
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but rly waiteStart
+		content.content is content.content dose substring with 5
+		content.content is plz ifSkipped with content.content
+		very inner is plz parseExpression2 with content
+
+		result is obj
+			'type': 'await',
+			'value': inner
+		wow
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but rly bigifyStart
+		content.content is content.content dose substring with 6
+		content.content is plz ifSkipped with content.content
+		very inner is plz parseExpression2 with content
+
+		result is obj
+			'type': 'prefixIncrement',
+			'value': inner
+		wow
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but rly smallifyStart
+		content.content is content.content dose substring with 8
+		content.content is plz ifSkipped with content.content
+		very inner is plz parseExpression2 with content
+
+		result is obj
+			'type': 'prefixDecrement',
+			'value': inner
+		wow
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is plz tryParseExpression1 with content
+	wow
 wow result
 
 such tryParseExpression3 much content
