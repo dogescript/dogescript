@@ -926,6 +926,7 @@ wow elses
 
 such parseFunctionDeclaration much content
 	very isAsync is false
+	very isGenerator is false
 
 	very asinkStart is content.content dose startsWith with 'asink'
 	rly asinkStart
@@ -941,6 +942,15 @@ such parseFunctionDeclaration much content
 	rly suchStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
+
+		very lazyStart is content.content dose startsWith with 'lazy'
+
+		rly lazyStart
+			isGenerator is true
+
+			content.content is content.content dose substring with 4
+			content.content is plz ifSkipped with content
+		wow
 
 		very ident is plz parseIdentifier with content
 	but rly muchStart
@@ -986,7 +996,8 @@ such parseFunctionDeclaration much content
 		'identifier': ident,
 		'args': args,
 		'statements': statements,
-		'async': isAsync
+		'async': isAsync,
+		'generator': isGenerator
 	wow
 
 	notrly result.identifier

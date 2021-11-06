@@ -83,7 +83,13 @@ such toJS much ast wrapFlag
 			result more 'async '
 		wow
 
-		result more 'function ' + ast.identifier + '('
+		result more 'function'
+
+		rly ast.generator
+			result more '*'
+		wow
+
+		result more ' ' + ast.identifier + '('
 		ast.args dose forEach with much arg idx
 			rly idx bigger 0
 				result += ', '
