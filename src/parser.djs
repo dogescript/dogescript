@@ -376,6 +376,7 @@ such tryParseExpression0 much content
 	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
 	very classyStart is content.content dose startsWith with 'classy'
+	very disStart is content.content dose startsWith with 'dis'
 	rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
@@ -464,6 +465,12 @@ such tryParseExpression0 much content
 		result is obj
 			'type': 'classExpression',
 			'elements': elements
+		wow
+	but rly disStart
+		content.content is content.content dose substring with 3
+		result is obj
+			'type': 'ident',
+			'value': 'this'
 		wow
 	but
 		very identRes is plz tryParseIdentifier with content
