@@ -21,6 +21,13 @@ such unwrapContent much content
 	wow
 wow content
 
+such cloneContent much content
+	very cloned is obj
+		'content': content.content,
+		'originalContent': content.originalContent
+	wow
+wow cloned
+
 such genContextInfo much content
 	very overallOffset is content.originalContent.length - content.content.length 
 	very previousContent is content.originalContent dose substring with 0 overallOffset
@@ -364,6 +371,7 @@ such tryParseExpression0 much content
 
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
+	very suchStart is content.content dose startsWith with 'such'
 	very muchStart is content.content dose startsWith with 'much'
 	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
@@ -397,6 +405,9 @@ such tryParseExpression0 much content
 			'constructor': constructor,
 			'args': args
 		wow
+	but rly suchStart
+		result is plz parseFunctionDeclaration with content
+		result.type is 'functionDeclarationInline'
 	but rly muchStart
 		very ctxInfo is plz genContextInfo with content
 
@@ -831,6 +842,7 @@ such parseStatement much content
 	very amazeStart is content.content dose startsWith with 'amaze'
 	very borkStart is content.content dose startsWith with 'bork'
 	very classyStart is content.content dose startsWith with 'classy'
+	very woofStart is content.content dose startsWith with 'woof'
 
 	rly veryStart
 		content.content is content.content dose substring with 4
@@ -966,6 +978,37 @@ such parseStatement much content
 			'type': 'classDeclaration',
 			'elements': elements,
 			'identifier': ident
+		wow
+	but rly woofStart
+		content.content is content.content dose substring with 4
+		content.content is plz ifSkipped with content
+
+		very identifier
+
+		shh first check for "be" form
+
+		very subContent is plz cloneContent with content
+		very identResult is plz tryParseIdentifier with subContent
+
+		rly identResult giv ok
+			subContent.content is plz ifSkippedInline with subContent
+			very beStart is subContent.content dose startsWith with 'be'
+			rly beStart
+				subContent.content is subContent.content dose substring with 2
+				subContent.content is plz ifSkipped with subContent
+
+				identifier is identResult giv found
+
+				content.content is subContent.content
+			wow
+		wow
+
+		very value is plz parseExpression with content
+		
+		result is obj
+			'type': 'export',
+			'identifier': identifier,
+			'value': value
 		wow
 	but
 		result is plz parseExpression with content

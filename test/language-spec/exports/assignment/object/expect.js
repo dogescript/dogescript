@@ -1,5 +1,4 @@
 function foo() {
-    // 1
+    
 }
-
-module.exports = foo
+module.exports = foo;

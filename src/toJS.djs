@@ -85,7 +85,12 @@ such toJS much ast wrapFlag
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'functionDeclarationInline'
-		result is 'function('
+		result is 'function'
+		rly ast.identifier
+			result more ' ' + ast.identifier
+		wow
+
+		result more '('
 		ast.args dose forEach with much arg idx
 			rly idx bigger 0
 				result += ', '
@@ -216,6 +221,15 @@ such toJS much ast wrapFlag
 		innerResult is plz indent with innerResult
 		result more innerResult
 		result more '\n}'
+	but rly ast.type is 'export'
+		result is 'module.exports'
+		rly ast.identifier
+			result more '.'
+			result more ast.identifier
+		wow
+		result more ' = '
+		very value is plz toJS with ast.value
+		result more value
 	but
 		very success is false
 
