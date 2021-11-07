@@ -10,7 +10,7 @@ such statementsToJS much statements
 		wow
 		very statementJS is plz toJS with statement
 		result += statementJS
-		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while' and statement.type not 'classDeclaration'
+		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while' and statement.type not 'for' and statement.type not 'classDeclaration'
 			result += ';'
 		wow
 	wow&
@@ -164,6 +164,40 @@ such toJS much ast wrapFlag
 		body is '\n' + body
 		body is plz indent with body
 		result += body + '\n}'
+	but rly ast.type is 'for'
+		very inBlock is ast.initStatements.length bigger 1
+
+		result is 'for ('
+		notrly inBlock
+			very statement is ast.initStatements[0]
+			statement is plz toJS with statement
+			result more statement
+		wow
+		result more '; '
+
+		very condition is plz toJS with ast.condition
+		result more condition
+		result more '; '
+
+		very afterStatement is plz toJS with ast.afterStatement
+		result more afterStatement
+		result more ') {'
+
+		very innerResult is plz statementsToJS with ast.bodyStatements
+		innerResult is '\n' + innerResult
+		innerResult is plz indent with innerResult
+		result more innerResult
+
+		result more '\n}'
+
+		rly inBlock
+			very init is plz statementsToJS with ast.initStatements
+			init is '\n' + init
+			result is init + result
+			result is plz indent with result
+
+			result is '{\n' + result + '}'
+		wow
 	but rly ast.type is 'trained'
 		result is '"use strict"'
 	but rly ast.type is 'debugger'

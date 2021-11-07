@@ -1028,26 +1028,8 @@ such parseFunctionDeclaration much content
 	wow
 wow result
 
-such parseStatement much content
-	content is plz wrapContent with content
-
-	very result
-
+such tryParseInlineStatement much content
 	very veryStart is content.content dose startsWith with 'very'
-	very trainedStart is content.content dose startsWith with 'trained'
-	very soStart is content.content dose startsWith with 'so'
-	very suchStart is content.content dose startsWith with 'such'
-	very asinkStart is content.content dose startsWith with 'asink'
-	very rlyStart is content.content dose startsWith with 'rly'
-	very notrlyStart is content.content dose startsWith with 'notrly'
-	very butStart is content.content dose startsWith with 'but'
-	very pawseStart is content.content dose startsWith with 'pawse'
-	very manyStart is content.content dose startsWith with 'many'
-	very amazeStart is content.content dose startsWith with 'amaze'
-	very borkStart is content.content dose startsWith with 'bork'
-	very classyStart is content.content dose startsWith with 'classy'
-	very woofStart is content.content dose startsWith with 'woof'
-
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -1069,7 +1051,66 @@ such parseStatement much content
 
 			result.value is expr
 		wow
-	but rly trainedStart
+	but
+		result is plz tryParseExpression with content
+		rly result.ok
+			rly result.expression.type is '==='
+				shh We have an ambiguity between equality checks and variable assignment, so we assume the latter if it's a statement
+				result is obj
+					'type': 'assignment',
+					'target': result.expression.a,
+					'value': result.expression.b
+				wow
+			but
+				result is obj
+					'ok': true,
+					'statement': result.expression
+				wow
+			wow
+		wow
+	wow
+
+	rly result.ok same undefined
+		result is obj
+			'ok': true,
+			'statement': result
+		wow
+	wow
+wow result
+
+such parseInlineStatement much content
+	very result is plz tryParseInlineStatement with content
+
+	rly result.ok
+		result is result.statement
+	but
+		very msg is startCtxInfo + 'Expected inline statement, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseStatement much content
+	content is plz wrapContent with content
+
+	very result
+
+	very trainedStart is content.content dose startsWith with 'trained'
+	very soStart is content.content dose startsWith with 'so'
+	very suchStart is content.content dose startsWith with 'such'
+	very asinkStart is content.content dose startsWith with 'asink'
+	very rlyStart is content.content dose startsWith with 'rly'
+	very notrlyStart is content.content dose startsWith with 'notrly'
+	very butStart is content.content dose startsWith with 'but'
+	very pawseStart is content.content dose startsWith with 'pawse'
+	very manyStart is content.content dose startsWith with 'many'
+	very amazeStart is content.content dose startsWith with 'amaze'
+	very borkStart is content.content dose startsWith with 'bork'
+	very classyStart is content.content dose startsWith with 'classy'
+	very woofStart is content.content dose startsWith with 'woof'
+	very muchStart is content.content dose startsWith with 'much'
+
+	rly trainedStart
 		content.content is content.content dose substring with 7
 
 		result is obj
@@ -1227,16 +1268,75 @@ such parseStatement much content
 			'identifier': identifier,
 			'value': value
 		wow
-	but
-		result is plz parseExpression with content
-		rly result.type is '==='
-			shh We have an ambiguity between equality checks and variable assignment, so we assume the latter if it's a statement
-			result is obj
-				'type': 'assignment',
-				'target': result.a,
-				'value': result.b
+	but rly muchStart
+		shh Could be either a loop or a function expression
+
+		very nextContent is plz cloneContent with content
+		nextContent.content is nextContent.content dose substring with 4
+		nextContent.content is plz ifSkippedInline with nextContent
+
+		very initRes1 is plz tryParseInlineStatement with nextContent
+
+		rly initRes1.ok
+			very initStatements is new Array with initRes1.statement
+
+			nextContent.content is plz ifSkippedInline with nextContent
+			very commaStart is nextContent.content dose startsWith with ','
+			many commaStart
+				nextContent.content is nextContent.content dose substring with 1
+				nextContent.content is plz ifSkipped with nextContent
+
+				shh at this point it's definitely a loop, so we can fail
+				very nextValue is plz parseInlineStatement with nextContent
+				initStatements dose push with nextValue
+
+				nextContent.content is plz ifSkipped with nextContent
+				commaStart is nextContent.content dose startsWith with ','
 			wow
+
+			very nextStart is nextContent.content dose startsWith with 'next'
+			rly nextStart
+				shh commit to consumption
+				content giv content is nextContent giv content
+
+				content giv content is content.content dose substring with 4
+				content giv content is plz ifSkipped with content.content
+
+				very condition is plz parseExpression with content
+
+				content giv content is plz ifSkipped with content.content
+				nextStart is content.content dose startsWith with 'next'
+
+				notrly nextStart
+					very ctxInfo is plz genContextInfo with content
+					very msg is ctxInfo + 'Expected "next", found ' + content.content[0]
+					very err is new Error with msg
+					throw err
+				wow
+
+				content giv content is content.content dose substring with 4
+				content giv content is plz ifSkipped with content.content
+
+				very afterStatement is plz parseInlineStatement with content
+				content giv content is plz ifSkipped with content.content
+
+				very bodyStatements is plz parseBlockBody with content
+
+				result is obj
+					'type': 'for',
+					'initStatements': initStatements,
+					'condition': condition,
+					'afterStatement': afterStatement,
+					'bodyStatements': bodyStatements
+				wow
+			but
+				result is plz parseExpression with content
+			wow
+		but
+			result is plz parseExpression with content
 		wow
+	but
+		result is plz parseInlineStatement with content
 	wow
 
 	shh console dose loge with 'parseStatement:' result
