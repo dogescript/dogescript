@@ -1014,7 +1014,7 @@ such parseFunctionDeclaration much content
 
 	very statements is plz parseBlockBody with content
 
-	result is obj
+	very result is obj
 		'type': 'functionDeclaration',
 		'identifier': ident,
 		'args': args,
@@ -1029,6 +1029,8 @@ such parseFunctionDeclaration much content
 wow result
 
 such tryParseInlineStatement much content
+	very result
+
 	very veryStart is content.content dose startsWith with 'very'
 	rly veryStart
 		content.content is content.content dose substring with 4
@@ -1040,7 +1042,7 @@ such tryParseInlineStatement much content
 			'type': 'declaration',
 			'ident': ident
 		wow
-		
+
 		very nextContent is plz ifSkippedInline with content
 		very isStart is nextContent dose startsWith with 'is'
 		rly isStart
