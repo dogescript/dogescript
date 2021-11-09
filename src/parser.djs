@@ -1045,7 +1045,8 @@ such tryParseInlineStatement much content
 
 		very nextContent is plz ifSkippedInline with content
 		very isStart is nextContent dose startsWith with 'is'
-		rly isStart
+		very asStart is nextContent dose startsWith with 'as'
+		rly isStart or asStart
 			content.content is nextContent dose substring with 2
 			content.content is plz ifSkipped with content
 
@@ -1081,6 +1082,8 @@ such tryParseInlineStatement much content
 wow result
 
 such parseInlineStatement much content
+	very startCtxInfo is plz genContextInfo with content
+
 	very result is plz tryParseInlineStatement with content
 
 	rly result.ok

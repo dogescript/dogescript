@@ -35,7 +35,7 @@ Expression = Expression6
 RlyBody = *(Statement 1*WS) (("but" (1*InlineWS RlyStatement) / BlockBody) / "wow")
 RlyStatement = ("rly" / "notrly") 1*WS Expression 1*WS RlyBody
 
-VeryStatement = "very" 1*WS Identifier [1*InlineWS "is" 1*WS Expression]
+VeryStatement = "very" 1*WS Identifier [1*InlineWS ("is" / "as") 1*WS Expression]
 SoStatement = "so" 1*WS Identifier [1*InlineWS "as" 1*WS Identifier]
 SuchStatement = ["asink" 1*InlineWS] "such" [1*InlineWS "lazy"] 1*WS Identifier [1*InlineWS "much" ArgumentDeclarations] 1*WS BlockBody [1*InlineWS Expression]
 DebuggerStatement = "debooger" / "pawse"
