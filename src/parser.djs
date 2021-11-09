@@ -377,10 +377,44 @@ such parseClassElement much content
 
 	very suchStart is content.content dose startsWith with 'such'
 	very asinkStart is content.content dose startsWith with 'asink'
+	very makerStart is content.content dose startsWith with 'maker'
 
 	rly suchStart or asinkStart
 		result is plz parseFunctionDeclaration with content
 		result.type is 'methodDeclaration'
+	but rly makerStart
+		content giv content is content.content dose substring with 5
+		content giv content is plz ifSkippedInline with content
+
+		very args is new Array
+
+		very done is false
+		many !done
+			content.content is plz ifSkippedInline with content
+
+			rly content.content.length is 0
+				very msg is ctxInfo + 'Unterminated function declaration'
+				very err is new Error with msg
+				throw err
+			wow
+
+			rly content.content[0] is '\n'
+				done is true
+			but
+				very arg is plz parseIdentifier with content
+				args dose push with arg
+			wow
+		wow
+
+		content.content is plz ifSkipped with content
+
+		very statements is plz parseBlockBody with content
+
+		result is obj
+			'type': 'constructor',
+			'args': args,
+			'statements': statements
+		wow
 	but
 		very msg is ctxInfo + 'Expected class element, found ' + content.content[0]
 		very err is new Error with msg

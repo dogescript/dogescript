@@ -296,6 +296,19 @@ such toJS much ast wrapFlag
 		innerResult is plz indent with innerResult
 		result more innerResult
 		result more '\n}'
+	but rly ast.type is 'constructor'
+		result is 'constructor('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result more ', '
+			wow
+			result more arg
+		wow&
+		result more ') {';
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
 	but rly ast.type is 'export'
 		result is 'module.exports'
 		rly ast.identifier
