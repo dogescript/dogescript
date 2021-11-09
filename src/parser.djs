@@ -1089,16 +1089,44 @@ such tryParseInlineStatement much content
 			result.value is expr
 		wow
 	but
-		result is plz tryParseExpression with content
-		rly result.ok
-			rly result.expression.type is '==='
-				shh We have an ambiguity between equality checks and variable assignment, so we assume the latter if it's a statement
-				result is obj
-					'type': 'assignment',
-					'target': result.expression.a,
-					'value': result.expression.b
+		shh first, look for reassignment
+		very nextContent is plz cloneContent with content
+		very identRes is plz tryParseIdentifier with nextContent
+		rly identRes.ok
+			very OPS is obj
+				'is': 'assignment',
+				'more': '+=',
+				'less': '-=',
+				'lots': '*=',
+				'few': '/='
+			wow
+
+			nextContent giv content is plz ifSkippedInline with nextContent
+			very keys is Object dose keys with OPS
+
+			much very i as 0 next i smaller keys.length next i more 1
+				very key is keys[i]
+				very id is OPS[key]
+
+				very opStart is nextContent.content dose startsWith with key
+				rly opStart
+					content.content is nextContent.content dose substring with key.length
+					content.content is plz ifSkipped with content
+					very rhs is plz parseExpression with content
+
+					result is obj
+						'type': id,
+						'a': identRes.found,
+						'b': rhs
+					wow
+					bork
 				wow
-			but
+			wow
+		wow
+
+		notrly result
+			result is plz tryParseExpression with content
+			rly result.ok
 				result is obj
 					'ok': true,
 					'statement': result.expression

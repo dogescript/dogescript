@@ -1,3 +1,3 @@
-for (var i = 0; i < arry.length(); i += 1) {
-    // 1
+for (let i = 0; i < arry.length(); i += 1) {
+    
 }

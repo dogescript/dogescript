@@ -1,6 +1,7 @@
 so ./binaryOperators as binaryOperators
 
 very SIMPLE_BINARY_OPS is new Array with '<' '>' '<=' '>=' 'instanceof'
+very SIMPLE_REASSIGNMENT_OPS is new Array with '+=' '-=' '*=' '/='
 
 such statementsToJS much statements
 	very result is ''
@@ -345,6 +346,18 @@ such toJS much ast wrapFlag
 				very a is plz toJS with ast.a true
 				very b is plz toJS with ast.b true
 				result is a + ' ' + id + ' ' + b
+
+				success is true
+				bork
+			wow
+		wow
+
+		much very i as 0 next i smaller SIMPLE_REASSIGNMENT_OPS.length next i more 1
+			very id = SIMPLE_REASSIGNMENT_OPS[i]
+
+			rly id is ast.type
+				very b is plz toJS with ast.b true
+				result is ast.a + ' ' + id + ' ' + b
 
 				success is true
 				bork
