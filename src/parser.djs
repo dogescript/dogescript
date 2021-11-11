@@ -989,8 +989,51 @@ such tryParseExpression6 much content
 	wow
 wow result
 
+such tryParseExpression7 much content
+	very OPS is obj
+		'and': 'logicalAnd'
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression6 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression6 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
 such tryParseExpression much content
-	very result is plz tryParseExpression6 with content
+	very result is plz tryParseExpression7 with content
 wow result
 
 such parseExpression much content
@@ -1074,6 +1117,20 @@ such parseExpression5 much content
 		result is result.expression
 	but
 		very msg is startCtxInfo + 'Expected expression5, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression6 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression6 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression6, found ' + result.found
 		very err is new Error with msg
 		throw err
 	wow

@@ -5,7 +5,8 @@ very OTHER_BINARY_OPS is obj
 	'division': '/',
 	'modulo': '%',
 	'addition': '+',
-	'subtraction': '-'
+	'subtraction': '-',
+	'logicalAnd': '&&'
 wow
 
 such statementsToJS much statements
