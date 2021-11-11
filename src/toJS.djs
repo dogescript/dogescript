@@ -1,7 +1,12 @@
-so ./binaryOperators as binaryOperators
-
-very SIMPLE_BINARY_OPS is new Array with '<' '>' '<=' '>=' 'instanceof'
+very SIMPLE_BINARY_OPS is new Array with '<' '>' '<=' '>=' 'instanceof' '===' '==' '!=='
 very SIMPLE_REASSIGNMENT_OPS is new Array with '+=' '-=' '*=' '/='
+very OTHER_BINARY_OPS is obj
+	'multiplication': '*',
+	'division': '/',
+	'modulo': '%',
+	'addition': '+',
+	'subtraction': '-'
+wow
 
 such statementsToJS much statements
 	very result is ''
@@ -364,17 +369,19 @@ such toJS much ast wrapFlag
 			wow
 		wow
 
-		very binaryOperatorValues is Object dose values with binaryOperators
-		much very i as 0 next i smaller binaryOperatorValues.length next i more 1
-			very info is binaryOperatorValues[i]
+		very otherBinaryOpKeys is Object dose keys with OTHER_BINARY_OPS
 
-			rly info.id is ast.type
+		much very i as 0 next i smaller otherBinaryOpKeys.length next i more 1
+			very id = otherBinaryOpKeys[i]
+			very op is OTHER_BINARY_OPS[id]
+
+			rly id is ast.type
 				very a is plz toJS with ast.a true
 				very b is plz toJS with ast.b true
-				result is a + ' ' + info.output + ' ' + b
+				result is a + ' ' + op + ' ' + b
 
 				success is true
-				break
+				bork
 			wow
 		wow
 

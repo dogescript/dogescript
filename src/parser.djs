@@ -1,5 +1,3 @@
-so ./binaryOperators as binaryOperators
-
 very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
@@ -734,30 +732,6 @@ such tryParseExpression1 much content
 			wow
 		wow
 
-		very nextContent is plz ifSkipped with content
-
-		very binaryOperatorKeys is Object dose keys with binaryOperators
-
-		much very i as 0 next i smaller binaryOperatorKeys.length next i more 1
-			very key is binaryOperatorKeys[i]
-			very info is binaryOperators[key]
-
-			very opStart is nextContent dose startsWith with key
-			rly opStart
-				content.content is nextContent dose substring with key.length
-				content.content is plz ifSkipped with content
-				very rhs is plz parseExpression0 with content
-
-				result is obj
-					'type': info.id,
-					'a': result,
-					'b': rhs
-				wow
-
-				nextContent is plz ifSkipped with content
-			wow
-		wow
-
 		result is obj
 			'ok': true,
 			'expression': result
@@ -835,11 +809,9 @@ wow result
 
 such tryParseExpression3 much content
 	very OPS is obj
-		'bigger': '>',
-		'smaller': '<',
-		'biggerish': '>=',
-		'smallerish': '<=',
-		'isa': 'instanceof'
+		'*': 'multiplication',
+		'/': 'division',
+		'%': 'modulo'
 	wow
 
 	very result
@@ -880,8 +852,145 @@ such tryParseExpression3 much content
 	wow
 wow result
 
+such tryParseExpression4 much content
+	very OPS is obj
+		'+': 'addition',
+		'-': 'subtraction'
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression3 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression3 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
+such tryParseExpression5 much content
+	very OPS is obj
+		'bigger': '>',
+		'smaller': '<',
+		'biggerish': '>=',
+		'smallerish': '<=',
+		'isa': 'instanceof'
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression4 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression4 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
+such tryParseExpression6 much content
+	very OPS is obj
+		'is': '===',
+		'like': '==',
+		'same': '===',
+		'not': '!=='
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression5 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression5 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
 such tryParseExpression much content
-	very result is plz tryParseExpression3 with content
+	very result is plz tryParseExpression6 with content
 wow result
 
 such parseExpression much content
@@ -923,6 +1032,48 @@ such parseExpression2 much content
 		result is result.expression
 	but
 		very msg is startCtxInfo + 'Expected expression2, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression3 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression3 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression3, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression4 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression4 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression4, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression5 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression5 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression5, found ' + result.found
 		very err is new Error with msg
 		throw err
 	wow
