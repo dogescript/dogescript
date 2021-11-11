@@ -1208,6 +1208,14 @@ such parseFunctionDeclaration much content
 		'generator': isGenerator
 	wow
 
+	very nextContent is plz cloneContent with content
+	nextContent giv content is plz ifSkippedInline with nextContent
+	very exprResult is plz tryParseExpression with nextContent
+	rly exprResult.ok
+		result giv returns is exprResult.expression
+		content giv content is nextContent giv content
+	wow
+
 	notrly result.identifier
 		result giv type is 'functionDeclarationInline'
 	wow

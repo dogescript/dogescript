@@ -103,8 +103,16 @@ such toJS much ast wrapFlag
 			result += arg
 		wow&
 		result += ') {';
+
 		very body is plz statementsToJS with ast.statements
 		body is '\n' + body
+		rly ast giv returns
+			body more '\nreturn '
+			very returnValue is plz toJS with ast.returns
+			body more returnValue
+			body more ';'
+		wow
+
 		body is plz indent with body
 		result += body + '\n}'
 	but rly ast.type is 'functionDeclarationInline'
