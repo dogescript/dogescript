@@ -79,8 +79,8 @@ such toJS much ast wrapFlag
 			result += ' = ' + value
 		wow
 	but rly ast.type is 'assignment'
-		very target is plz toJS with ast.target
-		very value is plz toJS with ast.value
+		very target is plz toJS with ast.a
+		very value is plz toJS with ast.b
 		result is target + ' = ' + value
 	but rly ast.type is 'functionDeclaration'
 		result is ''
@@ -361,8 +361,9 @@ such toJS much ast wrapFlag
 			very id = SIMPLE_REASSIGNMENT_OPS[i]
 
 			rly id is ast.type
+				very a is plz toJS with ast.a true
 				very b is plz toJS with ast.b true
-				result is ast.a + ' ' + id + ' ' + b
+				result is a + ' ' + id + ' ' + b
 
 				success is true
 				bork

@@ -1242,8 +1242,8 @@ such tryParseInlineStatement much content
 	but
 		shh first, look for reassignment
 		very nextContent is plz cloneContent with content
-		very identRes is plz tryParseIdentifier with nextContent
-		rly identRes.ok
+		very lhsRes is plz tryParseExpression1 with nextContent
+		rly lhsRes.ok
 			very OPS is obj
 				'is': 'assignment',
 				'more': '+=',
@@ -1267,7 +1267,7 @@ such tryParseInlineStatement much content
 
 					result is obj
 						'type': id,
-						'a': identRes.found,
+						'a': lhsRes.expression,
 						'b': rhs
 					wow
 					bork
