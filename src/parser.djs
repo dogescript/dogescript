@@ -1011,7 +1011,7 @@ such tryParseExpression7 much content
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
-				very rhs is plz parseExpression6 with content
+				very rhs is plz parseExpression7 with content
 
 				result is obj
 					'type': id,
@@ -1032,8 +1032,64 @@ such tryParseExpression7 much content
 	wow
 wow result
 
+such tryParseExpression8 much content
+	very OPS is obj
+		'or': 'logicalOr'
+	wow
+
+	very yeldeStart is content.content dose startsWith with 'yelde'
+	rly yeldeStart
+		content giv content is content.content dose substring with 5
+		content giv content is plz ifSkipped with content
+	wow
+
+	very result
+	very innerResult is plz tryParseExpression7 with content
+	rly innerResult giv ok
+		result is innerResult.expression
+
+		very nextContent is plz ifSkippedInline with content
+
+		very keys is Object dose keys with OPS
+
+		much very i as 0 next i smaller keys.length next i more 1
+			very key is keys[i]
+			very id is OPS[key]
+
+			very opStart is nextContent dose startsWith with key
+			rly opStart
+				content.content is nextContent dose substring with key.length
+				content.content is plz ifSkipped with content
+				very rhs is plz parseExpression6 with content
+
+				result is obj
+					'type': id,
+					'a': result,
+					'b': rhs
+				wow
+
+				nextContent is plz ifSkipped with content
+			wow
+		wow
+
+		rly yeldeStart
+			result is obj
+				'type': 'yield',
+				'value': result
+			wow
+		wow
+
+		result is obj
+			'ok': true,
+			'expression': result
+		wow
+	but
+		result is innerResult
+	wow
+wow result
+
 such tryParseExpression much content
-	very result is plz tryParseExpression7 with content
+	very result is plz tryParseExpression8 with content
 wow result
 
 such parseExpression much content
@@ -1131,6 +1187,20 @@ such parseExpression6 much content
 		result is result.expression
 	but
 		very msg is startCtxInfo + 'Expected expression6, found ' + result.found
+		very err is new Error with msg
+		throw err
+	wow
+wow result
+
+such parseExpression7 much content
+	very startCtxInfo is plz genContextInfo with content
+
+	very result is plz tryParseExpression7 with content
+
+	rly result.ok
+		result is result.expression
+	but
+		very msg is startCtxInfo + 'Expected expression7, found ' + result.found
 		very err is new Error with msg
 		throw err
 	wow

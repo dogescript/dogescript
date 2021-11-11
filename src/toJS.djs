@@ -6,7 +6,8 @@ very OTHER_BINARY_OPS is obj
 	'modulo': '%',
 	'addition': '+',
 	'subtraction': '-',
-	'logicalAnd': '&&'
+	'logicalAnd': '&&',
+	'logicalOr': '||'
 wow
 
 such statementsToJS much statements
@@ -231,6 +232,13 @@ such toJS much ast wrapFlag
 		result is plz statementsToJS with ast.statements
 	but rly ast.type is 'return'
 		result is 'return'
+		rly ast.value
+			very value is plz toJS with ast.value
+			result more ' '
+			result more value
+		wow
+	but rly ast.type is 'yield'
+		result is 'yield'
 		rly ast.value
 			very value is plz toJS with ast.value
 			result more ' '
