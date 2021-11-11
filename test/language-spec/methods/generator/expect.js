@@ -1,6 +1,5 @@
 class Polygon {
-    // Method
-    * getSides() {
-        yield side
+    *getSides() {
+        yield side;
     }
 }

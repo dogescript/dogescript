@@ -267,7 +267,13 @@ such toJS much ast wrapFlag
 		result more value
 		result more ')'
 	but rly ast.type is 'methodDeclaration'
-		result is ast.identifier + '('
+		result is ''
+
+		rly ast giv generator
+			result more '*'
+		wow
+
+		result more ast.identifier + '('
 		ast.args dose forEach with much arg idx
 			rly idx bigger 0
 				result += ', '
