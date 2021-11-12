@@ -344,6 +344,12 @@ such toJS much ast wrapFlag
 		body is '\n' + body
 		body is plz indent with body
 		result += body + '\n}'
+	but rly ast.type is 'setter'
+		result is 'set ' + ast.identifier + '(' + ast.newValueIdentifier + ') {'
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		body is plz indent with body
+		result += body + '\n}'
 	but rly ast.type is 'export'
 		result is 'module.exports'
 		rly ast.identifier

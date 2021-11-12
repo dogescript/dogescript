@@ -377,6 +377,7 @@ such parseClassElement much content
 	very asinkStart is content.content dose startsWith with 'asink'
 	very makerStart is content.content dose startsWith with 'maker'
 	very gitStart is content.content dose startsWith with 'git'
+	very sitStart is content.content dose startsWith with 'sit'
 
 	rly suchStart or asinkStart
 		result is plz parseFunctionDeclaration with content
@@ -426,6 +427,35 @@ such parseClassElement much content
 		result is obj
 			'type': 'getter',
 			'identifier': ident,
+			'statements': statements
+		wow
+	but rly sitStart
+		content giv content is content.content dose substring with '3'
+		content giv content is plz ifSkipped with content.content
+
+		very ident is plz parseIdentifier with content
+
+		content giv content is plz ifSkipped with content.content
+
+		very muchStart is content.content dose startsWith with 'much'
+		notrly muchStart
+			very msg is ctxInfo + 'Expected "much", found ' + content.content[0]
+			very err is new Error with msg
+			throw err
+		wow
+
+		content giv content is content.content dose substring with 4
+		content giv content is plz ifSkipped with content.content
+
+		very newValueIdent is plz parseIdentifier with content
+
+		content giv content is plz ifSkipped with content.content
+		very statements is plz parseBlockBody with content
+
+		result is obj
+			'type': 'setter',
+			'identifier': ident,
+			'newValueIdentifier': newValueIdent,
 			'statements': statements
 		wow
 	but

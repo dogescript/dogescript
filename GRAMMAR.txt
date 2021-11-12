@@ -49,7 +49,7 @@ MuchStatement = "much" 1*InlineWS InlineStatement 1*InlineWS *("," *WS InlineSta
 
 ClassConstructorDeclaration = "maker" ArgumentDeclarations 1*WS BlockBody
 GitElement = "git" 1*WS Identifier 1*WS BlockBody [1*InlineWS Expression]
-SitElement = "sit" 1*WS Identifier 1*WS BlockBody
+SitElement = "sit" 1*WS Identifier 1*WS "much" 1*WS Identifier 1*WS BlockBody
 StayElement = ["asink" 1*InlineWS] "stay" [1*InlineWS "lazy"] 1*WS Identifier [1*InlineWS "much" ArgumentDeclarations] 1*WS BlockBody [1*InlineWS Expression]
 
 ClassElement = ClassConstructorDeclaration / SuchStatement / GitElement / SitElement / StayElement
