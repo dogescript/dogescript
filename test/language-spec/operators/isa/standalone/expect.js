@@ -1,1 +1,1 @@
-foo instanceof Bar
+foo instanceof Bar;
