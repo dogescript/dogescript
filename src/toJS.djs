@@ -283,7 +283,40 @@ such toJS much ast wrapFlag
 		result += ') {';
 		very body is plz statementsToJS with ast.statements
 		body is '\n' + body
+		rly ast giv returns
+			body more '\nreturn '
+			very returnValue is plz toJS with ast.returns
+			body more returnValue
+			body more ';'
+		wow
 		body is plz indent with body
+
+		result += body + '\n}'
+	but rly ast.type is 'staticMethodDeclaration'
+		result is 'static '
+
+		rly ast giv generator
+			result more '*'
+		wow
+
+		result more ast.identifier + '('
+		ast.args dose forEach with much arg idx
+			rly idx bigger 0
+				result += ', '
+			wow
+			result += arg
+		wow&
+		result += ') {';
+		very body is plz statementsToJS with ast.statements
+		body is '\n' + body
+		rly ast giv returns
+			body more '\nreturn '
+			very returnValue is plz toJS with ast.returns
+			body more returnValue
+			body more ';'
+		wow
+		body is plz indent with body
+
 		result += body + '\n}'
 	but rly ast.type is 'classExpression'
 		result is 'class'

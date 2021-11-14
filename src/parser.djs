@@ -378,10 +378,30 @@ such parseClassElement much content
 	very makerStart is content.content dose startsWith with 'maker'
 	very gitStart is content.content dose startsWith with 'git'
 	very sitStart is content.content dose startsWith with 'sit'
+	very stayStart is content.content dose startsWith with 'stay'
 
-	rly suchStart or asinkStart
+	rly suchStart
 		result is plz parseFunctionDeclaration with content
 		result.type is 'methodDeclaration'
+	but rly asinkStart
+		very nextContent is content.content dose substring with 5
+		nextContent is plz ifSkippedInline with nextContent
+		
+		stayStart is nextContent dose startsWith with 'stay'
+		suchStart is nextContent dose startsWith with 'such'
+
+		rly stayStart
+			result is plz parseFunctionDeclaration with content true
+		but rly suchStart
+			result is plz parseFunctionDeclaration with content
+			result.type is 'methodDeclaration'
+		but
+			very msg is ctxInfo + 'Expected function declaration, found "asink ' + nextContent[0] + '"'
+			very err is new Error with msg
+			throw err
+		wow
+	but rly stayStart
+		result is plz parseFunctionDeclaration with content true
 	but rly makerStart
 		content giv content is content.content dose substring with 5
 		content giv content is plz ifSkippedInline with content
@@ -1304,7 +1324,7 @@ such parseElses much content
 	wow
 wow elses
 
-such parseFunctionDeclaration much content
+such parseFunctionDeclaration much content isClassStatic
 	very isAsync is false
 	very isGenerator is false
 
@@ -1318,8 +1338,21 @@ such parseFunctionDeclaration much content
 
 	very suchStart is content.content dose startsWith with 'such'
 	very muchStart is content.content dose startsWith with 'much'
+	very stayStart is content.content dose startsWith with 'stay'
 
-	rly suchStart
+	rly suchStart or stayStart
+		rly suchStart and isClassStatic
+			very msg is ctxInfo + 'Expected "stay", found "such"'
+			very err is new Error with msg
+			throw err
+		wow
+
+		rly stayStart and !isClassStatic
+			very msg is ctxInfo + 'Expected "such", found "stay"'
+			very err is new Error with msg
+			throw err
+		wow
+
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
 
@@ -1334,6 +1367,11 @@ such parseFunctionDeclaration much content
 
 		very ident is plz parseIdentifier with content
 	but rly muchStart
+		rly isClassStatic
+			very msg is ctxInfo + 'Expected "stay", found "much"'
+			very err is new Error with msg
+			throw err
+		wow
 	but
 		very msg is ctxInfo + 'Expected function declaration, found ' + content.content[0]
 		very err is new Error with msg
@@ -1386,6 +1424,10 @@ such parseFunctionDeclaration much content
 	rly exprResult.ok
 		result giv returns is exprResult.expression
 		content giv content is nextContent giv content
+	wow
+
+	rly isClassStatic
+		result giv type is 'staticMethodDeclaration'
 	wow
 
 	notrly result.identifier
