@@ -1,1 +1,1 @@
-document.findElementById('#foo')
+document.findElementById("#foo");

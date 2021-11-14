@@ -797,6 +797,10 @@ such tryParseExpression1 much content
 				content.content is plz ifSkipped with content
 				very child is plz parseIdentifier with content
 
+				rly result.type is 'ident' and result.value is 'console' and child is 'loge'
+					child is 'log'
+				wow
+
 				result is obj
 					'type': 'property',
 					'object': result,

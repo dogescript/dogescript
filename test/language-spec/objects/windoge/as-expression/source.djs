@@ -1,1 +1,1 @@
-windoge.location;
+windoge giv location;

@@ -1,1 +1,1 @@
-dogeument.findElementById('#foo')
+dogeument dose findElementById with '#foo'

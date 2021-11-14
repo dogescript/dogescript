@@ -1,1 +1,1 @@
-plz console.loge
+plz (console giv loge)

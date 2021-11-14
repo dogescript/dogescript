@@ -1,1 +1,1 @@
-var is_dogeument = false;
+let is_dogeument = false;

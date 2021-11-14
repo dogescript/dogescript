@@ -1,1 +1,1 @@
-plz dogeument.write
+plz (dogeument giv write)
