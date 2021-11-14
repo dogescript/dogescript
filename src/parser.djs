@@ -506,6 +506,7 @@ wow elements
 such tryParseExpression0 much content
 	very result
 
+	very parenStart is content.content dose startsWith with '('
 	very plzStart is content.content dose startsWith with 'plz'
 	very newStart is content.content dose startsWith with 'new'
 	very suchStart is content.content dose startsWith with 'such'
@@ -516,7 +517,27 @@ such tryParseExpression0 much content
 	very classyStart is content.content dose startsWith with 'classy'
 	very disStart is content.content dose startsWith with 'dis'
 	very objStart is content.content dose startsWith with 'obj'
-	rly plzStart
+	rly parenStart
+		very nextContent is plz cloneContent with content
+		nextContent giv content is nextContent.content dose substring with 1
+		nextContent giv content is plz ifSkipped with nextContent
+
+		result is plz tryParseExpression with nextContent
+		rly result.ok
+			content giv content is nextContent giv content
+			content giv content is plz ifSkipped with content
+
+			very endParenStart is content.content dose startsWith with ')'
+			rly endParenStart
+				content giv content is content.content dose substring with 1
+			but
+				very ctxInfo is plz genContextInfo with content
+				very msg is ctxInfo + 'Expected ")", found ' + content.content[0]
+				very err is new Error with msg
+				throw err
+			wow
+		wow
+	but rly plzStart
 		content.content is content.content dose substring with 3
 		content.content is plz ifSkipped with content
 
