@@ -544,6 +544,7 @@ such tryParseExpression0 much content
 	very classyStart is plz startsWithWord with content.content 'classy'
 	very disStart is plz startsWithWord with content.content 'dis'
 	very breedStart is plz startsWithWord with content.content 'breed'
+	very maybeStart is plz startsWithWord with content.content 'maybe'
 	very objStart is plz startsWithWord with content.content 'obj'
 	rly parenStart
 		very nextContent is plz cloneContent with content
@@ -683,6 +684,11 @@ such tryParseExpression0 much content
 			'type': 'ident',
 			'value': 'this'
 		wow
+	but rly maybeStart
+		content.content is content.content dose substring with 5
+		result is obj
+			'type': 'maybe'
+		wow
 	but rly breedStart
 		content.content is content.content dose substring with 5
 		result is obj
@@ -776,15 +782,9 @@ such tryParseExpression0 much content
 			result is identRes
 		but
 			very ident is identRes.found
-			rly ident is 'maybe'
-				result is obj
-					'type': 'maybe'
-				wow
-			but
-				result is obj
-					'type': 'ident',
-					'value': ident
-				wow
+			result is obj
+				'type': 'ident',
+				'value': ident
 			wow
 		wow
 	wow

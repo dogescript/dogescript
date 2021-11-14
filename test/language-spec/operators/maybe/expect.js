@@ -1,3 +1,3 @@
-while ((!!+Math.round(Math.random()))) {
-    // 1
+while (!Math.round(Math.random())) {
+    
 }
