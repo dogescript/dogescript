@@ -516,6 +516,7 @@ such tryParseExpression0 much content
 	very octalStart is content.content dose startsWith with '0'
 	very classyStart is content.content dose startsWith with 'classy'
 	very disStart is content.content dose startsWith with 'dis'
+	very breedStart is content.content dose startsWith with 'breed'
 	very objStart is content.content dose startsWith with 'obj'
 	rly parenStart
 		very nextContent is plz cloneContent with content
@@ -654,6 +655,17 @@ such tryParseExpression0 much content
 		result is obj
 			'type': 'ident',
 			'value': 'this'
+		wow
+	but rly breedStart
+		content.content is content.content dose substring with 5
+		result is obj
+			'type': 'ident',
+			'value': 'Symbol'
+		wow
+		result is obj
+			'type': 'property',
+			'object': result,
+			'property': 'species'
 		wow
 	but rly objStart
 		very startCtxInfo is plz genContextInfo with content

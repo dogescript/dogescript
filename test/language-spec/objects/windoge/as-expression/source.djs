@@ -1,1 +1,1 @@
-windoge giv location;
+windoge giv location
