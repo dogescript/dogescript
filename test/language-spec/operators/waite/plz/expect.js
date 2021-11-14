@@ -1,1 +1,1 @@
-await foo();
+(await foo());

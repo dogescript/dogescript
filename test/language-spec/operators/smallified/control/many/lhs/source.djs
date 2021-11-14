@@ -1,3 +1,3 @@
-many smallified foo bigger 0
+many foo smallified bigger 0
   shh 1
 wow

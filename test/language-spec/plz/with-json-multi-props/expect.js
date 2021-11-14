@@ -1,4 +1,4 @@
 foo({
-    'Content-Type': 'text/plain',
-    'Accept': 'en-US'
+    "Content-Type": "text/plain",
+    "Accept": "en-US",
 });

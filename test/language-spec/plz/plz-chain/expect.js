@@ -1,2 +1,1 @@
-foo(bar)
-    .baz(buzz);
+foo(bar).baz(buzz);

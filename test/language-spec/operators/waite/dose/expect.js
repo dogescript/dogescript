@@ -1,1 +1,1 @@
-await foo.bar();
+(await foo.bar());

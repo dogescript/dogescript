@@ -1,3 +1,3 @@
-while (0 > --foo) {
-    // 1
+while (0 > (--foo)) {
+    
 }

@@ -1,3 +1,3 @@
-for (foo = 1; foo < bar; foo++) {
-    // 1
+for (foo = 1; foo < bar; (foo++)) {
+    
 }

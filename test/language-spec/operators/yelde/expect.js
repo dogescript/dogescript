@@ -1,1 +1,1 @@
-yield foo
+yield foo;

@@ -1,1 +1,1 @@
-var foo = await bar;
+let foo = (await bar);
