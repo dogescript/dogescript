@@ -1,2 +1,2 @@
 plz foo&
-.plz bar
+dose bar

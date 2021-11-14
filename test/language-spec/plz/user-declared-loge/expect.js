@@ -1,1 +1,1 @@
-loge('msg');
+loge("msg");

@@ -1,1 +1,1 @@
-plz foo with {'Content-Type': 'text/plain'} {'Accept': 'en-US'} {'X-Other': 'oh-bother'}
+plz foo with obj 'Content-Type': 'text/plain' wow obj 'Accept': 'en-US' wow obj 'X-Other': 'oh-bother' wow
