@@ -1,1 +1,1 @@
-foo = 'hello';
+foo = "hello";
