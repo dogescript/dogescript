@@ -266,6 +266,16 @@ such toJS much ast wrapFlag
 		very value is plz toJS with ast.value
 		result more value
 		result more ')'
+	but rly ast.type is 'postfixIncrement'
+		result is '('
+		very value is plz toJS with ast.value
+		result more value
+		result more '++)'
+	but rly ast.type is 'postfixDecrement'
+		result is '('
+		very value is plz toJS with ast.value
+		result more value
+		result more '--)'
 	but rly ast.type is 'methodDeclaration'
 		result is ''
 

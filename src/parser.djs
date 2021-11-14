@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
@@ -809,6 +809,8 @@ such tryParseExpression1 much content
 			very doseStart is plz startsWithWord with nextContent 'dose'
 			very givStart is plz startsWithWord with nextContent 'giv'
 			very levlStart is plz startsWithWord with nextContent 'levl'
+			very bigifiedStart is plz startsWithWord with nextContent 'bigified'
+			very smallifiedStart is plz startsWithWord with nextContent 'smallified'
 
 			rly doseStart
 				content.content is nextContent dose substring with 4
@@ -855,6 +857,20 @@ such tryParseExpression1 much content
 					'type': 'index',
 					'object': result,
 					'index': index
+				wow
+			but rly bigifiedStart
+				content.content is nextContent dose substring with 8
+
+				result is obj
+					'type': 'postfixIncrement',
+					'value': result
+				wow
+			but rly smallifiedStart
+				content.content is nextContent dose substring with 10
+
+				result is obj
+					'type': 'postfixDecrement',
+					'value': result
 				wow
 			but
 				bork
@@ -1532,6 +1548,7 @@ such tryParseInlineStatement much content
 		rly lhsRes.ok
 			very OPS is obj
 				'is': 'assignment',
+				'as': 'assignment',
 				'more': '+=',
 				'less': '-=',
 				'lots': '*=',
