@@ -1,1 +1,1 @@
-var windogeStart = 5;
+let windogeStart = 5;

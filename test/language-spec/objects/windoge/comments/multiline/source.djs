@@ -1,3 +1,0 @@
-quiet
-windoge
-loud
