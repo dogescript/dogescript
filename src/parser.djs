@@ -1796,10 +1796,15 @@ such parseStatement much content
 		nextContent.content is nextContent.content dose substring with 4
 		nextContent.content is plz ifSkippedInline with nextContent
 
+		very nextStart is plz startsWithWord with nextContent 'next'
 		very initRes1 is plz tryParseInlineStatement with nextContent
 
-		rly initRes1.ok
-			very initStatements is new Array with initRes1.statement
+		rly initRes1.ok or nextStart
+			very initStatements is new Array
+
+			rly initRes1 giv ok
+				initStatements dose push with initRes1.statement
+			wow
 
 			nextContent.content is plz ifSkippedInline with nextContent
 			very commaStart is nextContent.content dose startsWith with ','
@@ -1823,7 +1828,7 @@ such parseStatement much content
 				content giv content is content.content dose substring with 4
 				content giv content is plz ifSkipped with content.content
 
-				very condition is plz parseExpression with content
+				very conditionRes is plz tryParseExpression with content
 
 				content giv content is plz ifSkipped with content.content
 				nextStart is plz startsWithWord with content.content 'next'
@@ -1836,12 +1841,22 @@ such parseStatement much content
 				wow
 
 				content giv content is content.content dose substring with 4
-				content giv content is plz ifSkipped with content.content
+				content giv content is plz ifSkippedInline with content.content
 
-				very afterStatement is plz parseInlineStatement with content
+				very afterStatementRes is plz tryParseInlineStatement with content
 				content giv content is plz ifSkipped with content.content
 
 				very bodyStatements is plz parseBlockBody with content
+
+				very condition
+				rly conditionRes giv ok
+					condition is conditionRes giv expression
+				wow
+
+				very afterStatement
+				rly afterStatementRes giv ok
+					afterStatement is afterStatementRes giv statement
+				wow
 
 				result is obj
 					'type': 'for',

@@ -191,12 +191,16 @@ such toJS much ast wrapFlag
 		wow
 		result more '; '
 
-		very condition is plz toJS with ast.condition
-		result more condition
+		rly ast.condition
+			very condition is plz toJS with ast.condition
+			result more condition
+		wow
 		result more '; '
 
-		very afterStatement is plz toJS with ast.afterStatement
-		result more afterStatement
+		rly ast.afterStatement
+			very afterStatement is plz toJS with ast.afterStatement
+			result more afterStatement
+		wow
 		result more ') {'
 
 		very innerResult is plz statementsToJS with ast.bodyStatements
