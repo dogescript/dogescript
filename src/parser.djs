@@ -53,9 +53,30 @@ such isInlineWhitespace much chr
 	wow
 wow result
 
+such startsWithWord much content word
+	content is plz unwrapContent with content
+
+	very starts is content dose startsWith with word
+
+	rly starts
+		very len is word giv length
+		content is content dose substring with len
+
+		rly content giv length bigger 0
+			very nextChar is content[0]
+			very isIC is plz isIdentChar with nextChar
+			notrly isIC
+				amaze true
+			wow
+		but
+			amaze true
+		wow
+	wow
+wow false
+
 such takeArgumentEnd much content
 	very startAnd is content.content dose startsWith with '&'
-	very startThx is content.content dose startsWith with 'thx'
+	very startThx is plz startsWithWord with content.content 'thx'
 	very startNewline is content.content dose startsWith with '\n'
 
 	very result is true
@@ -74,8 +95,8 @@ wow result
 such ifSkippedComment much content
 	content is plz unwrapContent with content
 
-	very shhStart is content dose startsWith with 'shh'
-	very quietStart is content dose startsWith with 'quiet'
+	very shhStart is plz startsWithWord with content 'shh'
+	very quietStart is plz startsWithWord with content 'quiet'
 	rly shhStart
 		very done is false
 		many content.length > 0 and !done
@@ -88,7 +109,7 @@ such ifSkippedComment much content
 	but rly quietStart
 		very done is false
 		many content.length > 0 and !done
-			very foundEnd is content dose startsWith with 'loud'
+			very foundEnd is plz startsWithWord with content 'loud'
 			rly foundEnd
 				content is content dose substring with 4
 				done is true
@@ -139,6 +160,14 @@ such ifSkipped much content
 	wow
 wow content
 
+such isIdentChar much chr
+	very isAlphabetic is (chr >= 'A' && chr <= 'Z') or (chr >= 'a' && chr <= 'z')
+	very isNumeric is chr >= '0' and chr <= '9'
+	very isOtherAllowed is chr == '_' or chr == '$'
+
+	very result is isAlphabetic or isNumeric or isOtherAllowed
+wow result
+
 such tryParseIdentifier much content
 	very tmpContent is content.content
 
@@ -147,11 +176,9 @@ such tryParseIdentifier much content
 	many !done
 		very chr is tmpContent[0]
 
-		very isAlphabetic is (chr >= 'A' && chr <= 'Z') or (chr >= 'a' && chr <= 'z')
-		very isNumeric is chr >= '0' and chr <= '9'
-		very isOtherAllowed is chr == '_' or chr == '$'
+		very isAllowed is plz isIdentChar with chr
 
-		rly isAlphabetic or isNumeric or isOtherAllowed
+		rly isAllowed
 			result += chr
 			tmpContent is tmpContent dose substring with 1
 		but
@@ -308,7 +335,7 @@ such parsePossibleArgumentValues much content
 
 	very nextContent is plz ifSkippedInline with content
 
-	very withStart is nextContent dose startsWith with 'with'
+	very withStart is plz startsWithWord with nextContent 'with'
 	rly withStart
 		content.content is nextContent dose substring with 4
 		content.content is plz ifSkipped with content
@@ -351,8 +378,8 @@ such parseBlockBody much content endOnBut
 			throw err
 		wow
 
-		very wowStart is content.content dose startsWith with 'wow'
-		very butStart is content.content dose startsWith with 'but'
+		very wowStart is plz startsWithWord with content.content 'wow'
+		very butStart is plz startsWithWord with content.content 'but'
 		rly wowStart
 			content.content is content.content dose substring with 3
 			done is true
@@ -373,12 +400,12 @@ such parseClassElement much content
 
 	very result
 
-	very suchStart is content.content dose startsWith with 'such'
-	very asinkStart is content.content dose startsWith with 'asink'
-	very makerStart is content.content dose startsWith with 'maker'
-	very gitStart is content.content dose startsWith with 'git'
-	very sitStart is content.content dose startsWith with 'sit'
-	very stayStart is content.content dose startsWith with 'stay'
+	very suchStart is plz startsWithWord with content.content 'such'
+	very asinkStart is plz startsWithWord with content.content 'asink'
+	very makerStart is plz startsWithWord with content.content 'maker'
+	very gitStart is plz startsWithWord with content.content 'git'
+	very sitStart is plz startsWithWord with content.content 'sit'
+	very stayStart is plz startsWithWord with content.content 'stay'
 
 	rly suchStart
 		result is plz parseFunctionDeclaration with content
@@ -387,8 +414,8 @@ such parseClassElement much content
 		very nextContent is content.content dose substring with 5
 		nextContent is plz ifSkippedInline with nextContent
 		
-		stayStart is nextContent dose startsWith with 'stay'
-		suchStart is nextContent dose startsWith with 'such'
+		stayStart is plz startsWithWord with nextContent 'stay'
+		suchStart is plz startsWithWord with nextContent 'such'
 
 		rly stayStart
 			result is plz parseFunctionDeclaration with content true
@@ -457,7 +484,7 @@ such parseClassElement much content
 
 		content giv content is plz ifSkipped with content.content
 
-		very muchStart is content.content dose startsWith with 'much'
+		very muchStart is plz startsWithWord with content.content 'much'
 		notrly muchStart
 			very msg is ctxInfo + 'Expected "much", found ' + content.content[0]
 			very err is new Error with msg
@@ -490,7 +517,7 @@ such parseClassBody much content
 	
 	very done is false
 	many !done
-		very wowStart is content.content dose startsWith with 'wow'
+		very wowStart is plz startsWithWord with content.content 'wow'
 		rly wowStart
 			content.content is content.content dose substring with 3
 			done is true
@@ -507,17 +534,17 @@ such tryParseExpression0 much content
 	very result
 
 	very parenStart is content.content dose startsWith with '('
-	very plzStart is content.content dose startsWith with 'plz'
-	very newStart is content.content dose startsWith with 'new'
-	very suchStart is content.content dose startsWith with 'such'
-	very asinkStart is content.content dose startsWith with 'asink'
-	very muchStart is content.content dose startsWith with 'much'
+	very plzStart is plz startsWithWord with content.content 'plz'
+	very newStart is plz startsWithWord with content.content 'new'
+	very suchStart is plz startsWithWord with content.content 'such'
+	very asinkStart is plz startsWithWord with content.content 'asink'
+	very muchStart is plz startsWithWord with content.content 'much'
 	very stringStart is content.content dose startsWith with '\''
 	very octalStart is content.content dose startsWith with '0'
-	very classyStart is content.content dose startsWith with 'classy'
-	very disStart is content.content dose startsWith with 'dis'
-	very breedStart is content.content dose startsWith with 'breed'
-	very objStart is content.content dose startsWith with 'obj'
+	very classyStart is plz startsWithWord with content.content 'classy'
+	very disStart is plz startsWithWord with content.content 'dis'
+	very breedStart is plz startsWithWord with content.content 'breed'
+	very objStart is plz startsWithWord with content.content 'obj'
 	rly parenStart
 		very nextContent is plz cloneContent with content
 		nextContent giv content is nextContent.content dose substring with 1
@@ -630,7 +657,7 @@ such tryParseExpression0 much content
 			content.content is plz ifSkippedInline with content.content
 		wow
 
-		very growsStart is content.content dose startsWith with 'grows'
+		very growsStart is plz startsWithWord with content.content 'grows'
 		very superclass
 
 		rly growsStart
@@ -683,7 +710,7 @@ such tryParseExpression0 much content
 				throw err
 			wow
 
-			very wowStart is content.content dose startsWith with 'wow'
+			very wowStart is plz startsWithWord with content.content 'wow'
 			rly wowStart
 				content.content is content.content dose substring with 3
 				done is true
@@ -779,9 +806,9 @@ such tryParseExpression1 much content
 		many true
 			very nextContent is plz ifSkipped with content
 
-			very doseStart is nextContent dose startsWith with 'dose'
-			very givStart is nextContent dose startsWith with 'giv'
-			very levlStart is nextContent dose startsWith with 'levl'
+			very doseStart is plz startsWithWord with nextContent 'dose'
+			very givStart is plz startsWithWord with nextContent 'giv'
+			very levlStart is plz startsWithWord with nextContent 'levl'
 
 			rly doseStart
 				content.content is nextContent dose substring with 4
@@ -846,10 +873,10 @@ wow result
 such tryParseExpression2 much content
 	very result
 
-	very kindofStart is content.content dose startsWith with 'kindof'
-	very waiteStart is content.content dose startsWith with 'waite'
-	very bigifyStart is content.content dose startsWith with 'bigify'
-	very smallifyStart is content.content dose startsWith with 'smallify'
+	very kindofStart is plz startsWithWord with content.content 'kindof'
+	very waiteStart is plz startsWithWord with content.content 'waite'
+	very bigifyStart is plz startsWithWord with content.content 'bigify'
+	very smallifyStart is plz startsWithWord with content.content 'smallify'
 
 	rly kindofStart
 		content.content is content.content dose substring with 6
@@ -1020,7 +1047,7 @@ such tryParseExpression5 much content
 			very key is keys[i]
 			very id is OPS[key]
 
-			very opStart is nextContent dose startsWith with key
+			very opStart is plz startsWithWord with nextContent key
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
@@ -1066,7 +1093,7 @@ such tryParseExpression6 much content
 			very key is keys[i]
 			very id is OPS[key]
 
-			very opStart is nextContent dose startsWith with key
+			very opStart is plz startsWithWord with nextContent key
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
@@ -1109,7 +1136,7 @@ such tryParseExpression7 much content
 			very key is keys[i]
 			very id is OPS[key]
 
-			very opStart is nextContent dose startsWith with key
+			very opStart is plz startsWithWord with nextContent key
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
@@ -1139,7 +1166,7 @@ such tryParseExpression8 much content
 		'or': 'logicalOr'
 	wow
 
-	very yeldeStart is content.content dose startsWith with 'yelde'
+	very yeldeStart is plz startsWithWord with content.content 'yelde'
 	rly yeldeStart
 		content giv content is content.content dose substring with 5
 		content giv content is plz ifSkipped with content
@@ -1158,7 +1185,7 @@ such tryParseExpression8 much content
 			very key is keys[i]
 			very id is OPS[key]
 
-			very opStart is nextContent dose startsWith with key
+			very opStart is plz startsWithWord with nextContent key
 			rly opStart
 				content.content is nextContent dose substring with key.length
 				content.content is plz ifSkipped with content
@@ -1314,7 +1341,7 @@ such parseElses much content
 	very done is false
 
 	many !done
-		very butStart is content.content dose startsWith with 'but'
+		very butStart is plz startsWithWord with content.content 'but'
 		rly butStart
 			content.content is content.content dose substring with 3
 			content.content is plz ifSkippedInline with content
@@ -1322,8 +1349,8 @@ such parseElses much content
 			very type is 'else'
 			very condition
 
-			very butRlyStart is content.content dose startsWith with 'rly'
-			very butNotrlyStart is content.content dose startsWith with 'notrly'
+			very butRlyStart is plz startsWithWord with content.content 'rly'
+			very butNotrlyStart is plz startsWithWord with content.content 'notrly'
 			rly butRlyStart
 				content.content is content.content dose substring with 3
 				type is 'elseif'
@@ -1365,7 +1392,7 @@ such parseFunctionDeclaration much content isClassStatic
 	very isAsync is false
 	very isGenerator is false
 
-	very asinkStart is content.content dose startsWith with 'asink'
+	very asinkStart is plz startsWithWord with content.content 'asink'
 	rly asinkStart
 		isAsync is true
 
@@ -1373,9 +1400,9 @@ such parseFunctionDeclaration much content isClassStatic
 		content.content is plz ifSkipped with content
 	wow
 
-	very suchStart is content.content dose startsWith with 'such'
-	very muchStart is content.content dose startsWith with 'much'
-	very stayStart is content.content dose startsWith with 'stay'
+	very suchStart is plz startsWithWord with content.content 'such'
+	very muchStart is plz startsWithWord with content.content 'much'
+	very stayStart is plz startsWithWord with content.content 'stay'
 
 	rly suchStart or stayStart
 		rly suchStart and isClassStatic
@@ -1393,7 +1420,7 @@ such parseFunctionDeclaration much content isClassStatic
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
 
-		very lazyStart is content.content dose startsWith with 'lazy'
+		very lazyStart is plz startsWithWord with content.content 'lazy'
 
 		rly lazyStart
 			isGenerator is true
@@ -1420,7 +1447,7 @@ such parseFunctionDeclaration much content isClassStatic
 	very args is []
 
 	very nextContent is plz ifSkippedInline with content
-	very muchStart is nextContent dose startsWith with 'much'
+	very muchStart is plz startsWithWord with nextContent 'much'
 	rly muchStart
 		content.content is nextContent dose substring with 4
 
@@ -1475,7 +1502,7 @@ wow result
 such tryParseInlineStatement much content
 	very result
 
-	very veryStart is content.content dose startsWith with 'very'
+	very veryStart is plz startsWithWord with content.content 'very'
 	rly veryStart
 		content.content is content.content dose substring with 4
 		content.content is plz ifSkipped with content
@@ -1488,8 +1515,8 @@ such tryParseInlineStatement much content
 		wow
 
 		very nextContent is plz ifSkippedInline with content
-		very isStart is nextContent dose startsWith with 'is'
-		very asStart is nextContent dose startsWith with 'as'
+		very isStart is plz startsWithWord with nextContent 'is'
+		very asStart is plz startsWithWord with nextContent 'as'
 		rly isStart or asStart
 			content.content is nextContent dose substring with 2
 			content.content is plz ifSkipped with content
@@ -1518,7 +1545,7 @@ such tryParseInlineStatement much content
 				very key is keys[i]
 				very id is OPS[key]
 
-				very opStart is nextContent.content dose startsWith with key
+				very opStart is plz startsWithWord with nextContent.content key
 				rly opStart
 					content.content is nextContent.content dose substring with key.length
 					content.content is plz ifSkipped with content
@@ -1572,20 +1599,20 @@ such parseStatement much content
 
 	very result
 
-	very trainedStart is content.content dose startsWith with 'trained'
-	very soStart is content.content dose startsWith with 'so'
-	very suchStart is content.content dose startsWith with 'such'
-	very asinkStart is content.content dose startsWith with 'asink'
-	very rlyStart is content.content dose startsWith with 'rly'
-	very notrlyStart is content.content dose startsWith with 'notrly'
-	very butStart is content.content dose startsWith with 'but'
-	very pawseStart is content.content dose startsWith with 'pawse'
-	very manyStart is content.content dose startsWith with 'many'
-	very amazeStart is content.content dose startsWith with 'amaze'
-	very borkStart is content.content dose startsWith with 'bork'
-	very classyStart is content.content dose startsWith with 'classy'
-	very woofStart is content.content dose startsWith with 'woof'
-	very muchStart is content.content dose startsWith with 'much'
+	very trainedStart is plz startsWithWord with content.content 'trained'
+	very soStart is plz startsWithWord with content.content 'so'
+	very suchStart is plz startsWithWord with content.content 'such'
+	very asinkStart is plz startsWithWord with content.content 'asink'
+	very rlyStart is plz startsWithWord with content.content 'rly'
+	very notrlyStart is plz startsWithWord with content.content 'notrly'
+	very butStart is plz startsWithWord with content.content 'but'
+	very pawseStart is plz startsWithWord with content.content 'pawse'
+	very manyStart is plz startsWithWord with content.content 'many'
+	very amazeStart is plz startsWithWord with content.content 'amaze'
+	very borkStart is plz startsWithWord with content.content 'bork'
+	very classyStart is plz startsWithWord with content.content 'classy'
+	very woofStart is plz startsWithWord with content.content 'woof'
+	very muchStart is plz startsWithWord with content.content 'much'
 
 	rly trainedStart
 		content.content is content.content dose substring with 7
@@ -1618,7 +1645,7 @@ such parseStatement much content
 
 		very nextContent is plz ifSkippedInline with content
 
-		very asStart is nextContent dose startsWith with 'as'
+		very asStart is plz startsWithWord with nextContent 'as'
 		rly asStart
 			content.content is nextContent dose substring with 2
 			content.content is plz ifSkipped with content
@@ -1694,7 +1721,7 @@ such parseStatement much content
 
 		content.content is plz ifSkippedInline with content.content
 
-		very growsStart is content.content dose startsWith with 'grows'
+		very growsStart is plz startsWithWord with content.content 'grows'
 		very superclass
 
 		rly growsStart
@@ -1727,7 +1754,7 @@ such parseStatement much content
 
 		rly identResult giv ok
 			subContent.content is plz ifSkippedInline with subContent
-			very beStart is subContent.content dose startsWith with 'be'
+			very beStart is plz startsWithWord with subContent.content 'be'
 			rly beStart
 				subContent.content is subContent.content dose substring with 2
 				subContent.content is plz ifSkipped with subContent
@@ -1771,7 +1798,7 @@ such parseStatement much content
 				commaStart is nextContent.content dose startsWith with ','
 			wow
 
-			very nextStart is nextContent.content dose startsWith with 'next'
+			very nextStart is plz startsWithWord with nextContent.content 'next'
 			rly nextStart
 				shh commit to consumption
 				content giv content is nextContent giv content
@@ -1782,7 +1809,7 @@ such parseStatement much content
 				very condition is plz parseExpression with content
 
 				content giv content is plz ifSkipped with content.content
-				nextStart is content.content dose startsWith with 'next'
+				nextStart is plz startsWithWord with content.content 'next'
 
 				notrly nextStart
 					very ctxInfo is plz genContextInfo with content
