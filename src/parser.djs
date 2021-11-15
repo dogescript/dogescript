@@ -543,6 +543,7 @@ such tryParseExpression0 much content
 	very octalStart is content.content dose startsWith with '0'
 	very classyStart is plz startsWithWord with content.content 'classy'
 	very disStart is plz startsWithWord with content.content 'dis'
+	very sooperStart is plz startsWithWord with content.content 'sooper'
 	very breedStart is plz startsWithWord with content.content 'breed'
 	very maybeStart is plz startsWithWord with content.content 'maybe'
 	very objStart is plz startsWithWord with content.content 'obj'
@@ -684,6 +685,12 @@ such tryParseExpression0 much content
 		result is obj
 			'type': 'ident',
 			'value': 'this'
+		wow
+	but rly sooperStart
+		content.content is content.content dose substring with 6
+		result is obj
+			'type': 'ident',
+			'value': 'super'
 		wow
 	but rly maybeStart
 		content.content is content.content dose substring with 5
