@@ -3,9 +3,9 @@ WS = InlineWS / CR / LF
 
 Identifier = (ALPHA / "_" / "$") *(ALPHA / DIGIT / "_" / "$")
 
-ArgumentsEnd = (*InlineWS "&") / (1*InlineWS "thx")
+ArgumentsEnd = ["," *WS] (*InlineWS "&") / (1*InlineWS "thx")
 
-ArgumentValues = Expression *(1*InlineWS Expression) ArgumentsEnd
+ArgumentValues = Expression *((1*InlineWS / (*InlineWS "," *WS)) Expression) ArgumentsEnd
 ArgumentDeclarations = *(1*InlineWS Identifier)
 
 BlockBody = *(Statement 1*WS) "wow"

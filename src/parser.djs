@@ -345,6 +345,13 @@ such parsePossibleArgumentValues much content
 			very expr is plz parseExpression with content
 			args dose push with expr
 			nextContent is plz ifSkippedInline with content
+
+			very commaStart is nextContent dose startsWith with ','
+			rly commaStart
+				nextContent is nextContent dose substring with 1
+				nextContent is plz ifSkipped with nextContent
+			wow
+
 			nextContent is plz wrapContent with nextContent
 
 			very foundArgumentEnd is plz takeArgumentEnd with nextContent
