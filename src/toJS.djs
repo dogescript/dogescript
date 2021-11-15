@@ -10,6 +10,9 @@ very OTHER_BINARY_OPS is obj
 	'logicalOr': '||'
 wow
 
+very MODULE_NAME_SEGMENT_REGEX is new RegExp with '^..?/.*?([\\w-]+)(\\.\\w+)?$'
+very IDENT_INVALID_REGEX is new RegExp with '[^a-zA-Z0-9_$]' 'g'
+
 such statementsToJS much statements
 	very result is ''
 	statements dose forEach with much statement idx
@@ -227,7 +230,15 @@ such toJS much ast wrapFlag
 		rly ast.identifier
 			result += ast.identifier
 		but
-			result += ast.path
+			very ident is ast.path
+
+			very m is MODULE_NAME_SEGMENT_REGEX dose exec with ident
+			rly m
+				ident is m levl 1
+			wow
+			ident is ident dose replace with IDENT_INVALID_REGEX '_'
+
+			result more ident
 		wow
 		result += ' = require(\''
 		result += ast.path

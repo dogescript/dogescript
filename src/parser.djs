@@ -1706,7 +1706,33 @@ such parseStatement much content
 		content.content is content.content dose substring with 2
 		content.content is plz ifSkipped with content
 
-		very importPath is plz parseIdentifier with content
+		very importPath is ''
+
+		many true
+			rly content.content.length smaller 1
+				bork
+			wow
+
+			very chr is content.content[0]
+
+			very isVChar is chr biggerish '!' and chr smallerish '~'
+
+			rly isVChar
+				content giv content is content.content dose substring with 1
+				importPath more chr
+			but
+				very isWS is plz isWhitespace with chr
+
+				rly isWS
+					bork
+				but
+					very ctxInfo is plz genContextInfo with content
+					very msg is ctxInfo + 'Expected whitespace, found ' + chr
+					very err is new Error with msg
+					throw err
+				wow
+			wow
+		wow
 
 		result is obj
 			'type': 'import',
