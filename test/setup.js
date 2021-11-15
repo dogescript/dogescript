@@ -6,6 +6,7 @@ const { exec } = require('child_process');
 
 
 var specDir = path.join(__dirname, 'language-spec');
+var errorDir = path.join(__dirname, 'invalid-syntax');
 
 // TODO: Replace me.
 function getFolderName(filePath) {
@@ -39,6 +40,25 @@ function getSpecFiles(specPath) {
 
       skywalker.on('end', function() {
         resolve(testDirs);
+    });
+  });
+}
+
+// Returns a promise to a list of filenames
+function getErrorFiles() {
+  return new Promise(function (resolve,) {
+    var list = [];
+    var skywalker = walk.walk(errorDir);
+
+    skywalker.on('file', function (root, fileStats, next) {
+      if (fileStats.name.endsWith('.djs')) {
+        list.push(path.resolve(root, fileStats.name));
+      }
+      next();
+    });
+
+    skywalker.on('end', function () {
+      resolve(list);
     });
   });
 }
@@ -95,10 +115,16 @@ function formatSpecMetadata(testDirMapping) {
 
 // setup.js, global setup for jest
 module.exports =  function() {
-  return getSpecFiles(specDir)
-    .then(formatSpecMetadata)
-    .then(function (specMetadata) {
-      util.writeTmpFile('specMetadata.json', JSON.stringify(specMetadata));
-    })
+  return Promise.all([
+    getSpecFiles(specDir)
+      .then(formatSpecMetadata)
+      .then(function (specMetadata) {
+        util.writeTmpFile('specMetadata.json', JSON.stringify(specMetadata));
+      }),
+    getErrorFiles()
+      .then(function (errorMetadata) {
+        util.writeTmpFile('errorMetadata.json', JSON.stringify(errorMetadata));
+      }),
+  ])
     .then(buildProject);
 };
