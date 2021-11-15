@@ -845,6 +845,7 @@ such tryParseExpression1 much content
 
 			very doseStart is plz startsWithWord with nextContent 'dose'
 			very givStart is plz startsWithWord with nextContent 'giv'
+			very protoStart is plz startsWithWord with nextContent 'proto'
 			very levlStart is plz startsWithWord with nextContent 'levl'
 			very bigifiedStart is plz startsWithWord with nextContent 'bigified'
 			very smallifiedStart is plz startsWithWord with nextContent 'smallified'
@@ -879,6 +880,21 @@ such tryParseExpression1 much content
 					child is 'log'
 				wow
 
+				result is obj
+					'type': 'property',
+					'object': result,
+					'property': child
+				wow
+			but rly protoStart
+				content.content is nextContent dose substring with 5
+				content.content is plz ifSkipped with content
+				very child is plz parseIdentifier with content
+
+				result is obj
+					'type': 'property',
+					'object': result,
+					'property': 'prototype'
+				wow
 				result is obj
 					'type': 'property',
 					'object': result,

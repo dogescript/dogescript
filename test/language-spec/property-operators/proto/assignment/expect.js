@@ -1,1 +1,1 @@
-document.prototype.body = 'blah';
+document.prototype.body = "blah";
