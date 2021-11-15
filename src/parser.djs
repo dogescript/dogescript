@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
@@ -546,6 +546,7 @@ such tryParseExpression0 much content
 	very breedStart is plz startsWithWord with content.content 'breed'
 	very maybeStart is plz startsWithWord with content.content 'maybe'
 	very objStart is plz startsWithWord with content.content 'obj'
+	very boxStart is plz startsWithWord with content.content 'box'
 	rly parenStart
 		very nextContent is plz cloneContent with content
 		nextContent giv content is nextContent.content dose substring with 1
@@ -699,6 +700,42 @@ such tryParseExpression0 much content
 			'type': 'property',
 			'object': result,
 			'property': 'species'
+		wow
+	but rly boxStart
+		content giv content is content.content dose substring with 3
+		content giv content is plz ifSkipped with content.content
+
+		very elements is new Array
+
+		many true
+			rly content.content.length is 0
+				very msg is startCtxInfo + 'Unterminated object'
+				very err is new Error with msg
+				throw err
+			wow
+
+			very wowStart is plz startsWithWord with content.content 'wow'
+			rly wowStart
+				content giv content is content.content dose substring with 3
+				bork
+			wow
+
+			very expr is plz parseExpression with content
+			elements dose push with expr
+
+			content giv content is plz ifSkipped with content
+
+			very commaStart is content.content dose startsWith with ','
+			rly commaStart
+				shh optional comma, skip
+
+				content.content is content.content dose substring with 1
+				content.content is plz ifSkipped with content
+			wow
+		wow
+		result is obj
+			'type': 'array',
+			'elements': elements
 		wow
 	but rly objStart
 		very startCtxInfo is plz genContextInfo with content

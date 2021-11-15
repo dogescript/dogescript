@@ -406,6 +406,19 @@ such toJS much ast wrapFlag
 		result more ' = '
 		very value is plz toJS with ast.value
 		result more value
+	but rly ast.type is 'array'
+		result is '['
+		much very i as 0 next i smaller ast.elements.length next i more 1
+			rly i bigger 0
+				result more ', '
+			wow
+
+			very entry is ast.elements[i]
+			very value is plz toJS with entry
+
+			result more value
+		wow
+		result more ']'
 	but rly ast.type is 'object'
 		result is '{'
 		very innerContent is ''
