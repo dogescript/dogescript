@@ -1,1 +1,1 @@
-var is_sooper = false;
+let is_sooper = false;
