@@ -1,2 +1,2 @@
 such a
-wow {'foo':'bar'}
+wow obj 'foo':'bar' wow

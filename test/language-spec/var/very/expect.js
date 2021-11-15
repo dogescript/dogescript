@@ -1,1 +1,1 @@
-var foo = undefined;
+let foo;

@@ -1,5 +1,6 @@
 function a() {
+    
     return {
-        'foo': 'bar'
+        "foo": "bar",
     };
 }

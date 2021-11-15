@@ -1,3 +1,3 @@
-var funky = function(a) {
-    // 1
-}
+let funky = function(a) {
+    
+};

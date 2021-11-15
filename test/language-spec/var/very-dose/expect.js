@@ -1,1 +1,1 @@
-var foo = bar.rawr();
+let foo = bar.rawr();

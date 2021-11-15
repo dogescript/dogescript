@@ -1,1 +1,1 @@
-var foo = bar.sum(5, 6);
+let foo = bar.sum(5, 6);

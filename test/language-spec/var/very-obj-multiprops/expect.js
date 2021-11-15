@@ -1,4 +1,4 @@
-var multiObj = {
-    test: ['wow'],
-    doge: 'good'
-}
+let multiObj = {
+    "test": ["wow"],
+    "doge": "good",
+};

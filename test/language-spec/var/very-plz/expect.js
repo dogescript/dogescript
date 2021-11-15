@@ -1,1 +1,1 @@
-var foo = bar(5, 6);
+let foo = bar(5, 6);

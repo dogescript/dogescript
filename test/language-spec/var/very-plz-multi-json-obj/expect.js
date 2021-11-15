@@ -1,5 +1,5 @@
-var foo = bar({
-    'Content-Type': 'text/plain'
+let foo = bar({
+    "Content-Type": "text/plain",
 }, {
-    'Accept': 'en-US'
+    "Accept": "en-US",
 });

@@ -1,3 +1,3 @@
 very multiObj is obj
-  test: ['wow']
+  test: box 'wow' wow
 wow
