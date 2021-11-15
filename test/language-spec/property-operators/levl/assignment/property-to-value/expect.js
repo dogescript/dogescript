@@ -1,1 +1,1 @@
-array[0] = 'hello';
+array[0] = "hello";

@@ -1,1 +1,1 @@
-document.body
+document.body;

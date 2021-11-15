@@ -1,1 +1,1 @@
-document.body = 'blah';
+document.body = "blah";
