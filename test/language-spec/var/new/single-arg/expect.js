@@ -1,1 +1,1 @@
-var foo = new Bar(1);
+let foo = new Bar(1);

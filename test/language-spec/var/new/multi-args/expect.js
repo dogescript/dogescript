@@ -1,1 +1,1 @@
-var foo = new Array("wow", "doge");
+let foo = new Array("wow", "doge");

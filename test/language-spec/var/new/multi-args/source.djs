@@ -1,1 +1,1 @@
-very foo is new Array with "wow" "doge"
+very foo is new Array with 'wow' 'doge'

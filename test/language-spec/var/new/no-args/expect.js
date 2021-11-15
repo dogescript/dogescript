@@ -1,1 +1,1 @@
-var foo = new Array();
+let foo = new Array();

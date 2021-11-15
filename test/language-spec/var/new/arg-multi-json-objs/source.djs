@@ -1,1 +1,1 @@
-very foo is new Bar with {'Content-Type':'text/plain'} {'Accept':'en-US'}
+very foo is new Bar with obj 'Content-Type':'text/plain' wow obj 'Accept':'en-US' wow

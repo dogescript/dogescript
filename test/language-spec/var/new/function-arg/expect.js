@@ -1,3 +1,3 @@
-var x = new Caller(function(callback) {
-    // 1
-})
+let x = new Caller(function(callback) {
+    
+});

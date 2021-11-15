@@ -1,1 +1,1 @@
-very foo is new Bar with "wow" , "doge"
+very foo is new Bar with 'wow' , 'doge'
