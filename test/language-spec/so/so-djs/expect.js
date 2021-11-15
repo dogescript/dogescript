@@ -1,1 +1,1 @@
-var foo = require('./bar/foo.djs');
+const foo = require('./bar/foo.djs');
