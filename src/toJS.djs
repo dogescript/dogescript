@@ -1,503 +1,503 @@
 very SIMPLE_BINARY_OPS is new Array with '<' '>' '<=' '>=' 'instanceof' '===' '==' '!=='
 very SIMPLE_REASSIGNMENT_OPS is new Array with '+=' '-=' '*=' '/='
 very OTHER_BINARY_OPS is obj
-	'multiplication': '*',
-	'division': '/',
-	'modulo': '%',
-	'addition': '+',
-	'subtraction': '-',
-	'logicalAnd': '&&',
-	'logicalOr': '||'
+    'multiplication': '*',
+    'division': '/',
+    'modulo': '%',
+    'addition': '+',
+    'subtraction': '-',
+    'logicalAnd': '&&',
+    'logicalOr': '||'
 wow
 
 very MODULE_NAME_SEGMENT_REGEX is new RegExp with '^..?/.*?([\\w-]+)(\\.\\w+)?$'
 very IDENT_INVALID_REGEX is new RegExp with '[^a-zA-Z0-9_$]' 'g'
 
 such statementsToJS much statements
-	very result is ''
-	statements dose forEach with much statement idx
-		rly idx bigger 0
-			result += '\n';
-		wow
-		very statementJS is plz toJS with statement
-		result += statementJS
-		rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while' and statement.type not 'for' and statement.type not 'classDeclaration'
-			result += ';'
-		wow
-	wow&
+    very result is ''
+    statements dose forEach with much statement idx
+        rly idx bigger 0
+            result += '\n';
+        wow
+        very statementJS is plz toJS with statement
+        result += statementJS
+        rly statement.type not 'functionDeclaration' and statement.type not 'if' and statement.type not 'while' and statement.type not 'for' and statement.type not 'classDeclaration'
+            result += ';'
+        wow
+    wow&
 wow result
 
 such indent much content
-	very result is content dose replace with /\n/g '\n    '
+    very result is content dose replace with /\n/g '\n    '
 wow result
 
 such toJS much ast wrapFlag
-	very result
-	rly ast.type is 'ident'
-		result is ast.value
-	but rly ast.type is 'maybe'
-		result is '!Math.round(Math.random())'
-		rly wrapFlag
-			result is '(' + result + ')'
-		wow
-	but rly ast.type is 'string'
-		result is JSON dose stringify with ast.value
-	but rly ast.type is 'number'
-		result is ast.value dose toString
-	but rly ast.type is 'property'
-		very object is plz toJS with ast.object true
-		result is object + '.' + ast.property
-	but rly ast.type is 'index'
-		very object is plz toJS with ast.object true
-		very index is plz toJS with ast.index
+    very result
+    rly ast.type is 'ident'
+        result is ast.value
+    but rly ast.type is 'maybe'
+        result is '!Math.round(Math.random())'
+        rly wrapFlag
+            result is '(' + result + ')'
+        wow
+    but rly ast.type is 'string'
+        result is JSON dose stringify with ast.value
+    but rly ast.type is 'number'
+        result is ast.value dose toString
+    but rly ast.type is 'property'
+        very object is plz toJS with ast.object true
+        result is object + '.' + ast.property
+    but rly ast.type is 'index'
+        very object is plz toJS with ast.object true
+        very index is plz toJS with ast.index
 
-		result is object + '[' + index + ']'
-	but rly ast.type is 'call'
-		very fn is plz toJS with ast.function
-		result is fn + '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			very argJS is plz toJS with arg
-			result += argJS
-		wow&
-		result += ')'
-	but rly ast.type is 'constructorCall'
-		very constructor is plz toJS with ast.constructor
-		result is 'new ' + constructor + '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			very argJS is plz toJS with arg
-			result += argJS
-		wow&
-		result += ')'
-	but rly ast.type is 'not'
-		very value is plz toJS with ast.value true
-		result is '!' + value
-	but rly ast.type is 'declaration'
-		result is 'let ' + ast.ident
-		rly ast.value
-			very value is plz toJS with ast.value
-			result += ' = ' + value
-		wow
-	but rly ast.type is 'assignment'
-		very target is plz toJS with ast.a
-		very value is plz toJS with ast.b
-		result is target + ' = ' + value
-	but rly ast.type is 'functionDeclaration'
-		result is ''
+        result is object + '[' + index + ']'
+    but rly ast.type is 'call'
+        very fn is plz toJS with ast.function
+        result is fn + '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            very argJS is plz toJS with arg
+            result += argJS
+        wow&
+        result += ')'
+    but rly ast.type is 'constructorCall'
+        very constructor is plz toJS with ast.constructor
+        result is 'new ' + constructor + '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            very argJS is plz toJS with arg
+            result += argJS
+        wow&
+        result += ')'
+    but rly ast.type is 'not'
+        very value is plz toJS with ast.value true
+        result is '!' + value
+    but rly ast.type is 'declaration'
+        result is 'let ' + ast.ident
+        rly ast.value
+            very value is plz toJS with ast.value
+            result += ' = ' + value
+        wow
+    but rly ast.type is 'assignment'
+        very target is plz toJS with ast.a
+        very value is plz toJS with ast.b
+        result is target + ' = ' + value
+    but rly ast.type is 'functionDeclaration'
+        result is ''
 
-		rly ast.async
-			result more 'async '
-		wow
+        rly ast.async
+            result more 'async '
+        wow
 
-		result more 'function'
+        result more 'function'
 
-		rly ast.generator
-			result more '*'
-		wow
+        rly ast.generator
+            result more '*'
+        wow
 
-		result more ' ' + ast.identifier + '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			result += arg
-		wow&
-		result += ') {';
+        result more ' ' + ast.identifier + '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            result += arg
+        wow&
+        result += ') {';
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		rly ast giv returns
-			body more '\nreturn '
-			very returnValue is plz toJS with ast.returns
-			body more returnValue
-			body more ';'
-		wow
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        rly ast giv returns
+            body more '\nreturn '
+            very returnValue is plz toJS with ast.returns
+            body more returnValue
+            body more ';'
+        wow
 
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'functionDeclarationInline'
-		result is ''
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'functionDeclarationInline'
+        result is ''
 
-		rly ast.async
-			result more 'async '
-		wow
+        rly ast.async
+            result more 'async '
+        wow
 
-		result more 'function'
-		rly ast.identifier
-			result more ' ' + ast.identifier
-		wow
+        result more 'function'
+        rly ast.identifier
+            result more ' ' + ast.identifier
+        wow
 
-		result more '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			result += arg
-		wow&
-		result += ') {'
+        result more '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            result += arg
+        wow&
+        result += ') {'
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'if'
-		result is 'if ('
-		very condition is plz toJS with ast.condition
-		result += condition + ') {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'if'
+        result is 'if ('
+        very condition is plz toJS with ast.condition
+        result += condition + ') {'
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-		ast.elses dose forEach with much statement
-			very elseJS is plz toJS with statement
-			result += ' ' + elseJS
-		wow&
-	but rly ast.type is 'else'
-		result is 'else {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+        ast.elses dose forEach with much statement
+            very elseJS is plz toJS with statement
+            result += ' ' + elseJS
+        wow&
+    but rly ast.type is 'else'
+        result is 'else {'
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'elseif'
-		result is 'else if ('
-		very condition is plz toJS with ast.condition
-		result += condition + ') {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'elseif'
+        result is 'else if ('
+        very condition is plz toJS with ast.condition
+        result += condition + ') {'
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'while'
-		result is 'while ('
-		very condition is plz toJS with ast.condition
-		result += condition += ') {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'while'
+        result is 'while ('
+        very condition is plz toJS with ast.condition
+        result += condition += ') {'
 
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'for'
-		very inBlock is ast.initStatements.length bigger 1
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'for'
+        very inBlock is ast.initStatements.length bigger 1
 
-		result is 'for ('
-		notrly inBlock
-			very statement is ast.initStatements[0]
-			statement is plz toJS with statement
-			result more statement
-		wow
-		result more '; '
+        result is 'for ('
+        notrly inBlock
+            very statement is ast.initStatements[0]
+            statement is plz toJS with statement
+            result more statement
+        wow
+        result more '; '
 
-		rly ast.condition
-			very condition is plz toJS with ast.condition
-			result more condition
-		wow
-		result more '; '
+        rly ast.condition
+            very condition is plz toJS with ast.condition
+            result more condition
+        wow
+        result more '; '
 
-		rly ast.afterStatement
-			very afterStatement is plz toJS with ast.afterStatement
-			result more afterStatement
-		wow
-		result more ') {'
+        rly ast.afterStatement
+            very afterStatement is plz toJS with ast.afterStatement
+            result more afterStatement
+        wow
+        result more ') {'
 
-		very innerResult is plz statementsToJS with ast.bodyStatements
-		innerResult is '\n' + innerResult
-		innerResult is plz indent with innerResult
-		result more innerResult
+        very innerResult is plz statementsToJS with ast.bodyStatements
+        innerResult is '\n' + innerResult
+        innerResult is plz indent with innerResult
+        result more innerResult
 
-		result more '\n}'
+        result more '\n}'
 
-		rly inBlock
-			very init is plz statementsToJS with ast.initStatements
-			init is '\n' + init
-			result is init + result
-			result is plz indent with result
+        rly inBlock
+            very init is plz statementsToJS with ast.initStatements
+            init is '\n' + init
+            result is init + result
+            result is plz indent with result
 
-			result is '{\n' + result + '}'
-		wow
-	but rly ast.type is 'trained'
-		result is '"use strict"'
-	but rly ast.type is 'debugger'
-		result is 'debugger'
-	but rly ast.type is 'import'
-		result is 'const '
-		rly ast.identifier
-			result += ast.identifier
-		but
-			very ident is ast.path
+            result is '{\n' + result + '}'
+        wow
+    but rly ast.type is 'trained'
+        result is '"use strict"'
+    but rly ast.type is 'debugger'
+        result is 'debugger'
+    but rly ast.type is 'import'
+        result is 'const '
+        rly ast.identifier
+            result += ast.identifier
+        but
+            very ident is ast.path
 
-			very m is MODULE_NAME_SEGMENT_REGEX dose exec with ident
-			rly m
-				ident is m levl 1
-			wow
-			ident is ident dose replace with IDENT_INVALID_REGEX '_'
+            very m is MODULE_NAME_SEGMENT_REGEX dose exec with ident
+            rly m
+                ident is m levl 1
+            wow
+            ident is ident dose replace with IDENT_INVALID_REGEX '_'
 
-			result more ident
-		wow
-		result += ' = require(\''
-		result += ast.path
-		result += '\')'
-	but rly ast.type is 'file'
-		result is plz statementsToJS with ast.statements
-	but rly ast.type is 'return'
-		result is 'return'
-		rly ast.value
-			very value is plz toJS with ast.value
-			result more ' '
-			result more value
-		wow
-	but rly ast.type is 'yield'
-		result is 'yield'
-		rly ast.value
-			very value is plz toJS with ast.value
-			result more ' '
-			result more value
-		wow
-	but rly ast.type is 'break'
-		result is 'break'
-	but rly ast.type is 'typeof'
-		result is '(typeof '
-		very value is plz toJS with ast.value
-		result more value
-		result more ')'
-	but rly ast.type is 'await'
-		result is '(await '
-		very value is plz toJS with ast.value
-		result more value
-		result more ')'
-	but rly ast.type is 'prefixIncrement'
-		result is '(++'
-		very value is plz toJS with ast.value
-		result more value
-		result more ')'
-	but rly ast.type is 'prefixDecrement'
-		result is '(--'
-		very value is plz toJS with ast.value
-		result more value
-		result more ')'
-	but rly ast.type is 'postfixIncrement'
-		result is '('
-		very value is plz toJS with ast.value
-		result more value
-		result more '++)'
-	but rly ast.type is 'postfixDecrement'
-		result is '('
-		very value is plz toJS with ast.value
-		result more value
-		result more '--)'
-	but rly ast.type is 'methodDeclaration'
-		result is ''
+            result more ident
+        wow
+        result += ' = require(\''
+        result += ast.path
+        result += '\')'
+    but rly ast.type is 'file'
+        result is plz statementsToJS with ast.statements
+    but rly ast.type is 'return'
+        result is 'return'
+        rly ast.value
+            very value is plz toJS with ast.value
+            result more ' '
+            result more value
+        wow
+    but rly ast.type is 'yield'
+        result is 'yield'
+        rly ast.value
+            very value is plz toJS with ast.value
+            result more ' '
+            result more value
+        wow
+    but rly ast.type is 'break'
+        result is 'break'
+    but rly ast.type is 'typeof'
+        result is '(typeof '
+        very value is plz toJS with ast.value
+        result more value
+        result more ')'
+    but rly ast.type is 'await'
+        result is '(await '
+        very value is plz toJS with ast.value
+        result more value
+        result more ')'
+    but rly ast.type is 'prefixIncrement'
+        result is '(++'
+        very value is plz toJS with ast.value
+        result more value
+        result more ')'
+    but rly ast.type is 'prefixDecrement'
+        result is '(--'
+        very value is plz toJS with ast.value
+        result more value
+        result more ')'
+    but rly ast.type is 'postfixIncrement'
+        result is '('
+        very value is plz toJS with ast.value
+        result more value
+        result more '++)'
+    but rly ast.type is 'postfixDecrement'
+        result is '('
+        very value is plz toJS with ast.value
+        result more value
+        result more '--)'
+    but rly ast.type is 'methodDeclaration'
+        result is ''
 
-		rly ast giv generator
-			result more '*'
-		wow
+        rly ast giv generator
+            result more '*'
+        wow
 
-		result more ast.identifier + '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			result += arg
-		wow&
-		result += ') {';
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		rly ast giv returns
-			body more '\nreturn '
-			very returnValue is plz toJS with ast.returns
-			body more returnValue
-			body more ';'
-		wow
-		body is plz indent with body
+        result more ast.identifier + '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            result += arg
+        wow&
+        result += ') {';
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        rly ast giv returns
+            body more '\nreturn '
+            very returnValue is plz toJS with ast.returns
+            body more returnValue
+            body more ';'
+        wow
+        body is plz indent with body
 
-		result += body + '\n}'
-	but rly ast.type is 'staticMethodDeclaration'
-		result is 'static '
+        result += body + '\n}'
+    but rly ast.type is 'staticMethodDeclaration'
+        result is 'static '
 
-		rly ast giv generator
-			result more '*'
-		wow
+        rly ast giv generator
+            result more '*'
+        wow
 
-		result more ast.identifier + '('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result += ', '
-			wow
-			result += arg
-		wow&
-		result += ') {';
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		rly ast giv returns
-			body more '\nreturn '
-			very returnValue is plz toJS with ast.returns
-			body more returnValue
-			body more ';'
-		wow
-		body is plz indent with body
+        result more ast.identifier + '('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result += ', '
+            wow
+            result += arg
+        wow&
+        result += ') {';
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        rly ast giv returns
+            body more '\nreturn '
+            very returnValue is plz toJS with ast.returns
+            body more returnValue
+            body more ';'
+        wow
+        body is plz indent with body
 
-		result += body + '\n}'
-	but rly ast.type is 'classExpression'
-		result is 'class'
+        result += body + '\n}'
+    but rly ast.type is 'classExpression'
+        result is 'class'
 
-		rly ast.identifier
-			result more ' ' + ast.identifier
-		wow
+        rly ast.identifier
+            result more ' ' + ast.identifier
+        wow
 
-		rly ast.superclass
-			result more ' extends '
-			result more ast.superclass
-		wow
+        rly ast.superclass
+            result more ' extends '
+            result more ast.superclass
+        wow
 
-		result more ' {'
-		very innerResult is ''
-		much very i as 0 next i smaller ast.elements.length next i more 1
-			innerResult more '\n'
-			very value is plz toJS with ast.elements[i]
-			innerResult more value
-		wow
-		innerResult is plz indent with innerResult
-		result more innerResult
-		result more '\n}'
-	but rly ast.type is 'classDeclaration'
-		result is 'class ' + ast.identifier
+        result more ' {'
+        very innerResult is ''
+        much very i as 0 next i smaller ast.elements.length next i more 1
+            innerResult more '\n'
+            very value is plz toJS with ast.elements[i]
+            innerResult more value
+        wow
+        innerResult is plz indent with innerResult
+        result more innerResult
+        result more '\n}'
+    but rly ast.type is 'classDeclaration'
+        result is 'class ' + ast.identifier
 
-		rly ast.superclass
-			result more ' extends '
-			result more ast.superclass
-		wow
+        rly ast.superclass
+            result more ' extends '
+            result more ast.superclass
+        wow
 
-		result more ' {'
-		very innerResult is ''
-		much very i as 0 next i smaller ast.elements.length next i more 1
-			innerResult more '\n'
-			very value is plz toJS with ast.elements[i]
-			innerResult more value
-		wow
-		innerResult is plz indent with innerResult
-		result more innerResult
-		result more '\n}'
-	but rly ast.type is 'constructor'
-		result is 'constructor('
-		ast.args dose forEach with much arg idx
-			rly idx bigger 0
-				result more ', '
-			wow
-			result more arg
-		wow&
-		result more ') {';
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'getter'
-		result is 'get ' + ast.identifier + '() {'
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'setter'
-		result is 'set ' + ast.identifier + '(' + ast.newValueIdentifier + ') {'
-		very body is plz statementsToJS with ast.statements
-		body is '\n' + body
-		body is plz indent with body
-		result += body + '\n}'
-	but rly ast.type is 'export'
-		result is 'module.exports'
-		rly ast.identifier
-			result more '.'
-			result more ast.identifier
-		wow
-		result more ' = '
-		very value is plz toJS with ast.value
-		result more value
-	but rly ast.type is 'array'
-		result is '['
-		much very i as 0 next i smaller ast.elements.length next i more 1
-			rly i bigger 0
-				result more ', '
-			wow
+        result more ' {'
+        very innerResult is ''
+        much very i as 0 next i smaller ast.elements.length next i more 1
+            innerResult more '\n'
+            very value is plz toJS with ast.elements[i]
+            innerResult more value
+        wow
+        innerResult is plz indent with innerResult
+        result more innerResult
+        result more '\n}'
+    but rly ast.type is 'constructor'
+        result is 'constructor('
+        ast.args dose forEach with much arg idx
+            rly idx bigger 0
+                result more ', '
+            wow
+            result more arg
+        wow&
+        result more ') {';
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'getter'
+        result is 'get ' + ast.identifier + '() {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'setter'
+        result is 'set ' + ast.identifier + '(' + ast.newValueIdentifier + ') {'
+        very body is plz statementsToJS with ast.statements
+        body is '\n' + body
+        body is plz indent with body
+        result += body + '\n}'
+    but rly ast.type is 'export'
+        result is 'module.exports'
+        rly ast.identifier
+            result more '.'
+            result more ast.identifier
+        wow
+        result more ' = '
+        very value is plz toJS with ast.value
+        result more value
+    but rly ast.type is 'array'
+        result is '['
+        much very i as 0 next i smaller ast.elements.length next i more 1
+            rly i bigger 0
+                result more ', '
+            wow
 
-			very entry is ast.elements[i]
-			very value is plz toJS with entry
+            very entry is ast.elements[i]
+            very value is plz toJS with entry
 
-			result more value
-		wow
-		result more ']'
-	but rly ast.type is 'object'
-		result is '{'
-		very innerContent is ''
-		much very i as 0 next i smaller ast.content.length next i more 1
-			very entry is ast.content[i]
-			very value is plz toJS with entry.value
+            result more value
+        wow
+        result more ']'
+    but rly ast.type is 'object'
+        result is '{'
+        very innerContent is ''
+        much very i as 0 next i smaller ast.content.length next i more 1
+            very entry is ast.content[i]
+            very value is plz toJS with entry.value
 
-			innerContent more '\n'
-			innerContent more JSON.stringify(entry.key)
-			innerContent more ': '
-			innerContent more value
-			innerContent more ','
-		wow
+            innerContent more '\n'
+            innerContent more JSON.stringify(entry.key)
+            innerContent more ': '
+            innerContent more value
+            innerContent more ','
+        wow
 
-		innerContent is plz indent with innerContent
-		result more innerContent
-		result more '\n}'
-	but
-		very success is false
+        innerContent is plz indent with innerContent
+        result more innerContent
+        result more '\n}'
+    but
+        very success is false
 
-		much very i as 0 next i smaller SIMPLE_BINARY_OPS.length next i more 1
-			very id = SIMPLE_BINARY_OPS[i]
+        much very i as 0 next i smaller SIMPLE_BINARY_OPS.length next i more 1
+            very id = SIMPLE_BINARY_OPS[i]
 
-			rly id is ast.type
-				very a is plz toJS with ast.a true
-				very b is plz toJS with ast.b true
-				result is a + ' ' + id + ' ' + b
+            rly id is ast.type
+                very a is plz toJS with ast.a true
+                very b is plz toJS with ast.b true
+                result is a + ' ' + id + ' ' + b
 
-				success is true
-				bork
-			wow
-		wow
+                success is true
+                bork
+            wow
+        wow
 
-		much very i as 0 next i smaller SIMPLE_REASSIGNMENT_OPS.length next i more 1
-			very id = SIMPLE_REASSIGNMENT_OPS[i]
+        much very i as 0 next i smaller SIMPLE_REASSIGNMENT_OPS.length next i more 1
+            very id = SIMPLE_REASSIGNMENT_OPS[i]
 
-			rly id is ast.type
-				very a is plz toJS with ast.a true
-				very b is plz toJS with ast.b true
-				result is a + ' ' + id + ' ' + b
+            rly id is ast.type
+                very a is plz toJS with ast.a true
+                very b is plz toJS with ast.b true
+                result is a + ' ' + id + ' ' + b
 
-				success is true
-				bork
-			wow
-		wow
+                success is true
+                bork
+            wow
+        wow
 
-		very otherBinaryOpKeys is Object dose keys with OTHER_BINARY_OPS
+        very otherBinaryOpKeys is Object dose keys with OTHER_BINARY_OPS
 
-		much very i as 0 next i smaller otherBinaryOpKeys.length next i more 1
-			very id = otherBinaryOpKeys[i]
-			very op is OTHER_BINARY_OPS[id]
+        much very i as 0 next i smaller otherBinaryOpKeys.length next i more 1
+            very id = otherBinaryOpKeys[i]
+            very op is OTHER_BINARY_OPS[id]
 
-			rly id is ast.type
-				very a is plz toJS with ast.a true
-				very b is plz toJS with ast.b true
-				result is a + ' ' + op + ' ' + b
+            rly id is ast.type
+                very a is plz toJS with ast.a true
+                very b is plz toJS with ast.b true
+                result is a + ' ' + op + ' ' + b
 
-				success is true
-				bork
-			wow
-		wow
+                success is true
+                bork
+            wow
+        wow
 
-		rly !success
-			very msg is 'Unrecognized node type: ' + ast.type
-			very err is new Error with msg
-			throw err
-		wow
-	wow
+        rly !success
+            very msg is 'Unrecognized node type: ' + ast.type
+            very err is new Error with msg
+            throw err
+        wow
+    wow
 wow result
 
 module.exports is toJS
