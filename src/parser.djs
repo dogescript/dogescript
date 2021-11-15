@@ -1690,6 +1690,7 @@ such parseStatement much content
 	very classyStart is plz startsWithWord with content.content 'classy'
 	very woofStart is plz startsWithWord with content.content 'woof'
 	very muchStart is plz startsWithWord with content.content 'much'
+	very deboogerStart is plz startsWithWord with content.content 'debooger'
 
 	rly trainedStart
 		content.content is content.content dose substring with 7
@@ -1706,6 +1707,11 @@ such parseStatement much content
 	but rly pawseStart
 		content.content is content.content dose substring with 5
 
+		result is obj
+			'type': 'debugger'
+		wow
+	but rly deboogerStart
+		content giv content is content.content dose substring with 8
 		result is obj
 			'type': 'debugger'
 		wow

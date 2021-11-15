@@ -1,1 +1,1 @@
-var deboogerStart = true;
+let deboogerStart = true;

@@ -1,1 +1,1 @@
-var pawseStart = true;
+let pawseStart = true;
