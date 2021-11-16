@@ -1152,7 +1152,7 @@ such tryParseExpression7 much content
     very result
     very innerResult is plz tryParseExpression6 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with true OPS parseExpression3 content innerResult.expression
+        result is plz binaryOpHelper with true OPS parseExpression6 content innerResult.expression
 
         result is obj
             'ok': true,
