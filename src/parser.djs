@@ -177,6 +177,18 @@ such ifSkipped much content
     wow
 wow content
 
+such mustSkip much content
+    very newValue is plz ifSkipped with content
+
+    rly content giv content same newValue and newValue giv length bigger 0
+        very ctxInfo is plz genContextInfo with content
+        very found is plz idxContent with content 0
+        very msg is ctxInfo + 'Expected whitespace, found ' + found
+        very err is new Error with msg
+        throw err
+    wow
+wow newValue
+
 such isIdentChar much chr
     very isAlphabeticUppercase is chr biggerish 'A' and chr smallerish 'Z'
     very isAlphabeticLowercase is chr biggerish 'a' and chr smallerish 'z'
@@ -425,7 +437,7 @@ such parseBlockBody much content endOnBut
             very statement is plz parseStatement with content
             statements dose push with statement
 
-            content giv content is plz ifSkipped with content
+            content giv content is plz mustSkip with content
         wow
     wow
 wow statements
@@ -1936,7 +1948,7 @@ such parseFile much content
         very statement is plz parseStatement with content
         result.statements dose push with statement
 
-        content giv content is plz ifSkipped with content
+        content giv content is plz mustSkip with content
     wow
 wow result
 
