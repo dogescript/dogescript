@@ -1,0 +1,5 @@
+root = true
+
+[src/*.djs]
+indent_style = space
+indent_size = 4
