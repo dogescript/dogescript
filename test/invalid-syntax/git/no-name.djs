@@ -1,4 +1,4 @@
 classy Foo
-	git
-	wow
+    git
+    wow
 wow

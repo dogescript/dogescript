@@ -1,4 +1,4 @@
 classy Foo
-	stay
-	wow
+    stay
+    wow
 wow

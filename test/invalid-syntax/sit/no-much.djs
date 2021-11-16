@@ -1,4 +1,4 @@
 classy Foo
-	sit name
-	wow
+    sit name
+    wow
 wow

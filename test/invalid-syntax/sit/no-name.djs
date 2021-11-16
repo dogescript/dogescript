@@ -1,4 +1,4 @@
 classy Foo
-	sit much arg
-	wow
+    sit much arg
+    wow
 wow
