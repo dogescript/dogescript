@@ -327,6 +327,10 @@ such toJS much ast wrapFlag
     but rly ast.type is 'staticMethodDeclaration'
         result is 'static '
 
+        rly ast.async
+            result more 'async '
+        wow
+
         rly ast giv generator
             result more '*'
         wow
