@@ -1021,6 +1021,43 @@ such tryParseExpression2 much content
     wow
 wow result
 
+such binaryOpHelper much words ops parseInner content result
+    very nextContent is plz ifSkippedInline with content
+
+    very keys is Object dose keys with ops
+
+    very didSomething is true
+    many didSomething
+        didSomething is false
+        much very i as 0 next i smaller keys.length next i more 1
+            very key is keys[i]
+            very id is ops[key]
+
+            very opStart
+            rly words
+                opStart is plz startsWithWord with nextContent key
+            but
+                opStart is nextContent dose startsWith with key
+            wow
+
+            rly opStart
+                content.content is nextContent dose substring with key.length
+                content.content is plz ifSkipped with content
+                very rhs is plz parseInner with content
+
+                result is obj
+                    'type': id,
+                    'a': result,
+                    'b': rhs
+                wow
+
+                nextContent is plz ifSkipped with content
+                didSomething is true
+            wow
+        wow
+    wow
+wow result
+
 such tryParseExpression3 much content
     very OPS is obj
         '*': 'multiplication',
@@ -1031,31 +1068,7 @@ such tryParseExpression3 much content
     very result
     very innerResult is plz tryParseExpression2 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is nextContent dose startsWith with key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression2 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with false OPS parseExpression2 content innerResult.expression
 
         result is obj
             'ok': true,
@@ -1075,31 +1088,7 @@ such tryParseExpression4 much content
     very result
     very innerResult is plz tryParseExpression3 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is nextContent dose startsWith with key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression3 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with false OPS parseExpression3 content innerResult.expression
 
         result is obj
             'ok': true,
@@ -1122,31 +1111,7 @@ such tryParseExpression5 much content
     very result
     very innerResult is plz tryParseExpression4 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is plz startsWithWord with nextContent key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression4 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with true OPS parseExpression4 content innerResult.expression
 
         result is obj
             'ok': true,
@@ -1168,31 +1133,7 @@ such tryParseExpression6 much content
     very result
     very innerResult is plz tryParseExpression5 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is plz startsWithWord with nextContent key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression5 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with true OPS parseExpression5 content innerResult.expression
 
         result is obj
             'ok': true,
@@ -1211,31 +1152,7 @@ such tryParseExpression7 much content
     very result
     very innerResult is plz tryParseExpression6 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is plz startsWithWord with nextContent key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression7 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with true OPS parseExpression3 content innerResult.expression
 
         result is obj
             'ok': true,
@@ -1260,31 +1177,7 @@ such tryParseExpression8 much content
     very result
     very innerResult is plz tryParseExpression7 with content
     rly innerResult giv ok
-        result is innerResult.expression
-
-        very nextContent is plz ifSkippedInline with content
-
-        very keys is Object dose keys with OPS
-
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is OPS[key]
-
-            very opStart is plz startsWithWord with nextContent key
-            rly opStart
-                content.content is nextContent dose substring with key.length
-                content.content is plz ifSkipped with content
-                very rhs is plz parseExpression6 with content
-
-                result is obj
-                    'type': id,
-                    'a': result,
-                    'b': rhs
-                wow
-
-                nextContent is plz ifSkipped with content
-            wow
-        wow
+        result is plz binaryOpHelper with true OPS parseExpression7 content innerResult.expression
 
         rly yeldeStart
             result is obj
