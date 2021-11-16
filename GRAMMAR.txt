@@ -25,7 +25,7 @@ BoxExpression = "box" 1*WS *(Expression *WS (("," *WS) / 1*WS)) "wow"
 
 Expression0 = PlzExpression / NewExpression / InlineFunction / StringLiteral / NumberLiteral / "maybe" / "windoge" / "dogeument" / "breed" / "sooper" / "dis" / ClassExpression / Identifier / SuchStatement / ("(" Expression ")") / ObjExpression / BoxExpression
 Expression1 = Expression0 *(1*InlineWS (("giv" 1*WS Identifier) / ("levl" 1*WS Expression0) / ("proto" 1*WS Identifier)) / ("dose" 1*WS Identifier 1*WS "with" ArgumentValues) / "bigified" / "smallified")
-Expression2 = *(("kindof" / "waite" / "bigify" / "smallify") 1*InlineWS] Expression1
+Expression2 = *((("kindof" / "waite" / "bigify" / "smallify") 1*WS) / ("-" *WS)) Expression1
 Expression3 = Expression2 *(*InlineWS ("*" / "/" / "%") *WS Expression2)
 Expression4 = Expression3 *(*InlineWS ("+" / "-") *WS Expression3)
 Expression5 = Expression4 *(1*InlineWS ("bigger" / "smaller" / "biggerish" / "smallerish" / "isa") 1*WS Expression4)
