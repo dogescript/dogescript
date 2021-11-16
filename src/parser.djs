@@ -283,6 +283,7 @@ such parseString much content
                 very numStr is content giv content dose substr with 2 6
                 very match is OCTAL_REGEX dose exec with numStr
                 rly match
+                    very num is plz parseInt with numStr 8
                     result more String dose fromCodePoint with num
                     plz shiftContent with content 8
                 but
