@@ -2,6 +2,10 @@ very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'bigg
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
+such idx much src index
+    amaze src levl index
+wow
+
 quiet
     JavaScript's strings are immutable, so they can't be changed.
     As a workaround, I wrap the string in an object, which can be changed.
@@ -27,6 +31,15 @@ such cloneContent much content
         'originalContent': content giv originalContent
     wow
 wow cloned
+
+such shiftContent much content count
+    content giv content is content giv content dose substring with count
+wow
+
+such idxContent much content index
+    content is content giv content
+    amaze content levl index
+wow
 
 such genContextInfo much content
     very overallOffset is content giv originalContent giv length - content giv content giv length 
@@ -65,7 +78,7 @@ such startsWithWord much content word
         content is content dose substring with len
 
         rly content giv length bigger 0
-            very nextChar is content[0]
+            very nextChar is plz idx with content 0
             very isIC is plz isIdentChar with nextChar
             notrly isIC
                 amaze true
@@ -77,16 +90,16 @@ such startsWithWord much content word
 wow false
 
 such takeArgumentEnd much content
-    very startAnd is content.content dose startsWith with '&'
-    very startThx is plz startsWithWord with content.content 'thx'
-    very startNewline is content.content dose startsWith with '\n'
+    very startAnd is content giv content dose startsWith with '&'
+    very startThx is plz startsWithWord with content 'thx'
+    very startNewline is content giv content dose startsWith with '\n'
 
     very result is true
 
     rly startAnd
-        content.content is content.content dose substring with 1
+        plz shiftContent with content 1
     but rly startThx
-        content.content is content.content dose substring with 3
+        plz shiftContent with content 3
     but rly startNewline
         shh don't consume newlines here
     but
@@ -101,8 +114,8 @@ such ifSkippedComment much content
     very quietStart is plz startsWithWord with content 'quiet'
     rly shhStart
         very done is false
-        many content.length > 0 and !done
-            rly content[0] is '\n'
+        many content giv length bigger 0 and done not true
+            rly content levl 0 is '\n'
                 done is true
             but
                 content is content dose substring with 1
@@ -110,7 +123,7 @@ such ifSkippedComment much content
         wow
     but rly quietStart
         very done is false
-        many content.length > 0 and !done
+        many content giv length bigger 0 and done not true
             very foundEnd is plz startsWithWord with content 'loud'
             rly foundEnd
                 content is content dose substring with 4
@@ -127,8 +140,9 @@ such ifSkippedInline much content
     
     very done is false
 
-    many content.length > 0 and !done
-        very result is plz isInlineWhitespace with content[0]
+    many content giv length bigger 0 and done not true
+        very firstChar is plz idx with content 0
+        very result is plz isInlineWhitespace with firstChar
         rly result
             content is content dose substring with 1
         but
@@ -147,8 +161,9 @@ such ifSkipped much content
     
     very done is false
 
-    many content.length > 0 and !done
-        very result is plz isWhitespace with content[0]
+    many content giv length bigger 0 and done not true
+        very firstChar is plz idx with content 0
+        very result is plz isWhitespace with firstChar
         rly result
             content is content dose substring with 1
         but
@@ -163,30 +178,31 @@ such ifSkipped much content
 wow content
 
 such isIdentChar much chr
-    very isAlphabetic is (chr >= 'A' && chr <= 'Z') or (chr >= 'a' && chr <= 'z')
-    very isNumeric is chr >= '0' and chr <= '9'
-    very isOtherAllowed is chr == '_' or chr == '$'
+    very isAlphabeticUppercase is chr biggerish 'A' and chr smallerish 'Z'
+    very isAlphabeticLowercase is chr biggerish 'a' and chr smallerish 'z'
+    very isNumeric is chr biggerish '0' and chr smallerish '9'
+    very isOtherAllowed is chr same '_' or chr same '$'
 
-    very result is isAlphabetic or isNumeric or isOtherAllowed
+    very result is isAlphabeticUppercase or isAlphabeticLowercase or isNumeric or isOtherAllowed
 wow result
 
 such tryParseIdentifier much content
-    very tmpContent is content.content
+    very tmpContent is content giv content
 
     very result is ''
     very done is false
-    many !done
-        very chr is tmpContent[0]
+    many done not true
+        very chr is plz idx with tmpContent 0
 
         very isAllowed is plz isIdentChar with chr
 
         rly isAllowed
-            result += chr
+            result more chr
             tmpContent is tmpContent dose substring with 1
         but
             done is true
         wow
-        rly tmpContent.length is 0
+        rly tmpContent giv length is 0
             done is true
         wow
     wow
@@ -199,8 +215,10 @@ such tryParseIdentifier much content
             'ok': false
         wow
     but rly result is ''
+        very found is plz idxContent with content 0
+
         result is obj
-            'found': content.content[0],
+            'found': found,
             'ok': false
         wow
     but
@@ -210,7 +228,7 @@ such tryParseIdentifier much content
             result is 'window'
         wow
 
-        content.content is tmpContent
+        content giv content is tmpContent
 
         result is obj
             'found': result,
@@ -224,10 +242,12 @@ such parseIdentifier much content
 
     very result is plz tryParseIdentifier with content
 
-    rly result.ok
-        result is result.found
+    rly result giv ok
+        result is result giv found
     but
-        very msg is startCtxInfo + 'Expected identifier, found ' + result.found
+        very found is result giv found
+
+        very msg is startCtxInfo + 'Expected identifier, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -236,32 +256,35 @@ wow result
 such parseString much content
     very startCtxInfo is plz genContextInfo with content
 
-    rly content.content[0] not "'"
-        very msg is startCtxInfo + 'Expected string, found ' + content.content[0]
+    very quoteStart is content giv content dose startsWith with '\''
+    notrly quoteStart
+        very found is plz idxContent with content 0
+
+        very msg is startCtxInfo + 'Expected string, found ' + found
         very err is new Error with msg
         throw err
     wow
 
-    content.content is content.content dose substring with 1
+    plz shiftContent with content 1
 
     very result is ''
     very done is false
-    many !done
-        rly content.content.length is 0
+    many done not true
+        rly content giv content giv length is 0
             very msg is startCtxInfo + 'Unterminated string'
             very err is new Error with msg
             throw err
         wow
-        very chr is content.content[0]
+        very chr is plz idxContent with content 0
         rly chr is '\\'
-            very nextChr is content.content[1]
+            very nextChr is plz idxContent with content 1
 
             rly nextChr is 'u'
-                very numStr is content.content dose substr with 2 6
+                very numStr is content giv content dose substr with 2 6
                 very match is OCTAL_REGEX dose exec with numStr
                 rly match
                     result more String dose fromCodePoint with num
-                    content.content is content.content dose substring with 8
+                    plz shiftContent with content 8
                 but
                     very ctxInfo is plz genContextInfo with content
                     very msg is ctxInfo + 'Invalid string escape sequence'
@@ -269,32 +292,33 @@ such parseString much content
                     throw err
                 wow
             but
-                rly nextChr === '\\' || nextChr === '/' || nextChr === '\'' || nextChr === '"'
-                    result += nextChr
+                very literal is nextChr same '"' or nextChr same '/' or nextChr same '\'' or nextChr same '\\'
+                rly literal
+                    result more nextChr
                 but rly nextChr is 'b'
-                    result += '\b'
+                    result more '\b'
                 but rly nextChr is 'f'
-                    result += '\f'
+                    result more '\f'
                 but rly nextChr is 'n'
-                    result += '\n'
+                    result more '\n'
                 but rly nextChr is 'r'
-                    result += '\r'
+                    result more '\r'
                 but rly nextChr is 't'
-                    result += '\t'
+                    result more '\t'
                 but
                     very ctxInfo is plz genContextInfo with content
                     very msg is ctxInfo + 'Invalid string escape sequence'
                     very err is new Error with msg
                     throw err
                 wow
-                content.content is content.content dose substring with 2
+                plz shiftContent with content 2
             wow
-        but rly chr is "'"
+        but rly chr is '\''
             done is true
-            content.content is content.content dose substring with 1
+            plz shiftContent with content 1
         but
-            result += chr
-            content.content is content.content dose substring with 1
+            result more chr
+            plz shiftContent with content 1
         wow
     wow
 wow result
@@ -302,22 +326,23 @@ wow result
 such parseOctalNumber much content
     very ctxInfo is plz genContextInfo with content
 
-    rly content.content[0] not '0'
-        very msg is ctxInfo + 'Expected octal number, found ' + content.content[0]
+    very firstChar is plz idxContent with content 0
+    rly firstChar not '0'
+        very msg is ctxInfo + 'Expected octal number, found ' + firstChar
         very err is new Error with msg
         throw err
     wow
 
-    content.content is content.content dose substring with 1
+    plz shiftContent with content 1
 
     very text is ''
     very done is false
-    many !done
-        very chr is content.content[0]
+    many done not true
+        very chr is plz idxContent with content 0
         very idx is '01234567' dose indexOf with chr
         rly idx not -1
             text += chr
-            content.content is content.content dose substring with 1
+            plz shiftContent with content 1
         but
             done is true
         wow
@@ -390,7 +415,7 @@ such parseBlockBody much content endOnBut
         very wowStart is plz startsWithWord with content.content 'wow'
         very butStart is plz startsWithWord with content.content 'but'
         rly wowStart
-            content.content is content.content dose substring with 3
+            plz shiftContent with content 3
             done is true
         but rly butStart and endOnBut
             shh 'but' is not consumed at this point since it's part of the next statement
@@ -528,7 +553,7 @@ such parseClassBody much content
     many !done
         very wowStart is plz startsWithWord with content.content 'wow'
         rly wowStart
-            content.content is content.content dose substring with 3
+            plz shiftContent with content 3
             done is true
         but
             very element is plz parseClassElement with content
@@ -578,7 +603,7 @@ such tryParseExpression0 much content
             wow
         wow
     but rly plzStart
-        content.content is content.content dose substring with 3
+        plz shiftContent with content 3
         content.content is plz ifSkipped with content
 
         very callee is plz parseExpression0 with content
@@ -592,7 +617,7 @@ such tryParseExpression0 much content
             'args': args
         wow
     but rly newStart
-        content.content is content.content dose substring with 3
+        plz shiftContent with content 3
         content.content is plz ifSkipped with content
 
         very constructor is plz parseExpression0 with content
@@ -612,7 +637,7 @@ such tryParseExpression0 much content
     but rly muchStart
         very ctxInfo is plz genContextInfo with content
 
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
         content.content is plz ifSkipped with content
 
         very args is []
@@ -657,7 +682,7 @@ such tryParseExpression0 much content
             'value': value
         wow
     but rly classyStart
-        content.content is content.content dose substring with 6
+        plz shiftContent with content 6
         content.content is plz ifSkippedInline with content.content
 
         very identifier
@@ -673,7 +698,7 @@ such tryParseExpression0 much content
         very superclass
 
         rly growsStart
-            content.content is content.content dose substring with 5
+            plz shiftContent with content 5
             content.content is plz ifSkipped with content.content
 
             superclass is plz parseIdentifier with content
@@ -690,24 +715,24 @@ such tryParseExpression0 much content
             'identifier': identifier
         wow
     but rly disStart
-        content.content is content.content dose substring with 3
+        plz shiftContent with content 3
         result is obj
             'type': 'ident',
             'value': 'this'
         wow
     but rly sooperStart
-        content.content is content.content dose substring with 6
+        plz shiftContent with content 6
         result is obj
             'type': 'ident',
             'value': 'super'
         wow
     but rly maybeStart
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
         result is obj
             'type': 'maybe'
         wow
     but rly breedStart
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
         result is obj
             'type': 'ident',
             'value': 'Symbol'
@@ -745,7 +770,7 @@ such tryParseExpression0 much content
             rly commaStart
                 shh optional comma, skip
 
-                content.content is content.content dose substring with 1
+                plz shiftContent with content 1
                 content.content is plz ifSkipped with content
             wow
         wow
@@ -756,7 +781,7 @@ such tryParseExpression0 much content
     but rly objStart
         very startCtxInfo is plz genContextInfo with content
 
-        content.content is content.content dose substring with 3
+        plz shiftContent with content 3
         content.content is plz ifSkipped with content.content
 
         very objContent is new Array
@@ -771,7 +796,7 @@ such tryParseExpression0 much content
 
             very wowStart is plz startsWithWord with content.content 'wow'
             rly wowStart
-                content.content is content.content dose substring with 3
+                plz shiftContent with content 3
                 done is true
             but
                 very key
@@ -801,7 +826,7 @@ such tryParseExpression0 much content
                     throw err
                 wow
 
-                content.content is content.content dose substring with 1
+                plz shiftContent with content 1
                 content.content is plz ifSkipped with content
 
                 very value is plz parseExpression with content
@@ -812,7 +837,7 @@ such tryParseExpression0 much content
                 rly commaStart
                     shh optional comma, skip
 
-                    content.content is content.content dose substring with 1
+                    plz shiftContent with content 1
                     content.content is plz ifSkipped with content
                 wow
 
@@ -964,7 +989,7 @@ such tryParseExpression2 much content
     very smallifyStart is plz startsWithWord with content.content 'smallify'
 
     rly kindofStart
-        content.content is content.content dose substring with 6
+        plz shiftContent with content 6
         content.content is plz ifSkipped with content.content
 
         very inner is plz parseExpression2 with content
@@ -978,7 +1003,7 @@ such tryParseExpression2 much content
             'expression': result
         wow
     but rly waiteStart
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
         content.content is plz ifSkipped with content.content
         very inner is plz parseExpression2 with content
 
@@ -991,7 +1016,7 @@ such tryParseExpression2 much content
             'expression': result
         wow
     but rly bigifyStart
-        content.content is content.content dose substring with 6
+        plz shiftContent with content 6
         content.content is plz ifSkipped with content.content
         very inner is plz parseExpression2 with content
 
@@ -1004,7 +1029,7 @@ such tryParseExpression2 much content
             'expression': result
         wow
     but rly smallifyStart
-        content.content is content.content dose substring with 8
+        plz shiftContent with content 8
         content.content is plz ifSkipped with content.content
         very inner is plz parseExpression2 with content
 
@@ -1321,7 +1346,7 @@ such parseElses much content
     many !done
         very butStart is plz startsWithWord with content.content 'but'
         rly butStart
-            content.content is content.content dose substring with 3
+            plz shiftContent with content 3
             content.content is plz ifSkippedInline with content
 
             very type is 'else'
@@ -1330,14 +1355,14 @@ such parseElses much content
             very butRlyStart is plz startsWithWord with content.content 'rly'
             very butNotrlyStart is plz startsWithWord with content.content 'notrly'
             rly butRlyStart
-                content.content is content.content dose substring with 3
+                plz shiftContent with content 3
                 type is 'elseif'
 
                 content.content is plz ifSkippedInline with content
 
                 condition is plz parseExpression with content
             but rly butNotrlyStart
-                content.content is content.content dose substring with 6
+                plz shiftContent with content 6
                 type is 'elseif'
 
                 content.content is plz ifSkippedInline with content
@@ -1374,7 +1399,7 @@ such parseFunctionDeclaration much content isClassStatic
     rly asinkStart
         isAsync is true
 
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
         content.content is plz ifSkipped with content
     wow
 
@@ -1395,7 +1420,7 @@ such parseFunctionDeclaration much content isClassStatic
             throw err
         wow
 
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
         content.content is plz ifSkipped with content
 
         very lazyStart is plz startsWithWord with content.content 'lazy'
@@ -1403,7 +1428,7 @@ such parseFunctionDeclaration much content isClassStatic
         rly lazyStart
             isGenerator is true
 
-            content.content is content.content dose substring with 4
+            plz shiftContent with content 4
             content.content is plz ifSkipped with content
         wow
 
@@ -1482,7 +1507,7 @@ such tryParseInlineStatement much content
 
     very veryStart is plz startsWithWord with content.content 'very'
     rly veryStart
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
         content.content is plz ifSkipped with content
 
         very ident is plz parseIdentifier with content
@@ -1595,19 +1620,19 @@ such parseStatement much content
     very deboogerStart is plz startsWithWord with content.content 'debooger'
 
     rly trainedStart
-        content.content is content.content dose substring with 7
+        plz shiftContent with content 7
 
         result is obj
             'type': 'trained'
         wow
     but rly borkStart
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
 
         result is obj
             'type': 'break'
         wow
     but rly pawseStart
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
 
         result is obj
             'type': 'debugger'
@@ -1618,7 +1643,7 @@ such parseStatement much content
             'type': 'debugger'
         wow
     but rly soStart
-        content.content is content.content dose substring with 2
+        plz shiftContent with content 2
         content.content is plz ifSkipped with content
 
         very importPath is ''
@@ -1669,9 +1694,9 @@ such parseStatement much content
         result is plz parseFunctionDeclaration with content
     but rly rlyStart or notrlyStart
         rly notrlyStart
-            content.content is content.content dose substring with 6
+            plz shiftContent with content 6
         but
-            content.content is content.content dose substring with 3
+            plz shiftContent with content 3
         wow
 
         content.content is plz ifSkipped with content
@@ -1697,7 +1722,7 @@ such parseStatement much content
             'elses': elses
         wow
     but rly manyStart
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
         content.content is plz ifSkipped with content
 
         very condition is plz parseExpression with content
@@ -1711,7 +1736,7 @@ such parseStatement much content
             'statements': statements
         wow
     but rly amazeStart
-        content.content is content.content dose substring with 5
+        plz shiftContent with content 5
         content.content is plz ifSkippedInline with content
         very exprRes is plz tryParseExpression with content
         rly exprRes.ok
@@ -1725,7 +1750,7 @@ such parseStatement much content
             wow
         wow
     but rly classyStart
-        content.content is content.content dose substring with 6
+        plz shiftContent with content 6
         content.content is plz ifSkipped with content.content
 
         very ident is plz parseIdentifier with content
@@ -1736,7 +1761,7 @@ such parseStatement much content
         very superclass
 
         rly growsStart
-            content.content is content.content dose substring with 5
+            plz shiftContent with content 5
             content.content is plz ifSkipped with content.content
 
             superclass is plz parseIdentifier with content
@@ -1753,7 +1778,7 @@ such parseStatement much content
             'superclass': superclass
         wow
     but rly woofStart
-        content.content is content.content dose substring with 4
+        plz shiftContent with content 4
         content.content is plz ifSkipped with content
 
         very identifier
