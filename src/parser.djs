@@ -1091,9 +1091,9 @@ such binaryOpHelper much words ops parseInner content result
     very didSomething is true
     many didSomething
         didSomething is false
-        much very i as 0 next i smaller keys.length next i more 1
-            very key is keys[i]
-            very id is ops[key]
+        much very i as 0 next i smaller keys giv length next i more 1
+            very key is plz idx with keys i
+            very id is plz idx with ops key
 
             very opStart
             rly words
@@ -1103,7 +1103,8 @@ such binaryOpHelper much words ops parseInner content result
             wow
 
             rly opStart
-                content.content is nextContent dose substring with key.length
+                very keyLen is key giv length
+                content giv content is nextContent dose substring with keyLen
                 content giv content is plz ifSkipped with content
                 very rhs is plz parseInner with content
 
@@ -1130,7 +1131,8 @@ such tryParseExpression3 much content
     very result
     very innerResult is plz tryParseExpression2 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with false OPS parseExpression2 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with false OPS parseExpression2 content result
 
         result is obj
             'ok': true,
@@ -1150,7 +1152,8 @@ such tryParseExpression4 much content
     very result
     very innerResult is plz tryParseExpression3 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with false OPS parseExpression3 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with false OPS parseExpression3 content result
 
         result is obj
             'ok': true,
@@ -1173,7 +1176,8 @@ such tryParseExpression5 much content
     very result
     very innerResult is plz tryParseExpression4 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with true OPS parseExpression4 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with true OPS parseExpression4 content result
 
         result is obj
             'ok': true,
@@ -1195,7 +1199,8 @@ such tryParseExpression6 much content
     very result
     very innerResult is plz tryParseExpression5 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with true OPS parseExpression5 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with true OPS parseExpression5 content result
 
         result is obj
             'ok': true,
@@ -1214,7 +1219,8 @@ such tryParseExpression7 much content
     very result
     very innerResult is plz tryParseExpression6 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with true OPS parseExpression6 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with true OPS parseExpression6 content result
 
         result is obj
             'ok': true,
@@ -1239,7 +1245,8 @@ such tryParseExpression8 much content
     very result
     very innerResult is plz tryParseExpression7 with content
     rly innerResult giv ok
-        result is plz binaryOpHelper with true OPS parseExpression7 content innerResult.expression
+        result is innerResult giv expression
+        result is plz binaryOpHelper with true OPS parseExpression7 content result
 
         rly yeldeStart
             result is obj
@@ -1268,10 +1275,11 @@ such parseExpression much content
 
     very result is plz tryParseExpression with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1282,10 +1290,11 @@ such parseExpression0 much content
 
     very result is plz tryParseExpression0 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression0, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression0, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1296,10 +1305,11 @@ such parseExpression2 much content
 
     very result is plz tryParseExpression2 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression2, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression2, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1310,10 +1320,11 @@ such parseExpression3 much content
 
     very result is plz tryParseExpression3 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression3, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression3, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1324,10 +1335,11 @@ such parseExpression4 much content
 
     very result is plz tryParseExpression4 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression4, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression4, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1338,10 +1350,11 @@ such parseExpression5 much content
 
     very result is plz tryParseExpression5 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression5, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression5, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1352,10 +1365,11 @@ such parseExpression6 much content
 
     very result is plz tryParseExpression6 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression6, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression6, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1366,17 +1380,18 @@ such parseExpression7 much content
 
     very result is plz tryParseExpression7 with content
 
-    rly result.ok
-        result is result.expression
+    rly result giv ok
+        result is result giv expression
     but
-        very msg is startCtxInfo + 'Expected expression7, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected expression7, found ' + found
         very err is new Error with msg
         throw err
     wow
 wow result
 
 such parseElses much content
-    very elses is []
+    very elses is new Array
 
     very done is false
 
@@ -1451,7 +1466,7 @@ such parseFunctionDeclaration much content isClassStatic
             throw err
         wow
 
-        rly stayStart and !isClassStatic
+        rly stayStart and isClassStatic not true
             very msg is ctxInfo + 'Expected "such", found "stay"'
             very err is new Error with msg
             throw err
@@ -1477,31 +1492,33 @@ such parseFunctionDeclaration much content isClassStatic
             throw err
         wow
     but
-        very msg is ctxInfo + 'Expected function declaration, found ' + content.content[0]
+        very found is plz idxContent with content 0
+        very msg is ctxInfo + 'Expected function declaration, found ' + found
         very err is new Error with msg
         throw err
     wow
 
     very ctxInfo is plz genContextInfo with content
 
-    very args is []
+    very args is new Array
 
     very nextContent is plz ifSkippedInline with content
     very muchStart is plz startsWithWord with nextContent 'much'
     rly muchStart
-        content.content is nextContent dose substring with 4
+        content giv content is nextContent dose substring with 4
 
         very done is false
         many done not true
             content giv content is plz ifSkippedInline with content
 
-            rly content.content.length is 0
+            rly content giv content giv length is 0
                 very msg is ctxInfo + 'Unterminated function declaration'
                 very err is new Error with msg
                 throw err
             wow
 
-            rly content.content[0] is '\n'
+            very newlineStart is content giv content dose startsWith with '\n'
+            rly newlineStart
                 done is true
             but
                 very arg is plz parseIdentifier with content
@@ -1525,8 +1542,8 @@ such parseFunctionDeclaration much content isClassStatic
     very nextContent is plz cloneContent with content
     nextContent giv content is plz ifSkippedInline with nextContent
     very exprResult is plz tryParseExpression with nextContent
-    rly exprResult.ok
-        result giv returns is exprResult.expression
+    rly exprResult giv ok
+        result giv returns is exprResult giv expression
         content giv content is nextContent giv content
     wow
 
@@ -1534,7 +1551,7 @@ such parseFunctionDeclaration much content isClassStatic
         result giv type is 'staticMethodDeclaration'
     wow
 
-    notrly result.identifier
+    notrly result giv identifier
         result giv type is 'functionDeclarationInline'
     wow
 wow result
@@ -1558,18 +1575,18 @@ such tryParseInlineStatement much content
         very isStart is plz startsWithWord with nextContent 'is'
         very asStart is plz startsWithWord with nextContent 'as'
         rly isStart or asStart
-            content.content is nextContent dose substring with 2
+            content giv content is nextContent dose substring with 2
             content giv content is plz ifSkipped with content
 
             very expr is plz parseExpression with content
 
-            result.value is expr
+            result giv value is expr
         wow
     but
         shh first, look for reassignment
         very nextContent is plz cloneContent with content
         very lhsRes is plz tryParseExpression1 with nextContent
-        rly lhsRes.ok
+        rly lhsRes giv ok
             very OPS is obj
                 'is': 'assignment',
                 'as': 'assignment',
@@ -1582,19 +1599,22 @@ such tryParseInlineStatement much content
             nextContent giv content is plz ifSkippedInline with nextContent
             very keys is Object dose keys with OPS
 
-            much very i as 0 next i smaller keys.length next i more 1
-                very key is keys[i]
-                very id is OPS[key]
+            much very i as 0 next i smaller keys giv length next i more 1
+                very key is plz idx with keys i
+                very id is plz idx with OPS key
 
-                very opStart is plz startsWithWord with nextContent.content key
+                very opStart is plz startsWithWord with nextContent key
                 rly opStart
-                    content.content is nextContent.content dose substring with key.length
+                    very keyLen is key giv length
+                    content giv content is nextContent giv content dose substring with keyLen
                     content giv content is plz ifSkipped with content
                     very rhs is plz parseExpression with content
 
+                    very lhs is lhsRes giv expression
+
                     result is obj
                         'type': id,
-                        'a': lhsRes.expression,
+                        'a': lhs,
                         'b': rhs
                     wow
                     bork
@@ -1604,16 +1624,18 @@ such tryParseInlineStatement much content
 
         notrly result
             result is plz tryParseExpression with content
-            rly result.ok
+            rly result giv ok
+                very expression is result giv expression
+
                 result is obj
                     'ok': true,
-                    'statement': result.expression
+                    'statement': expression
                 wow
             wow
         wow
     wow
 
-    rly result.ok same undefined
+    rly result giv ok same undefined
         result is obj
             'ok': true,
             'statement': result
@@ -1626,10 +1648,11 @@ such parseInlineStatement much content
 
     very result is plz tryParseInlineStatement with content
 
-    rly result.ok
-        result is result.statement
+    rly result giv ok
+        result is result giv statement
     but
-        very msg is startCtxInfo + 'Expected inline statement, found ' + result.found
+        very found is result giv found
+        very msg is startCtxInfo + 'Expected inline statement, found ' + found
         very err is new Error with msg
         throw err
     wow
@@ -1686,11 +1709,11 @@ such parseStatement much content
         very importPath is ''
 
         many true
-            rly content.content.length smaller 1
+            rly content giv content giv length smaller 1
                 bork
             wow
 
-            very chr is content.content[0]
+            very chr is plz idxContent with content 0
 
             very isVChar is chr biggerish '!' and chr smallerish '~'
 
@@ -1720,12 +1743,12 @@ such parseStatement much content
 
         very asStart is plz startsWithWord with nextContent 'as'
         rly asStart
-            content.content is nextContent dose substring with 2
+            content giv content is nextContent dose substring with 2
             content giv content is plz ifSkipped with content
 
             very ident is plz parseIdentifier with content
 
-            result.identifier is ident
+            result giv identifier is ident
         wow
     but rly suchStart or asinkStart
         result is plz parseFunctionDeclaration with content
@@ -1776,10 +1799,11 @@ such parseStatement much content
         plz shiftContent with content 5
         content giv content is plz ifSkippedInline with content
         very exprRes is plz tryParseExpression with content
-        rly exprRes.ok
+        rly exprRes giv ok
+            very value is exprRes giv expression
             result is obj
                 'type': 'return',
-                'value': exprRes.expression
+                'value': value
             wow
         but
             result is obj
@@ -1826,15 +1850,15 @@ such parseStatement much content
         very identResult is plz tryParseIdentifier with subContent
 
         rly identResult giv ok
-            subContent.content is plz ifSkippedInline with subContent
-            very beStart is plz startsWithWord with subContent.content 'be'
+            subContent giv content is plz ifSkippedInline with subContent
+            very beStart is plz startsWithWord with subContent 'be'
             rly beStart
-                subContent.content is subContent.content dose substring with 2
-                subContent.content is plz ifSkipped with subContent
+                subContent giv content is subContent giv content dose substring with 2
+                subContent giv content is plz ifSkipped with subContent
 
                 identifier is identResult giv found
 
-                content.content is subContent.content
+                content giv content is subContent giv content
             wow
         wow
 
@@ -1849,34 +1873,35 @@ such parseStatement much content
         shh Could be either a loop or a function expression
 
         very nextContent is plz cloneContent with content
-        nextContent.content is nextContent.content dose substring with 4
-        nextContent.content is plz ifSkippedInline with nextContent
+        nextContent giv content is nextContent giv content dose substring with 4
+        nextContent giv content is plz ifSkippedInline with nextContent
 
         very nextStart is plz startsWithWord with nextContent 'next'
         very initRes1 is plz tryParseInlineStatement with nextContent
 
-        rly initRes1.ok or nextStart
+        rly initRes1 giv ok or nextStart
             very initStatements is new Array
 
             rly initRes1 giv ok
-                initStatements dose push with initRes1.statement
+                very initStatement1 is initRes1 giv statement
+                initStatements dose push with initStatement1
             wow
 
-            nextContent.content is plz ifSkippedInline with nextContent
-            very commaStart is nextContent.content dose startsWith with ','
+            nextContent giv content is plz ifSkippedInline with nextContent
+            very commaStart is nextContent giv content dose startsWith with ','
             many commaStart
-                nextContent.content is nextContent.content dose substring with 1
-                nextContent.content is plz ifSkipped with nextContent
+                nextContent giv content is nextContent giv content dose substring with 1
+                nextContent giv content is plz ifSkipped with nextContent
 
                 shh at this point it's definitely a loop, so we can fail
                 very nextValue is plz parseInlineStatement with nextContent
                 initStatements dose push with nextValue
 
-                nextContent.content is plz ifSkipped with nextContent
-                commaStart is nextContent.content dose startsWith with ','
+                nextContent giv content is plz ifSkipped with nextContent
+                commaStart is nextContent giv content dose startsWith with ','
             wow
 
-            very nextStart is plz startsWithWord with nextContent.content 'next'
+            very nextStart is plz startsWithWord with nextContent 'next'
             rly nextStart
                 shh commit to consumption
                 content giv content is nextContent giv content
@@ -1891,7 +1916,8 @@ such parseStatement much content
 
                 notrly nextStart
                     very ctxInfo is plz genContextInfo with content
-                    very msg is ctxInfo + 'Expected "next", found ' + content.content[0]
+                    very found is plz idxContent with content 0
+                    very msg is ctxInfo + 'Expected "next", found ' + found
                     very err is new Error with msg
                     throw err
                 wow
@@ -1937,21 +1963,23 @@ wow result
 such parseFile much content
     content is plz wrapContent with content
     
-    very result is obj
-        'type': 'file',
-        'statements': []
-    wow
-
     content giv content is plz ifSkipped with content
 
-    many content.content.length > 0
+    very statements is new Array
+
+    many content giv content giv length bigger 0
         very statement is plz parseStatement with content
-        result.statements dose push with statement
+        statements dose push with statement
 
         content giv content is plz mustSkip with content
     wow
+
+    very result is obj
+        'type': 'file',
+        'statements': statements
+    wow
 wow result
 
-module.exports.parseExpression is parseExpression
-module.exports.parseStatement is parseStatement
-module.exports.parseFile is parseFile
+woof parseExpression be parseExpression
+woof parseStatement be parseStatement
+woof parseFile be parseFile
