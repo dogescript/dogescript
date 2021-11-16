@@ -17,23 +17,25 @@ wow content
 
 such unwrapContent much content
     rly typeof content is 'object'
-        content is content.content
+        content is content giv content
     wow
 wow content
 
 such cloneContent much content
     very cloned is obj
-        'content': content.content,
-        'originalContent': content.originalContent
+        'content': content giv content,
+        'originalContent': content giv originalContent
     wow
 wow cloned
 
 such genContextInfo much content
-    very overallOffset is content.originalContent.length - content.content.length 
-    very previousContent is content.originalContent dose substring with 0 overallOffset
+    very overallOffset is content giv originalContent giv length - content giv content giv length 
+    very previousContent is content giv originalContent dose substring with 0 overallOffset
     very previousLines is previousContent dose split with '\n'
-    very lineNumber is previousLines.length
-    very columnNumber is previousLines[previousLines.length - 1].length + 1
+    very lineNumber is previousLines giv length
+
+    very lastLineIdx is previousLines giv length - 1
+    very columnNumber is previousLines levl lastLineIdx giv length + 1
 
     very result is '[' + lineNumber + ':' + columnNumber + '] '
     shh console dose loge with result content.content.substring(0, 5)
