@@ -987,6 +987,7 @@ such tryParseExpression2 much content
     very waiteStart is plz startsWithWord with content.content 'waite'
     very bigifyStart is plz startsWithWord with content.content 'bigify'
     very smallifyStart is plz startsWithWord with content.content 'smallify'
+    very minusStart is content giv content dose startsWith with '-'
 
     rly kindofStart
         plz shiftContent with content 6
@@ -1035,6 +1036,20 @@ such tryParseExpression2 much content
 
         result is obj
             'type': 'prefixDecrement',
+            'value': inner
+        wow
+        result is obj
+            'ok': true,
+            'expression': result
+        wow
+    but rly minusStart
+        plz shiftContent with content 1
+        content.content is plz ifSkipped with content.content
+
+        very inner is plz parseExpression2 with content
+
+        result is obj
+            'type': 'negate',
             'value': inner
         wow
         result is obj

@@ -271,6 +271,9 @@ such toJS much ast wrapFlag
         very value is plz toJS with ast.value
         result more value
         result more ')'
+    but rly ast.type is 'negate'
+        result is '-'
+        result more plz toJS with ast.value
     but rly ast.type is 'prefixIncrement'
         result is '(++'
         very value is plz toJS with ast.value
