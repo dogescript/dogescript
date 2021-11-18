@@ -1,3 +1,3 @@
-while (10 > (foo++)) {
+while (10 > foo++) {
     
 }

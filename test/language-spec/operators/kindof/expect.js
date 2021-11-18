@@ -1,1 +1,1 @@
-(typeof foo);
+typeof foo;
