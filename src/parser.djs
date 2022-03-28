@@ -412,7 +412,7 @@ such parsePossibleArgumentValues much content
     wow
 wow args
 
-such parseBlockBody much content endOnBut
+such parseBlockBody much content endOnBut endOnCatch
     very ctxInfo is plz genContextInfo with content
 
     very statements is new Array
@@ -427,11 +427,14 @@ such parseBlockBody much content endOnBut
 
         very wowStart is plz startsWithWord with content 'wow'
         very butStart is plz startsWithWord with content 'but'
+        very catchStart is plz startsWithWord with content 'catch'
         rly wowStart
             plz shiftContent with content 3
             done is true
         but rly butStart and endOnBut
             shh 'but' is not consumed at this point since it's part of the next statement
+            done is true
+        but rly catchStart and endOnCatch
             done is true
         but
             very statement is plz parseStatement with content
@@ -1678,6 +1681,7 @@ such parseStatement much content
     very woofStart is plz startsWithWord with content 'woof'
     very muchStart is plz startsWithWord with content 'much'
     very deboogerStart is plz startsWithWord with content 'debooger'
+    very goStart is plz startsWithWord with content 'go'
 
     rly trainedStart
         plz shiftContent with content 7
@@ -1868,6 +1872,45 @@ such parseStatement much content
             'type': 'export',
             'identifier': identifier,
             'value': value
+        wow
+    but rly goStart
+        plz shiftContent with content 2
+        content giv content is plz ifSkipped with content
+
+        very statements is plz parseBlockBody with content false true
+        very catches is new Array
+
+        very nextContent is plz cloneContent with content
+        nextContent giv content is plz ifSkipped with nextContent
+
+        very catchStart is plz startsWithWord with nextContent 'catch'
+        many catchStart
+            content giv content is nextContent giv content
+            plz shiftContent with content 5
+            content giv content is plz ifSkipped with content
+
+            very ident is plz parseIdentifier with content
+            content giv content is plz ifSkipped with content
+
+            very body is plz parseBlockBody with content false true
+            very catchResult is obj
+                'type': 'catch',
+                'identifier': ident,
+                'statements': body
+            wow
+
+            catches dose push with catchResult
+
+            nextContent is plz cloneContent with content
+            nextContent giv content is plz ifSkipped with nextContent
+
+            catchStart is plz startsWithWord with nextContent 'catch'
+        wow
+
+        result is obj
+            'type': 'try',
+            'statements': statements,
+            'catches': catches
         wow
     but rly muchStart
         shh Could be either a loop or a function expression

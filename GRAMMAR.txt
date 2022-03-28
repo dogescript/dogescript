@@ -60,6 +60,10 @@ ClassExpression = "classy" [1*InlineWS Identifier] [1*InlineWS "grows" 1*WS Iden
 
 InlineStatement = VeryStatement / ReassignmentStatement / Expression
 
-Statement = "trained" / SoStatement / SuchStatement / RlyStatement / DebuggerStatement / ManyStatement / WoofStatement / AmazeStatement / "bork" / ClassDeclaration / MuchStatement / InlineStatement
+CatchBlock = "catch" 1*WS Identifier 1*WS *(Statement 1*WS) (CatchBlock / "wow")
+TryBody = *(Statement 1*WS) (CatchBlock / "wow")
+TryStatement = "go" 1*WS TryBody
+
+Statement = "trained" / SoStatement / SuchStatement / RlyStatement / DebuggerStatement / ManyStatement / WoofStatement / AmazeStatement / "bork" / ClassDeclaration / MuchStatement / InlineStatement / TryStatement
 
 File = *WS *(Statement 1*WS)

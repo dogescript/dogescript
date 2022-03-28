@@ -38,7 +38,7 @@ such statementsToJS much statements
         wow
         very statementJS is plz toJS with statement 20
         result more statementJS
-        rly statement giv type not 'functionDeclaration' and statement giv type not 'if' and statement giv type not 'while' and statement giv type not 'for' and statement giv type not 'classDeclaration'
+        rly statement giv type not 'functionDeclaration' and statement giv type not 'if' and statement giv type not 'while' and statement giv type not 'for' and statement giv type not 'classDeclaration' and statement giv type not 'try'
             result more ';'
         wow
     wow&
@@ -227,6 +227,30 @@ such toJS much ast parentOpLevel
         body is '\n' + body
         body is plz indent with body
         result more body + '\n}'
+    but rly ast giv type is 'try'
+        result is 'try {'
+        very statements is ast giv statements
+        very body is plz statementsToJS with statements
+        body is '\n' + body
+        body is plz indent with body
+        result more body
+        result more '\n}'
+
+        ast giv catches dose forEach with much entry
+            very inner is plz toJS with entry
+            result more '\n'
+            result more inner
+        wow&
+    but rly ast giv type is 'catch'
+        result is 'catch('
+        result more ast giv identifier
+        result more ') {'
+        very statements is ast giv statements
+        very body is plz statementsToJS with statements
+        body is '\n' + body
+        body is plz indent with body
+        result more body
+        result more '\n}'
     but rly ast giv type is 'while'
         result is 'while ('
         very condition is ast giv condition
