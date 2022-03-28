@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'very' 'waite' 'woof' 'wow' 'yelde'
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'typeof' 'very' 'waite' 'woof' 'wow' 'yelde'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
@@ -11,7 +11,7 @@ quiet
     As a workaround, I wrap the string in an object, which can be changed.
 loud
 such wrapContent much content
-    rly typeof content is 'string'
+    rly kindof content is 'string'
         content is obj
             'content': content,
             'originalContent': content
@@ -20,7 +20,7 @@ such wrapContent much content
 wow content
 
 such unwrapContent much content
-    rly typeof content is 'object'
+    rly kindof content is 'object'
         content is content giv content
     wow
 wow content
