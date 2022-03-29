@@ -11,7 +11,10 @@ very config is obj
 wow
 very rl is readline dose createInterface with config
 
-very vmCtx is vm dose createContext
+very ctxSrc is obj
+    'console': console
+wow
+very vmCtx is vm dose createContext with ctxSrc
 
 such loopHandleInput much input
     go
