@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'trained' 'typeof' 'very' 'waite' 'woof' 'wow' 'yelde'
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'throw' 'trained' 'typeof' 'very' 'waite' 'woof' 'wow' 'yelde'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
@@ -1676,6 +1676,7 @@ such parseStatement much content
     very pawseStart is plz startsWithWord with content 'pawse'
     very manyStart is plz startsWithWord with content 'many'
     very amazeStart is plz startsWithWord with content 'amaze'
+    very throwStart is plz startsWithWord with content 'throw'
     very borkStart is plz startsWithWord with content 'bork'
     very classyStart is plz startsWithWord with content 'classy'
     very woofStart is plz startsWithWord with content 'woof'
@@ -1813,6 +1814,14 @@ such parseStatement much content
             result is obj
                 'type': 'return'
             wow
+        wow
+    but rly throwStart
+        plz shiftContent with content 5
+        content giv content is plz ifSkipped with content
+        very expr is plz parseExpression with content
+        result is obj
+            'type': 'throw',
+            'value': expr
         wow
     but rly classyStart
         plz shiftContent with content 6

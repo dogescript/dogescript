@@ -64,6 +64,8 @@ CatchBlock = "catch" 1*WS Identifier 1*WS *(Statement 1*WS) (CatchBlock / "wow")
 TryBody = *(Statement 1*WS) (CatchBlock / "wow")
 TryStatement = "go" 1*WS TryBody
 
-Statement = "trained" / SoStatement / SuchStatement / RlyStatement / DebuggerStatement / ManyStatement / WoofStatement / AmazeStatement / "bork" / ClassDeclaration / MuchStatement / InlineStatement / TryStatement
+ThrowStatement = "throw" 1*WS Expression
+
+Statement = "trained" / SoStatement / SuchStatement / RlyStatement / DebuggerStatement / ManyStatement / WoofStatement / AmazeStatement / "bork" / ClassDeclaration / MuchStatement / InlineStatement / TryStatement / ThrowStatement
 
 File = *WS *(Statement 1*WS)

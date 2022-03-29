@@ -338,6 +338,10 @@ such toJS much ast parentOpLevel
             result more ' '
             result more value
         wow
+    but rly ast giv type is 'throw'
+        result is 'throw '
+        very value is ast giv value
+        result more plz toJS with value
     but rly ast giv type is 'yield'
         result is 'yield'
         rly ast giv value
