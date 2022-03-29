@@ -281,11 +281,10 @@ such toJS much ast parentOpLevel
         wow
         result more '; '
 
-        rly ast giv afterStatement
-            very afterStatement is ast giv afterStatement
+        ast giv afterStatements dose forEach with much afterStatement
             afterStatement is plz toJS with afterStatement 20
             result more afterStatement
-        wow
+        wow&
         result more ') {'
 
         very bodyStatements is ast giv bodyStatements

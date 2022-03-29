@@ -1960,7 +1960,28 @@ such parseStatement much content
                 plz shiftContent with content 4
                 content giv content is plz ifSkippedInline with content
 
+                very afterStatements is new Array
+
                 very afterStatementRes is plz tryParseInlineStatement with content
+                rly afterStatementRes giv ok
+                    very current is afterStatementRes giv statement
+                    afterStatements dose push with current
+
+                    content giv content is plz ifSkippedInline with content
+
+                    many true
+                        commaStart is content giv content dose startsWith with ','
+
+                        rly commaStart
+                            content giv content is plz ifSkipped with content
+                            current is plz parseInlineStatement with content
+                            afterStatements dose push with current
+                        but
+                            bork
+                        wow
+                    wow
+                wow
+
                 content giv content is plz ifSkipped with content
 
                 very bodyStatements is plz parseBlockBody with content
@@ -1970,16 +1991,11 @@ such parseStatement much content
                     condition is conditionRes giv expression
                 wow
 
-                very afterStatement
-                rly afterStatementRes giv ok
-                    afterStatement is afterStatementRes giv statement
-                wow
-
                 result is obj
                     'type': 'for',
                     'initStatements': initStatements,
                     'condition': condition,
-                    'afterStatement': afterStatement,
+                    'afterStatements': afterStatements,
                     'bodyStatements': bodyStatements
                 wow
             but
