@@ -12,13 +12,15 @@ try {
 
 const files = fs.readdirSync(srcDir);
 
-function buildStage(name, dest, fn) {
+const LIB_FILES = ["parser.djs", "toJS.djs", "index.djs"];
+
+function buildStage(name, dest, fn, libOnly) {
 	try {
 		fs.mkdirSync(dest);
 	} catch(e) {}
 
 	files.forEach(function(file) {
-		if(file.endsWith(".djs")) {
+		if(file.endsWith(".djs") && (!libOnly || LIB_FILES.includes(file))) {
 			console.log(name + ": Building " + file);
 			const sourceFilename = srcDir + "/" + file;
 			const targetFilename = dest + "/" + file.substring(0, file.length - 4) + ".js";
@@ -31,7 +33,7 @@ function buildStage(name, dest, fn) {
 	});
 }
 
-buildStage("stage1", buildDir + "/stage1", dogescript);
+buildStage("stage1", buildDir + "/stage1", dogescript, true);
 
 const stage1 = require(buildDir + "/stage1");
 buildStage("stage2", buildDir + "/stage2", stage1);
