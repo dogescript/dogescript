@@ -1,15 +1,15 @@
 {
-	"name": "doge3",
+	"name": "dogescript",
 	"version": "3.0.0-pre",
-	"description": "wow so much future",
+	"description": "wow so syntax very doge much future",
 	"main": "dist/index.js",
 	"bin": {
-		"doge3": "bin/bin.js",
+		"dogescript": "bin/bin.js",
 		"dogenode": "bin/dogenode.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://git.vpzom.click/vpzom/doge3"
+		"url": "https://github.com/dogescript/dogescript"
 	},
 	"keywords": [
 		"wow"

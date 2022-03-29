@@ -1,8 +1,15 @@
-doge3
-=====
-A proof-of-concept for a new [Dogescript](https://dogescript.io) transpiler.
+![doge](doge.gif)
 
-Limitations:
- - This parser does not parse everything, so whitespace and comments are not preserved in the output
- - Not everything is implemented yet :P
- - Probably other things
+## dogescript
+
+### Usage
+
+#### Command Line
+
+The `dogescript` command can be used to transpile dogescript code to JavaScript. Use a command like `dogescript dogescript.djs > compiled.js` to save to a file.
+
+The `dogenode` command launches a REPL.
+
+#### JavaScript
+
+`dogescript(source)` will transpile the given source code from dogescript into JS.
