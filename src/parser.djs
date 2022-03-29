@@ -89,6 +89,26 @@ such startsWithWord much content word
     wow
 wow false
 
+classy IncompleteError grows Error
+    maker message
+        plz sooper with message
+
+        dis giv name is 'IncompleteError'
+    wow
+wow
+
+such makeExpectedError much ctxInfo expected found
+    very msg is ctxInfo + 'Expected ' + expected
+    rly kindof found is 'undefined'
+        very err is new IncompleteError with msg
+        throw err
+    but
+        msg more ', found ' + found
+        very err is new Error with msg
+        throw err
+    wow
+wow
+
 such takeArgumentEnd much content
     very startAnd is content giv content dose startsWith with '&'
     very startThx is plz startsWithWord with content 'thx'
@@ -259,9 +279,7 @@ such parseIdentifier much content
     but
         very found is result giv found
 
-        very msg is startCtxInfo + 'Expected identifier, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'identifier' found
     wow
 wow result
 
@@ -272,9 +290,7 @@ such parseString much content
     notrly quoteStart
         very found is plz idxContent with content 0
 
-        very msg is startCtxInfo + 'Expected string, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'string' found
     wow
 
     plz shiftContent with content 1
@@ -284,7 +300,7 @@ such parseString much content
     many done not true
         rly content giv content giv length is 0
             very msg is startCtxInfo + 'Unterminated string'
-            very err is new Error with msg
+            very err is new IncompleteError with msg
             throw err
         wow
         very chr is plz idxContent with content 0
@@ -341,9 +357,7 @@ such parseOctalNumber much content
 
     very firstChar is plz idxContent with content 0
     rly firstChar not '0'
-        very msg is ctxInfo + 'Expected octal number, found ' + firstChar
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with ctxInfo 'octal number' firstChar
     wow
 
     plz shiftContent with content 1
@@ -421,7 +435,7 @@ such parseBlockBody much content endOnBut endOnCatch
     many done not true
         rly content giv content giv length is 0
             very msg is ctxInfo + 'Unterminated block'
-            very err is new Error with msg
+            very err is new IncompleteError with msg
             throw err
         wow
 
@@ -492,7 +506,7 @@ such parseClassElement much content
 
             rly content giv content giv length is 0
                 very msg is ctxInfo + 'Unterminated function declaration'
-                very err is new Error with msg
+                very err is new IncompleteError with msg
                 throw err
             wow
 
@@ -539,9 +553,7 @@ such parseClassElement much content
         very muchStart is plz startsWithWord with content 'much'
         notrly muchStart
             very found is plz idxContent with content 0
-            very msg is ctxInfo + 'Expected "much", found ' + found
-            very err is new Error with msg
-            throw err
+            plz makeExpectedError with '"much"' found
         wow
 
         plz shiftContent with content 4
@@ -560,9 +572,7 @@ such parseClassElement much content
         wow
     but
         very found is plz idxContent with content 0
-        very msg is ctxInfo + 'Expected class element, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with ctxInfo 'class element' found
     wow
 wow result
 
@@ -618,9 +628,7 @@ such tryParseExpression0 much content
             but
                 very ctxInfo is plz genContextInfo with content
                 very found is plz idxContent with content 0
-                very msg is ctxInfo + 'Expected ")", found ' + found
-                very err is new Error with msg
-                throw err
+                plz makeExpectedError with ctxInfo '")"' found
             wow
         wow
     but rly plzStart
@@ -669,7 +677,7 @@ such tryParseExpression0 much content
 
             rly content giv content giv length is 0
                 very msg is ctxInfo + 'Unterminated function declaration'
-                very err is new Error with msg
+                very err is new IncompleteError with msg
                 throw err
             wow
 
@@ -773,7 +781,7 @@ such tryParseExpression0 much content
         many true
             rly content giv content giv length is 0
                 very msg is startCtxInfo + 'Unterminated object'
-                very err is new Error with msg
+                very err is new IncompleteError with msg
                 throw err
             wow
 
@@ -812,7 +820,7 @@ such tryParseExpression0 much content
         many done not true
             rly content giv content giv length is 0
                 very msg is startCtxInfo + 'Unterminated object'
-                very err is new Error with msg
+                very err is new IncompleteError with msg
                 throw err
             wow
 
@@ -833,9 +841,7 @@ such tryParseExpression0 much content
                     but
                         very ctxInfo is plz genContextInfo with content
                         very found is identRes giv found
-                        very msg is ctxInfo + 'Expected string, identifier, or "wow", found ' + found
-                        very err is new Error with msg
-                        throw err
+                        plz makeExpectedError with ctxInfo 'string, identifier, or "wow"' found
                     wow
                 wow
 
@@ -845,9 +851,7 @@ such tryParseExpression0 much content
                 notrly colonStart
                     very ctxInfo is plz genContextInfo with content
                     very found is plz idxContent with content 0
-                    very msg is startCtxInfo + 'Expected ":", found ' + found
-                    very err is new Error with msg
-                    throw err
+                    plz makeExpectedError with ctxInfo '":"' found
                 wow
 
                 plz shiftContent with content 1
@@ -1282,9 +1286,7 @@ such parseExpression much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression' found
     wow
 wow result
 
@@ -1297,9 +1299,7 @@ such parseExpression0 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression0, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression0' found
     wow
 wow result
 
@@ -1312,9 +1312,7 @@ such parseExpression2 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression2, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression2' found
     wow
 wow result
 
@@ -1327,9 +1325,7 @@ such parseExpression3 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression3, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression3' found
     wow
 wow result
 
@@ -1342,9 +1338,7 @@ such parseExpression4 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression4, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression4' found
     wow
 wow result
 
@@ -1357,9 +1351,7 @@ such parseExpression5 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression5, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression5' found
     wow
 wow result
 
@@ -1372,9 +1364,7 @@ such parseExpression6 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression6, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression6' found
     wow
 wow result
 
@@ -1387,9 +1377,7 @@ such parseExpression7 much content
         result is result giv expression
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected expression7, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'expression7' found
     wow
 wow result
 
@@ -1497,9 +1485,7 @@ such parseFunctionDeclaration much content isClassStatic
         wow
     but
         very found is plz idxContent with content 0
-        very msg is ctxInfo + 'Expected function declaration, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'function declaration' found
     wow
 
     very ctxInfo is plz genContextInfo with content
@@ -1517,7 +1503,7 @@ such parseFunctionDeclaration much content isClassStatic
 
             rly content giv content giv length is 0
                 very msg is ctxInfo + 'Unterminated function declaration'
-                very err is new Error with msg
+                very err is new IncompleteError with msg
                 throw err
             wow
 
@@ -1656,9 +1642,7 @@ such parseInlineStatement much content
         result is result giv statement
     but
         very found is result giv found
-        very msg is startCtxInfo + 'Expected inline statement, found ' + found
-        very err is new Error with msg
-        throw err
+        plz makeExpectedError with startCtxInfo 'inline statement' found
     wow
 wow result
 
@@ -1970,9 +1954,7 @@ such parseStatement much content
                 notrly nextStart
                     very ctxInfo is plz genContextInfo with content
                     very found is plz idxContent with content 0
-                    very msg is ctxInfo + 'Expected "next", found ' + found
-                    very err is new Error with msg
-                    throw err
+                    plz makeExpectedError with startCtxInfo '"next"' found
                 wow
 
                 plz shiftContent with content 4
@@ -2036,3 +2018,4 @@ wow result
 woof parseExpression be parseExpression
 woof parseStatement be parseStatement
 woof parseFile be parseFile
+woof IncompleteError be IncompleteError

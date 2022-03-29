@@ -3,7 +3,10 @@
 	"version": "3.0.0-pre",
 	"description": "wow so much future",
 	"main": "dist/index.js",
-	"bin": "bin.js",
+	"bin": {
+		"doge3": "bin/bin.js",
+		"dogenode": "bin/dogenode.js"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://git.vpzom.click/vpzom/doge3"
