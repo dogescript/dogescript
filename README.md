@@ -13,3 +13,7 @@ The `dogenode` command launches a REPL.
 #### JavaScript
 
 `dogescript(source)` will transpile the given source code from dogescript into JS.
+
+### Language documentation
+
+* [`LANGUAGE.md`](/LANGUAGE.md)
