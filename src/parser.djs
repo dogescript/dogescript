@@ -1272,7 +1272,7 @@ such tryParseExpression much content
 wow result
 
 such parseExpression much content
-    very content is plz wrapContent with content
+    content is plz wrapContent with content
 
     very startCtxInfo is plz genContextInfo with content
 
@@ -1449,6 +1449,7 @@ wow elses
 such parseFunctionDeclaration much content isClassStatic
     very isAsync is false
     very isGenerator is false
+    very ident
 
     very asinkStart is plz startsWithWord with content 'asink'
     rly asinkStart
@@ -1487,7 +1488,7 @@ such parseFunctionDeclaration much content isClassStatic
             content giv content is plz ifSkipped with content
         wow
 
-        very ident is plz parseIdentifier with content
+        ident is plz parseIdentifier with content
     but rly muchStart
         rly isClassStatic
             very msg is ctxInfo + 'Expected "stay", found "much"'
@@ -1506,7 +1507,7 @@ such parseFunctionDeclaration much content isClassStatic
     very args is new Array
 
     very nextContent is plz ifSkippedInline with content
-    very muchStart is plz startsWithWord with nextContent 'much'
+    muchStart is plz startsWithWord with nextContent 'much'
     rly muchStart
         content giv content is nextContent dose substring with 4
 
@@ -1542,7 +1543,7 @@ such parseFunctionDeclaration much content isClassStatic
         'generator': isGenerator
     wow
 
-    very nextContent is plz cloneContent with content
+    nextContent is plz cloneContent with content
     nextContent giv content is plz ifSkippedInline with nextContent
     very exprResult is plz tryParseExpression with nextContent
     rly exprResult giv ok

@@ -6,4 +6,4 @@ such transpile much src
     very asJS is plz toJS with parsed
 wow asJS
 
-module.exports is transpile
+woof transpile
