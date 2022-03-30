@@ -254,12 +254,6 @@ such tryParseIdentifier much content
             'ok': false
         wow
     but
-        rly result is 'doge' + 'ument'
-            result is 'document'
-        but rly result is 'win' + 'doge'
-            result is 'window'
-        wow
-
         content giv content is tmpContent
 
         result is obj
@@ -612,6 +606,9 @@ such tryParseExpression0 much content
     very maybeStart is plz startsWithWord with content 'maybe'
     very objStart is plz startsWithWord with content 'obj'
     very boxStart is plz startsWithWord with content 'box'
+    very dogeumentStart is plz startsWithWord with content 'dogeument'
+    very windogeStart is plz startsWithWord with content 'windoge'
+
     rly parenStart
         very nextContent is plz cloneContent with content
         nextContent giv content is nextContent giv content dose substring with 1
@@ -755,6 +752,18 @@ such tryParseExpression0 much content
         result is obj
             'type': 'ident',
             'value': 'super'
+        wow
+    but rly dogeumentStart
+        plz shiftContent with content 9
+        result is obj
+            'type': 'ident',
+            'value': 'document'
+        wow
+    but rly windogeStart
+        plz shiftContent with content 7
+        result is obj
+            'type': 'ident',
+            'value': 'window'
         wow
     but rly maybeStart
         plz shiftContent with content 5
