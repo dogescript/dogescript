@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'classy' 'debooger' 'dis' 'dose' 'few' 'giv' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'not' 'notrly' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'such' 'throw' 'trained' 'typeof' 'very' 'waite' 'woof' 'wow' 'yelde'
+very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'be' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'catch' 'classy' 'debooger' 'dis' 'dogeument' 'dose' 'few' 'git' 'giv' 'go' 'grows' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'new' 'not' 'notrly' 'obj' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'sit' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'stay' 'such' 'throw' 'thx' 'trained' 'typeof' 'very' 'waite' 'with' 'woof' 'wow' 'yelde' 'windoge'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
