@@ -1559,15 +1559,21 @@ such tryParseInlineStatement much content
     very result
 
     very veryStart is plz startsWithWord with content 'very'
-    rly veryStart
-        plz shiftContent with content 4
+    very constStart is plz startsWithWord with content '5evar'
+    rly veryStart or constStart
+        rly constStart
+            plz shiftContent with content 5
+        but
+            plz shiftContent with content 4
+        wow
         content giv content is plz ifSkipped with content
 
         very ident is plz parseIdentifier with content
 
         result is obj
             'type': 'declaration',
-            'ident': ident
+            'ident': ident,
+            'const': constStart
         wow
 
         very nextContent is plz ifSkippedInline with content

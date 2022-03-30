@@ -114,7 +114,12 @@ such toJS much ast parentOpLevel
         result is '!' + value
         opLevel is 2
     but rly ast giv type is 'declaration'
-        result is 'let '
+        result is ''
+        rly ast giv const
+            result more 'const '
+        but
+            result more 'let '
+        wow
         result more ast giv ident
         rly ast giv value
             very value is ast giv value
