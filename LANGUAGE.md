@@ -149,7 +149,7 @@ function foo() {
 ### Calling functions
 
 #### Plz
-Function calls start with the `plz` syntax, followed by the function's name and optional arguments (separated by a space). To call a `sum(a,b)` function with `1` and `2`, one would do the following:
+Function calls start with the `plz` syntax, followed by the function's name and optional arguments (separated by either a space or a comma). To call a `sum(a,b)` function with `1` and `2`, one would do the following:
 
 ```dogescript
 plz sum with 1 2
@@ -167,10 +167,6 @@ Alternatively, one could use the `plz` syntax as well:
 ```dogescript
 plz (Math giv sum) with 1 2
 ```
-
-#### Function Properties
-
-* `breed` -> `Symbol.species`
 
 ## Classes
 
@@ -286,12 +282,45 @@ classy Rectangle
 wow
 ```
 
+### Instantiation
+Classes can be instantiated with the `new` keyword.
+
+```dogescript
+very foo is new Array with 5
+```
+
 ## Expressions
 
-Use the `dis` keyword to refer to the current object. In general, `dis` refers to the calling object in a method. Use `dis` either with the `giv` or the `levl` operator.
+* `maybe` randomly returns true or false at runtime
+* `windoge` -> `window`
+* `dogeument` -> `document`
+* `breed` -> `Symbol.species`
+
+### dis
+
+Use the `dis` keyword to refer to the current object. In general, `dis` refers to the object a method was called on. Use `dis` either with the `giv` or the `levl` operator.
 
 * `dis giv foo` => `this.foo`
 * `dis levl 'foo'` => `this['foo]`
+
+### Object Literals
+
+Plain objects can be created with the `obj` keyword. Keys can be either strings or identifiers.
+
+```dogescript
+very foo is obj
+    doge: 'arrived'
+    'such': 'wow'
+wow
+```
+
+### Array Literals
+
+Arrays can be created with the `box` keyword.
+
+```dogescript
+very list is box 'cat' 'yarn' wow
+```
 
 ## Branching
 
@@ -391,6 +420,26 @@ many 1
 wow
 ```
 
+## Error Handling
+Errors can be thrown using the `throw` keyword:
+
+```dogescript
+such neverWorks
+    throw new Error with 'What did you expect?'
+wow
+```
+
+### go
+To catch errors, use the `go` statement:
+
+```dogescript
+go
+    plz neverWorks
+catch ex
+    console dose error with ex
+wow
+```
+
 ## Operators
 
 ### Unary Operators
@@ -418,6 +467,8 @@ wow
 * `isa` - `instanceof`
 * `like` - `==`
 * `same` - `===`
+
+The following arithmetic operators are available: `*` `/` `%` `+` `-`
 
 #### Property
 
