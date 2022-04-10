@@ -8,3 +8,10 @@ example/WOWserify/bundle.js
 /dist
 coverage
 .vscode/
+
+# generated files when things fail
+test_out/
+
+# jest cache
+# https://github.com/facebook/jest/issues/3573
+jest_0/
