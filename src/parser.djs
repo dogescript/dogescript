@@ -1,4 +1,4 @@
-very RESERVED_IDENTS is new Array with 'amaze' 'and' 'as' 'asink' 'be' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'catch' 'classy' 'debooger' 'dis' 'dogeument' 'dose' 'few' 'git' 'giv' 'go' 'grows' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'new' 'not' 'notrly' 'obj' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'sit' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'stay' 'such' 'throw' 'thx' 'trained' 'typeof' 'very' 'waite' 'with' 'woof' 'wow' 'yelde' 'windoge'
+very RESERVED_IDENTS is new Array with 'also' 'amaze' 'and' 'as' 'asink' 'be' 'bigger' 'biggerish' 'bigify' 'bigified' 'bork' 'box' 'breed' 'but' 'catch' 'classy' 'debooger' 'dis' 'dogeument' 'dose' 'few' 'git' 'giv' 'go' 'grows' 'is' 'isa' 'kindof' 'lazy' 'levl' 'less' 'like' 'lots' 'loud' 'maker' 'many' 'maybe' 'more' 'much' 'next' 'new' 'not' 'notrly' 'obj' 'or' 'pawse' 'plz' 'proto' 'quiet' 'rly' 'same' 'shh' 'sit' 'smaller' 'smallerish' 'smallify' 'smallified' 'so' 'sooper' 'stay' 'such' 'throw' 'thx' 'trained' 'typeof' 'very' 'waite' 'with' 'woof' 'wow' 'yelde' 'windoge'
 
 very OCTAL_REGEX is new RegExp with '^[0-7]*$'
 
@@ -86,6 +86,19 @@ such startsWithWord much content word
         but
             amaze true
         wow
+    wow
+wow false
+
+such takeArgumentSeparator much content
+    rly content giv content levl 0 is ','
+        plz shiftContent with content 1
+        amaze true
+    wow
+
+    very alsoStart is plz startsWithWord with content 'also'
+    rly alsoStart
+        plz shiftContent with content 4
+        amaze true
     wow
 wow false
 
@@ -392,15 +405,13 @@ such parsePossibleArgumentValues much content
         many done not true
             very expr is plz parseExpression with content
             args dose push with expr
-            nextContent is plz ifSkippedInline with content
+            nextContent is plz cloneContent with content
+            nextContent giv content is plz ifSkippedInline with content
 
-            very commaStart is nextContent dose startsWith with ','
-            rly commaStart
-                nextContent is nextContent dose substring with 1
-                nextContent is plz ifSkipped with nextContent
+            very sepStart is plz takeArgumentSeparator with nextContent
+            rly sepStart
+                nextContent giv content is plz ifSkipped with nextContent
             wow
-
-            nextContent is plz wrapContent with nextContent
 
             very foundArgumentEnd is plz takeArgumentEnd with nextContent
 
@@ -805,11 +816,10 @@ such tryParseExpression0 much content
 
             content giv content is plz ifSkipped with content
 
-            very commaStart is content giv content dose startsWith with ','
-            rly commaStart
+            very sepStart is plz takeArgumentSeparator with content
+            rly sepStart
                 shh optional comma, skip
 
-                plz shiftContent with content 1
                 content giv content is plz ifSkipped with content
             wow
         wow
@@ -870,11 +880,10 @@ such tryParseExpression0 much content
 
                 content giv content is plz ifSkipped with content
 
-                very commaStart is content giv content dose startsWith with ','
-                rly commaStart
+                very sepStart is plz takeArgumentSeparator with content
+                rly sepStart
                     shh optional comma, skip
 
-                    plz shiftContent with content 1
                     content giv content is plz ifSkipped with content
                 wow
 
@@ -1940,9 +1949,8 @@ such parseStatement much content
             wow
 
             nextContent giv content is plz ifSkippedInline with nextContent
-            very commaStart is nextContent giv content dose startsWith with ','
-            many commaStart
-                nextContent giv content is nextContent giv content dose substring with 1
+            very sepStart is plz takeArgumentSeparator with nextContent
+            many sepStart
                 nextContent giv content is plz ifSkipped with nextContent
 
                 shh at this point it's definitely a loop, so we can fail
@@ -1950,7 +1958,8 @@ such parseStatement much content
                 initStatements dose push with nextValue
 
                 nextContent giv content is plz ifSkipped with nextContent
-                commaStart is nextContent giv content dose startsWith with ','
+
+                sepStart is plz takeArgumentSeparator with nextContent
             wow
 
             very nextStart is plz startsWithWord with nextContent 'next'
@@ -1984,16 +1993,13 @@ such parseStatement much content
 
                     content giv content is plz ifSkippedInline with content
 
-                    many true
-                        commaStart is content giv content dose startsWith with ','
+                    very sepStart is plz takeArgumentSeparator with content
+                    many sepStart
+                        content giv content is plz ifSkipped with content
+                        current is plz parseInlineStatement with content
+                        afterStatements dose push with current
 
-                        rly commaStart
-                            content giv content is plz ifSkipped with content
-                            current is plz parseInlineStatement with content
-                            afterStatements dose push with current
-                        but
-                            bork
-                        wow
+                        sepStart is plz takeArgumentSeparator with content
                     wow
                 wow
 
