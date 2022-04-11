@@ -77,3 +77,7 @@ npm install
 # and then:
 npm run build # builds dogescript
 ```
+
+## Debugging
+
+Easiest way to debug is to write the code you're trying to parse in the `debug.js` file and run the debugger through that.

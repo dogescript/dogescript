@@ -1,4 +1,5 @@
 var path = require('path');
+var fs = require('fs');
 var process = require('process');
 var walk = require('walk');
 var util = require('./util');
@@ -56,12 +57,21 @@ function buildProject() {
     exec(`cd ${ROOT_DIR} && ${buildCommand}`, { encoding: 'UTF-8' }, (error, stdout, stderr) => {
       const errorOutput = stderr.toString();
       const stdOutput = stdout.toString();
-      const errMsg = "Failed to start testing suite, compiler build failed";
+      const errMsg = "Failed to start testing suite, compiler build failed. Check details above or err.log";
 
       if (error || errorOutput) {
+        console.log(error);
         console.error(errorOutput);
         console.error(stdOutput);
         console.error(errMsg)
+
+        if (!fs.existsSync('./test_out/compiler')){
+          fs.mkdirSync('./test_out/compiler', {recursive: true});
+        }
+        fs.writeFileSync('./test_out/compiler/err.txt', error);
+        fs.writeFileSync('./test_out/compiler/out.log', stdOutput);
+        fs.writeFileSync('./test_out/compiler/err.log', errorOutput);
+
         reject([
           new Error(errMsg),
           stdOutput,
@@ -95,6 +105,7 @@ function formatSpecMetadata(testDirMapping) {
 
 // setup.js, global setup for jest
 module.exports =  function() {
+  // TODO determine if library needs rebuilding
   return getSpecFiles(specDir)
     .then(formatSpecMetadata)
     .then(function (specMetadata) {

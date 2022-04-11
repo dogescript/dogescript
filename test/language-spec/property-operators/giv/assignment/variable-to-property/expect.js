@@ -1,1 +1,1 @@
-foo = document.window
+foo = document.window;

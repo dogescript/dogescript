@@ -1,1 +1,1 @@
-var Species = this.constructor[Symbol.species]
+var Species = this.constructor[Symbol.species];
