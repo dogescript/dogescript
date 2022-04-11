@@ -56,7 +56,7 @@ wow result
 
 such isWhitespace much chr
     very result is false
-    rly chr is ' ' or chr is '\n' or chr is '\r'
+    rly chr is ' ' or chr is '\n'
         result is true
     wow
 wow result
