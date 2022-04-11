@@ -56,7 +56,8 @@ wow result
 
 such isWhitespace much chr
     very result is false
-    rly chr is ' ' or chr is '\n'
+    shh handle CR and LF
+    rly chr is ' ' or chr is '\n' or chr is '\r'
         result is true
     wow
 wow result
@@ -67,6 +68,16 @@ such isInlineWhitespace much chr
         result is true
     wow
 wow result
+
+quiet
+  Determines if the first character of the content is a new line character
+  
+  @return true if the content starts with a new line character, false otherwise
+loud
+such startsWithNewLine much content
+  very chr is content dose charAt with 0
+  amaze chr same '\n' or chr same '\r'
+wow 
 
 such startsWithWord much content word
     content is plz unwrapContent with content
@@ -112,7 +123,8 @@ wow
 such takeArgumentEnd much content
     very startAnd is content giv content dose startsWith with '&'
     very startThx is plz startsWithWord with content 'thx'
-    very startNewline is content giv content dose startsWith with '\n'
+    very textContent is content giv content
+    very startNewline is plz startsWithNewLine with textContent
 
     very result is true
 
@@ -135,7 +147,7 @@ such ifSkippedComment much content
     rly shhStart
         very done is false
         many content giv length bigger 0 and done not true
-            rly content levl 0 is '\n'
+            rly content levl 0 is '\n' or content levl 0 is '\r'
                 done is true
             but
                 content is content dose substring with 1
@@ -504,8 +516,8 @@ such parseClassElement much content
                 throw err
             wow
 
-            very newlineStart is content giv content dose startsWith with '\n'
-            rly newlineStart
+            very textContent is content giv content
+            rly plz startsWithNewLine with textContent thx
                 done is true
             but
                 very arg is plz parseIdentifier with content
@@ -678,8 +690,9 @@ such tryParseExpression0 much content
                 throw err
             wow
 
-            very newlineStart is content giv content dose startsWith with '\n'
-            rly newlineStart
+            
+            very textContent is content giv content
+            rly plz startsWithNewLine with textContent thx
                 done is true
             but
                 very arg is plz parseIdentifier with content
@@ -1516,8 +1529,8 @@ such parseFunctionDeclaration much content isClassStatic
                 throw err
             wow
 
-            very newlineStart is content giv content dose startsWith with '\n'
-            rly newlineStart
+            very textContent is content giv content
+            rly plz startsWithNewLine with textContent thx
                 done is true
             but
                 very arg is plz parseIdentifier with content

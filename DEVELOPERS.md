@@ -5,7 +5,6 @@ Notes for developers of the language.
 ## Build
 
 1. `npm run build`
-  2. Requires files do not contain `\r` (CR) returns and must only include `\n` (LF)
 
 ## Debugging
 
