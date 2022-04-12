@@ -113,7 +113,6 @@ wow
 such takeArgumentEnd much content
     very startAnd is content giv content dose startsWith with '&'
     very startThx is plz startsWithWord with content 'thx'
-    very textContent is content giv content
     very startNewline is content giv content dose startsWith with '\n'
 
     very result is true
