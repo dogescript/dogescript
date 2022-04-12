@@ -69,16 +69,6 @@ such isInlineWhitespace much chr
     wow
 wow result
 
-quiet
-  Determines if the first character of the content is a new line character
-  
-  @return true if the content starts with a new line character, false otherwise
-loud
-such startsWithNewLine much content
-  very chr is content dose charAt with 0
-  amaze chr same '\n'
-wow 
-
 such startsWithWord much content word
     content is plz unwrapContent with content
 
@@ -124,7 +114,7 @@ such takeArgumentEnd much content
     very startAnd is content giv content dose startsWith with '&'
     very startThx is plz startsWithWord with content 'thx'
     very textContent is content giv content
-    very startNewline is plz startsWithNewLine with textContent
+    very startNewline is content giv content dose startsWith with '\n'
 
     very result is true
 
@@ -516,8 +506,8 @@ such parseClassElement much content
                 throw err
             wow
 
-            very textContent is content giv content
-            rly plz startsWithNewLine with textContent thx
+            very newlineStart is content giv content dose startsWith with '\n'
+            rly newlineStart
                 done is true
             but
                 very arg is plz parseIdentifier with content
@@ -690,9 +680,8 @@ such tryParseExpression0 much content
                 throw err
             wow
 
-            
-            very textContent is content giv content
-            rly plz startsWithNewLine with textContent thx
+            very newlineStart is content giv content dose startsWith with '\n'
+            rly newlineStart
                 done is true
             but
                 very arg is plz parseIdentifier with content
@@ -1529,8 +1518,8 @@ such parseFunctionDeclaration much content isClassStatic
                 throw err
             wow
 
-            very textContent is content giv content
-            rly plz startsWithNewLine with textContent thx
+            very newlineStart is content giv content dose startsWith with '\n'
+            rly newlineStart
                 done is true
             but
                 very arg is plz parseIdentifier with content
