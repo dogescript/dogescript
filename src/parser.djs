@@ -64,7 +64,7 @@ wow result
 
 such isInlineWhitespace much chr
     very result is false
-    rly chr is ' '
+    rly chr is ' ' or chr is '\r'
         result is true
     wow
 wow result
@@ -76,7 +76,7 @@ quiet
 loud
 such startsWithNewLine much content
   very chr is content dose charAt with 0
-  amaze chr same '\n' or chr same '\r'
+  amaze chr same '\n'
 wow 
 
 such startsWithWord much content word
