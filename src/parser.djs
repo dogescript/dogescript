@@ -56,14 +56,15 @@ wow result
 
 such isWhitespace much chr
     very result is false
-    rly chr is ' ' or chr is '\n'
+    shh handle CR and LF
+    rly chr is ' ' or chr is '\n' or chr is '\r'
         result is true
     wow
 wow result
 
 such isInlineWhitespace much chr
     very result is false
-    rly chr is ' '
+    rly chr is ' ' or chr is '\r'
         result is true
     wow
 wow result
