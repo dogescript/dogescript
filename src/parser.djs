@@ -136,7 +136,7 @@ such ifSkippedComment much content
     rly shhStart
         very done is false
         many content giv length bigger 0 and done not true
-            rly content levl 0 is '\n' or content levl 0 is '\r'
+            rly content levl 0 is '\n'
                 done is true
             but
                 content is content dose substring with 1
