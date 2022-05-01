@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.4.3]
 
-- Configure `files` parameter to slim down package size to < 100kb
+- Configure `files` parameter to slim down package size
 
 ## [2.4.2]
 
