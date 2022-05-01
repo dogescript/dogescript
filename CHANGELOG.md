@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.3]
+
+- Configure `files` parameter to slim down package size to < 100kb
+
 ## [2.4.2]
 
 ### Fixed
@@ -54,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix REPL run cannot run express or long lived processes[#271](https://github.com/dogescript/dogescript/pull/271)
 
 
-[Unreleased]: https://github.com/dogescript/dogescript/compare/2.4.2...HEAD
+[Unreleased]: https://github.com/dogescript/dogescript/compare/2.4.3...HEAD
+[2.4.3]: https://github.com/dogescript/dogescript/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/dogescript/dogescript/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/dogescript/dogescript/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/dogescript/dogescript/compare/6fb5d4dfc93c507b83474119d9e869350e7e11a1...HEAD
